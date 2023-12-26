@@ -1,0 +1,37 @@
+.route-card {
+  height: 280px;
+  &__item {
+    display: flex !important;
+    align-items: flex-end;
+    border-radius: 12px;
+    padding: 0 15px 15px 15px;
+    height: 100%;
+    transition: 0.3s ease-in-out;
+    &:hover > div {
+      background: #cbcaca;
+    }
+  }
+  &__content {
+    border-radius: 8px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+  }
+  &__name {
+    font-size: 16px;
+    line-height: 24px;
+    color: #2b394d;
+  }
+  &__price {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+    color: #005ee4;
+    & > span {
+      color: #005ee4;
+    }
+  }
+}

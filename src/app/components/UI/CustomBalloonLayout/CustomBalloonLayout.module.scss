@@ -1,0 +1,15 @@
+.balloon-layout{
+    background: url('../../../../../public/icons/iconMap.svg') no-repeat; 
+    background-size:contain;
+    width: 60px; 
+    height: 68px;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    position: relative;
+}
+.balloon-icon{
+    position: absolute;
+    fill: #FFFFFF;
+    bottom: 27px;
+}

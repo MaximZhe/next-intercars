@@ -2,6 +2,8 @@ import React from 'react';
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Head from 'next/head';
+import Breadcrumbs from '../components/UI/Breadcrumbs/Breadcrumbs';
 
 
 export const metadata: Metadata = {
@@ -11,9 +13,16 @@ export const metadata: Metadata = {
 }
 const RoutePageMinsk = () => {
     return (
-        <div>
+        <>
+        <Head>
+    <meta name="google-site-verification" content="google67984ba37c9a9849.html" />
+    
+  </Head>
+  <div>
+            
 <section className="route">
     <div className="route__row">
+        <Breadcrumbs/>
         <div className="route__content">
             <h2 className="route__title">
                 Расписание автобусов Ошямны &mdash; Минск</h2>
@@ -80,7 +89,9 @@ const RoutePageMinsk = () => {
         
         </div>
 </section>
-</div>  
+</div> 
+  </>
+         
     );
 };
 
