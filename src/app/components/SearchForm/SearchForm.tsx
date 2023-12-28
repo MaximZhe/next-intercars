@@ -70,7 +70,7 @@ const SearchForm:FC <ISearchForm> = ({ className }) => {
     const router = useRouter();
 
     const handleSuccess = () => {
-        router.push('/list-result-routes', undefined);
+        router.push('/SearchResultPage', undefined);
       };
    console.log(handleSuccess)
 

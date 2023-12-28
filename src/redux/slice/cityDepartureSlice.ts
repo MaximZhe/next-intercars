@@ -1,4 +1,4 @@
-import { ICityDataProps } from '@/types/types';
+import { ICityDataProps } from "@/app/types/types";
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: ICityDataProps = {

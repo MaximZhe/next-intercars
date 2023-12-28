@@ -1,7 +1,8 @@
 import { FC } from 'react';
-import './ListRatesFilterButtons.scss';
-import { ReactComponent as ArrowFilter } from '../../assets/icons/arrow-filter-icon.svg';
+import style from './ListRatesFilterButtons.module.scss';
+
 import Button from '../UI/Button/Button';
+import ArrowFilter from '@/app/icons/svg/ArrowFilter';
 
 interface IButtonFilter{
     title: string,
@@ -11,11 +12,11 @@ interface IButtonFilter{
 const ListRatesFilterButtons:FC<IButtonFilter> = ({ title, onClick,isSort}) => {
     
     return (
-        <Button className={`filter-button ${!isSort ? '' : 'active'}`} onClick={onClick}>
-            <span className='filter-button__text'>
+        <Button className={`${style['filter-button']} ${!isSort ? '' : style.active}`} onClick={onClick}>
+            <span className={style['filter-button__text']}>
                 {title}
             </span>
-            <ArrowFilter className='filter-button__icon' />
+            <ArrowFilter className={style['filter-button__icon']} />
         </Button>
     );
 };

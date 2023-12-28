@@ -1,20 +1,21 @@
-import { Link } from 'react-router-dom';
-import './Application.scss'
+
+import Link from 'next/link';
+import style from './Application.module.scss'
 const Application = () => {
     return (
-        <div className='applications'>
-            <div className='applications__container'>
-                <div className='applications__wrapper'>
-                    <h2 className='applications__title'>
+        <div className={style.applications}>
+            <div className={style['applications__container']}>
+                <div className={style['applications__wrapper']}>
+                    <h2 className={style['applications__title']}>
                         Путешествовать удобнее
                         с приложением <span>Intercars</span>
                     </h2>
                 </div>
                 <div 
-                 className='applications__img' ></div>
-                <div className='applications-links'>
-                    <Link to='' className='applications-links__item'></Link>
-                    <Link to='' className='applications-links__item'></Link>
+                 className={style['applications__img']} ></div>
+                <div className={style['applications-links']}>
+                    <Link href='' className={style['applications-links__item']}></Link>
+                    <Link href='' className={style['applications-links__item']}></Link>
                 </div>
             </div>
         </div>

@@ -21,7 +21,7 @@
     }
   }
   &__img {
-    background: url("../../../assets/images/two-phone-icon.png") no-repeat;
+    background: url("../../../icons/image/two-phone-icon.png") no-repeat;
     background-size: cover;
     max-width: 246px;
     width: 100%;
@@ -43,11 +43,11 @@
     height: 42px;
     border-radius: 6px;
     &:first-child {
-      background: url("../../../assets/images/app-store.png") no-repeat;
+      background: url("../../../icons/image/app-store.png") no-repeat;
       background-size: cover;
     }
     &:last-child {
-      background: url("../../../assets/images/google-play.png") no-repeat;
+      background: url("../../../icons/image/google-play.png") no-repeat;
       background-size: cover;
     }
   }
@@ -73,7 +73,7 @@
         }
         &__img {
             position: absolute;
-          background: url("../../../assets/images/two-phone-mobail.png") no-repeat;
+          background: url("../../../icons/image/two-phone-mobail.png") no-repeat;
           max-width: 130px;
           width: 100%;
           height: 156px;

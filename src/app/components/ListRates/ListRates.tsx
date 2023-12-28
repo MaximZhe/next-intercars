@@ -1,7 +1,8 @@
+'use client'
 import { FC, useEffect, useState } from 'react';
-import './ListRates.scss';
+import style from './ListRates.module.scss';
 import SearchForm from '../SearchForm/SearchForm';
-import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
+// import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
 import axios from 'axios';
 
 import ListRatesFilterButtons from '../ListRatesFilterButtons/ListRatesFilterButtons';
@@ -202,13 +203,13 @@ const ListRates: FC = () => {
   const sortedPrices = sortedRoutesPriceBest(routes)
   console.log(routes)
   return (
-    <section className='rates'>
-      <SearchForm className='rates__form' />
+    <section className={style.rates}>
+      <SearchForm className={style['rates__form']} />
       <div className='container'>
-        <div className='rates__wrapper'>
-          <div className='rates__header'>
-            {!isMobile ? <Breadcrumbs /> : null}
-            <div className='rates__filter'>
+        <div className={style['rates__wrapper']} >
+          <div className={style['rates__header']} >
+            {/* {!isMobile ? <Breadcrumbs /> : null} */}
+            <div className={style['rates__filter']} >
               <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={isSortTimeDepart} title={'Время отправления'} />
               <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={isSortTimeArrive} title={'Время прибытия'} />
               <ListRatesFilterButtons onClick={sortedRoutesTimeFull} isSort={isSortTimeFull} title={'Время в пути'} />
@@ -216,7 +217,7 @@ const ListRates: FC = () => {
             </div>
           </div>
 
-          <div className='list'>
+          <div className={style.list}>
             <GridLoader color={'#0243A6'} loading={ loading} size={10}/>
             
             {routes.map((data) => (

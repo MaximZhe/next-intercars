@@ -1,5 +1,6 @@
 
-import { ICityDataProps } from '@/types/types';
+
+import { ICityDataProps } from '@/app/types/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 

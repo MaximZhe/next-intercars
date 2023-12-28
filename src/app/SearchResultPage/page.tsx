@@ -1,5 +1,5 @@
 
-
+'use client'
 import { useMatchMedia } from '../hooks/useMatchMedia';
 import Menu from '../components/Header/Menu/Menu';
 import ListRates from '../components/ListRates/ListRates';

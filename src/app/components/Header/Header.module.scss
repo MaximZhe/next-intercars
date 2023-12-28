@@ -61,9 +61,6 @@
   border-radius: 6px;
   border: 1px solid #9fb1c9;
   padding: 8px 16px;
-
-  &__icon {
-  }
   &__content {
     display: flex;
     flex-direction: column;
@@ -115,7 +112,7 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
   gap: 5px 0;
   left: -85px;
   &--mobail{

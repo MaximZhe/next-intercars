@@ -1,5 +1,6 @@
 
-import { IFetchDataRoutes } from '@/types/types';
+
+import { IFetchDataRoutes } from '@/app/types/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 
