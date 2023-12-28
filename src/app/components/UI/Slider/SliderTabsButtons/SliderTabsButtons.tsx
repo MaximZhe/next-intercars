@@ -11,14 +11,14 @@ const SliderTabsButtons:FC<ISliderTab> = ({activeTab, handleClick} ) => {
     return (
         <div className={style['routes-tabs']}>
             <button className={`${style['routes-tabs__btn']}
-                        ${activeTab === 'russia' ? 'active' : ''}`}
+                        ${activeTab === 'russia' ? style.active : ''}`}
                 type='button'
                 name='russia'
                 onClick={() => handleClick('russia')}>
                 По России
             </button>
             <button className={`${style['routes-tabs__btn']}
-                        ${activeTab === 'international' ? 'active' : ''}`}
+                        ${activeTab === 'international' ? style.active : ''}`}
                 type='button'
                 name='international'
                 onClick={() => handleClick('international')}

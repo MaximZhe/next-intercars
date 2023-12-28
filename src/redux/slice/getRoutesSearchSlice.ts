@@ -1,6 +1,6 @@
 import { createSlice} from "@reduxjs/toolkit";
 
-import { ITariffData } from '../../types/types';
+import { ITariffData } from '../../app/types/types';
 
 interface DataRouteState {
     dataRoutes: ITariffData;

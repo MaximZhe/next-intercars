@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IItemRoutes} from '../../types/types';
+import { IItemRoutes} from '../../app/types/types';
 
 interface DataRouteState {
     Routes: IItemRoutes[];

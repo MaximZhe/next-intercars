@@ -21,7 +21,10 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+
 import { setupListeners } from "@reduxjs/toolkit/dist/query/react";
+import { cityArrivalApi, cityDepartureApi } from "../api/getCityRoutes";
+import SearchRoutesApi from "../api/getRoutesSearch";
 
 
 const persistConfig = {
@@ -38,8 +41,11 @@ const rootReduсer = combineReducers({
   storegeRouteReduser,
   cityDepartureReduser,
   dataOrderFormReduser,
+  cityDepartureApi: cityDepartureApi.reducer, 
   cityArrivalReduser,
+  cityArrivalApi: cityArrivalApi.reducer, 
   dataRoutesReduser,
+  SearchRoutesApi: SearchRoutesApi.reducer, 
 });
 const persistedReducer = persistReducer(persistConfig, rootReduсer);
 
@@ -51,7 +57,7 @@ export const setupStore = () => {
     serializableCheck: {
       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
     },
-  })
+  }).concat(cityDepartureApi.middleware as Middleware,cityArrivalApi.middleware as Middleware,SearchRoutesApi.middleware as Middleware,),
   });
    
   setupListeners(store.dispatch);

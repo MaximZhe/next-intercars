@@ -1,11 +1,23 @@
 "use client"
 
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+
+import React, { FC, useEffect, useState } from 'react';
 import moment from 'moment';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import styles from './SearchForm.module.scss';
+
+
+
+
+import { setDataRoute } from '@/redux/slice/getRoutesSlice';
+import { useAppDispatch } from '@/app/hooks/redux';
+import { useRouter } from 'next/navigation';
+import ArrowForm from '@/app/icons/svg/ArrowForm';
+import CalendarIcon from '@/app/icons/svg/CalendarIcon';
+import { defaultCityForm, defaultDateForm } from '@/app/constant/constant';
+
 
 const initialStateResultCity = {
     Id: 0,
@@ -51,8 +63,18 @@ export interface IRouteData {
     },
     Error: null
 }
-const SearchForm = ({ className }: { className: string }) => {
-   
+interface ISearchForm {
+    className: string,
+}
+const SearchForm:FC <ISearchForm> = ({ className }) => {
+    const router = useRouter();
+
+    const handleSuccess = () => {
+        router.push('/list-result-routes', undefined);
+      };
+   console.log(handleSuccess)
+
+    const dispatch = useAppDispatch();
     const [cityDepartureValue, setCityDepartureValue] = useState<string>('');
     const [cityArrivalValue, setCityArrivalValue] = useState<string>('');
     const [cityDepartureData, setCityDepartureData] = useState<ICityDataProps>({
@@ -70,37 +92,40 @@ const SearchForm = ({ className }: { className: string }) => {
     const [date, setDate] = useState(defaultDate);
     const [isCalendarShow, setCalendarShow] = useState(false)
     const [isButtonClicked, setButtonClicked] = useState(false);
-    
+
 
     // Функция для проверки, является ли дата прошедшей
     const isPastDate = (date: any) => {
-      return date < TodayDate;
+        return date < TodayDate;
     };
-  
-   
-  
+    
+
+
     // Функция для определения, можно ли кликнуть по дате
-    const tileDisabled = ({ date }:{date:any}) => {
-      return isPastDate(date);
+    const tileDisabled = ({ date }: { date: any }) => {
+        return isPastDate(date);
     };
-  
-    const formatedDateFetch = (date:any) => {
+
+    const formatedDateFetch = (date: any) => {
         const formetedDate = moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD');
         return formetedDate
     }
     const handleDepartureChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setCityDepartureValue(e.target.value);
+        console.log(e.target.value)
     };
 
     const handleArrivalChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setCityArrivalValue(e.target.value);
-    };
 
+    };
+    console.log(cityArrivalValue)
     const handleDateChange = (selectedDate: any) => {
         const newDate = moment(selectedDate).format('DD.MM.YYYY');
         setDate(newDate);
         setCalendarShow(prevState => !prevState);
     };
+
     useEffect(() => {
         const fetchCityDeparture = async (cityDeparture: string) => {
             try {
@@ -111,9 +136,9 @@ const SearchForm = ({ className }: { className: string }) => {
                 const response = await axios.post('/api/v1/cities/find', data);
                 const dat = response.data;
                 setCityDepartureData(dat);
+                console.log(dat)
             }
             catch (error) {
-
                 console.error('Ошибка при отправке данных на сервер:', error);
             }
         }
@@ -144,17 +169,19 @@ const SearchForm = ({ className }: { className: string }) => {
         const newDateFormated = formatedDateFetch(date);
         try {
             const datas: IFetchDataRoutes = {
-                CityDeparture: 1,
-                CityArrival: 3,
+                CityDeparture: cityDepartureData.Result[0].Id,
+                CityArrival: cityArrivalData.Result[0].Id,
                 Date: newDateFormated,
                 IsDynamic: true,
             };
             console.log(datas)
             const response = await axios.post('/api/v1/routes/search', datas);
             const dat = response.data;
-           
+            dispatch(setDataRoute(dat));
+            handleSuccess();
+
         } catch (error) {
-           
+
             console.error('Ошибка при отправке данных на сервер:', error);
         } finally {
             setCityDepartureValue('');
@@ -173,10 +200,10 @@ const SearchForm = ({ className }: { className: string }) => {
     return (
         <>
             <form className={`${styles['form-search']} ${className}`}>
-                <div className='form-search__wrapper'>
-                    <label className='form-search__label'>Откуда</label>
-                    <div className='form-search__container'>
-                        <input className='form-search__input'
+                <div className={styles['form-search__wrapper']}>
+                    <label className={styles['form-search__label']}>Откуда</label>
+                    <div className={styles['form-search__container']}>
+                        <input className={styles['form-search__input']}
                             id="departure"
                             name='departure'
                             type="text"
@@ -184,17 +211,21 @@ const SearchForm = ({ className }: { className: string }) => {
                             onChange={handleDepartureChange}
                             placeholder='Пункт отправления'
                         />
-                       
+                        <ArrowForm className={styles['form-search__image']} />
+                    </div>
+                    <div className={styles['form-search__sample']}>
+                        <p className={styles['form-search__text']}>Например:</p>
+                        <button className={styles['form-search__btn']} type='button' onClick={() => setCityDepartureValue(defaultCityForm.Minsk)}>{defaultCityForm.Minsk}</button>
+                        <button className={styles['form-search__btn']} type='button' onClick={() => setCityDepartureValue(defaultCityForm.Mosсow)}>{defaultCityForm.Mosсow}</button>
                     </div>
 
-                   
                 </div>
 
-                <div className='form-search__wrapper'>
-                    <label className='form-search__label'>Куда</label>
+                <div className={styles['form-search__wrapper']}>
+                    <label className={styles['form-search__label']}>Куда</label>
 
                     <input
-                        className='form-search__input'
+                        className={styles['form-search__input']}
                         id="arrival"
                         name='arrival'
                         type="text"
@@ -202,14 +233,19 @@ const SearchForm = ({ className }: { className: string }) => {
                         onChange={handleArrivalChange}
                         placeholder='Пункт назначения'
                     />
-                    
+                    <div className={styles['form-search__sample']}>
+                        <p className={styles['form-search__text']}>Например:</p>
+
+                        <button className={styles['form-search__btn']} type='button' onClick={() => setCityArrivalValue(defaultCityForm.Minsk)}>{defaultCityForm.Minsk}</button>
+                        <button className={styles['form-search__btn']} type='button' onClick={() => setCityArrivalValue(defaultCityForm.Mosсow)}>{defaultCityForm.Mosсow}</button>
+                    </div>
                 </div>
 
-                <div className='form-search__wrapper'>
-                    <label className='form-search__label'>Когда</label>
-                    <div className='form-search__container'>
+                <div className={styles['form-search__wrapper']}>
+                    <label className={styles['form-search__label']}>Когда</label>
+                    <div className={styles['form-search__container']}>
                         <input
-                            className='form-search__input'
+                            className={styles['form-search__input']}
                             id="date"
                             name='date'
                             type="text"
@@ -217,24 +253,34 @@ const SearchForm = ({ className }: { className: string }) => {
                             readOnly
                             onClick={() => setCalendarShow(true)}
                         />
-                       
+                        <div className={styles['form-search__icon-wrapper']}
+                        onClick={() => setCalendarShow(prevState => !prevState)}>
+                            <CalendarIcon
+                                className={styles['form-search__icon']}
+                            />
+                        </div>
+
                     </div>
 
-                    
+                    <div className={styles['form-search__sample']}>
+                        <p className={styles['form-search__text']}>Например:</p>
+                        <button className={styles['form-search__btn']} type='button' onClick={() => setDate(defaultDate)}>{defaultDateForm.Today}</button>
+                        <button className={styles['form-search__btn']} type='button' onClick={() => setDate(defaultNextDate)}>{defaultDateForm.Tomorrow}</button>
+                    </div>
                     {isCalendarShow ?
-                        <div className='form-search__calendar'>
+                        <div className={styles['form-search__calendar']}>
                             <Calendar
                                 onClickDay={handleDateChange}
                                 value={TodayDate}
                                 tileDisabled={tileDisabled}
-                                
+
                             />
                         </div>
                         : null}
-                        
+
                 </div>
-                <div className='form-search__wrapper'>
-                    <button  className='form-search__btn-submit' type='button' onClick={handleSubmit}>Найти билеты</button>
+                <div className={styles['form-search__wrapper']}>
+                    <button className={styles['form-search__btn-submit']} type='button' onClick={handleSubmit}>Найти билеты</button>
                 </div>
             </form>
         </>

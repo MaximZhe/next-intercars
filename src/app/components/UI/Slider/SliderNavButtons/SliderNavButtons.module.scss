@@ -22,3 +22,8 @@
       }
     }
   }
+  @media (max-width: 768px) {
+    .slider-nav{
+      display: none;
+    }
+  }

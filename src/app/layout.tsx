@@ -5,12 +5,15 @@ import './globals.css'
 
 
 import Header from './components/Header/Header'
-import Footer from './components/Footer/Footer'
-import MainMenu from './components/MainMenu/MainMenu'
-import Head from 'next/head'
-import StoreProvider from './redux/StoreProvider/StoreProvider'
 
-const inter = Inter({ subsets: ['latin'] })
+import Head from 'next/head'
+
+import Footer from './components/Footer/Footer'
+import StoreProvider from '@/redux/StoreProvider/StoreProvider'
+import PersistProvider from '@/redux/PersistProvider/PersistProvider'
+import { routesItems } from './constant/constant'
+
+
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -25,21 +28,22 @@ export default function RootLayout({
 }) {
   return (
     <StoreProvider>
-      <html lang="ru">
-        <Head>
-          <meta name="google-site-verification" content="google67984ba37c9a9849.html" />
+     
+        <html lang="ru">
+          <Head>
+            <meta name="google-site-verification" content="google67984ba37c9a9849.html" />
 
-        </Head>
-        <body className={inter.className}>
-          <Header />
-          <MainMenu />
-          <main style={{ maxWidth: '1244px', margin: '0 auto' }}>
-            {children}
-          </main>
+          </Head>
+          <body >
+            <Header />
+            <main style={{ maxWidth: '1244px', margin: '0 auto' }}>
+              {children}
+            </main>
 
-          <Footer />
-        </body>
-      </html>
+            <Footer routes={routesItems} />
+          </body>
+        </html>
+      
     </StoreProvider>
 
   )

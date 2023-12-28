@@ -19,12 +19,17 @@ const ButtonRoutes: FC<IButtonRoutesProps> = ({
   onClick,
 }) => {
   return (
-    <NextLink href={to} as={state} passHref>
-      <a className={`${style['button-more']} ${className}`} onClick={onClick}>
-        {title}
-        <ArrowRight className={style['button-more__icon']} />
-      </a>
-    </NextLink>
+    (<NextLink
+      href={to}
+      as={state}
+      passHref
+      className={`${style['button-more']} ${className}`}
+      onClick={onClick}>
+
+      {title}
+      <ArrowRight className={style['button-more__icon']} />
+
+    </NextLink>)
   );
 };
 

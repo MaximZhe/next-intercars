@@ -3,7 +3,7 @@
 import { FC } from 'react';
 import style from './HumburgerMenu.module.scss';
 
-import { setIsStateMenuMobail } from '@/app/redux/slice/menuMobileStateSlice';
+import { setIsStateMenuMobail } from '@/redux/slice/menuMobileStateSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks/redux';
 
 const HumburgerMenu: FC = () => {

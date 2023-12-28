@@ -16,20 +16,30 @@ const SliderNavButtons: React.FC<SliderNavButtonsProps> = ({
   lastSlide,
   firstSlide
 }) => {
+  const handlePrevButtonClick = () => {
+    handleSlidePrev();
+  };
+
+  const handleNextButtonClick = () => {
+    handleNavButtonNext();
+  };
+
   return (
     <div className={style['slider-nav']}>
       <button
         disabled={firstSlide}
         type='button'
-        className={`${style['slider-nav__btn']} ${firstSlide ? 'disabled' : ''} prev`}
-        onClick={handleSlidePrev}>
+        className={`${style['slider-nav__btn']} ${firstSlide ? style.disabled : ''} prev`}
+        onClick={handlePrevButtonClick}
+      >
         <ArrowIcon />
       </button>
       <button
         disabled={lastSlide}
         type='button'
-        className={`${style['slider-nav__btn']} ${lastSlide ? 'disabled' : ''} next`}
-        onClick={handleNavButtonNext}>
+        className={`${style['slider-nav__btn']} ${lastSlide ? style.disabled : ''} next`}
+        onClick={handleNextButtonClick}
+      >
         <ArrowIcon />
       </button>
     </div>

@@ -14,10 +14,10 @@ import HumburgerMenu from '../UI/HumburgerMenu/HumburgerMenu';
 const Header = () => {
     return (
         <header className={style.header} >
-            <div className={style['container-fluid']}>
+            <div className='container-fluid'>
                 <div className={style['header__wrapper']}>
-                    <Link href='' className={style['header-logo']}>
-                        <Image src={logo} width={225} height={32} alt='' />
+                    <Link href='/'  legacyBehavior>
+                        <Image className={style['header-logo']} src={logo} width={225} height={32} alt='' />
                     </Link>
                     <div className={style.user}>
                         <UserIcon className={style['user__icon']} />

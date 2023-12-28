@@ -1,7 +1,7 @@
 'use client'
 import { useAppDispatch, useAppSelector } from "@/app/hooks/redux";
-import { setIsToggleMenu, setLanguageValue } from "@/app/redux/slice/languageSlice";
-
+import { setIsToggleMenu, setLanguageValue } from "@/redux/slice/languageSlice";
+import style from '../Header.module.scss'
 
 const LanguagePanel = () => {
 
@@ -15,25 +15,25 @@ const LanguagePanel = () => {
         dispatch(setIsToggleMenu(false));
     }
     return (
-        <div className="header__dropdown">
-            <div className={`dropdown ${isOpen ? 'open' : ''}`}>
-                <div className="dropdown__language" onClick={toggleDropdown}>
+        <div className={style['header__dropdown']}>
+            <div className={`${style.dropdown} ${isOpen ? style.open : ''}`}>
+                <div className={style['dropdown__language']} onClick={toggleDropdown}>
                     {language}
                 </div>
                 {isOpen && (
-                    <div className="dropdown-menu">
+                    <div className={style['dropdown-menu']}>
                         <button type='button'
-                            className={`dropdown-item ${language === 'RUS' ? 'active' : ''}`}
+                            className={`${style['dropdown-item']} ${language === 'RUS' ? style.active : ''}`}
                             onClick={() => handleButtonClick('RUS')}>
                             Русский
                         </button>
                         <button type='button'
-                            className={`dropdown-item ${language === 'EN' ? 'active' : ''}`}
+                            className={`${style['dropdown-item']} ${language === 'EN' ? style.active : ''}`}
                             onClick={() => handleButtonClick('EN')}>
                             English
                         </button>
                         <button type='button'
-                            className={`dropdown-item ${language === 'PL' ? 'active' : ''}`}
+                            className={`${style['dropdown-item']} ${language === 'PL' ? style.active : ''}`}
                             onClick={() => handleButtonClick('PL')}>
                             Polski
                         </button>

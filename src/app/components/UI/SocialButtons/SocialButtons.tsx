@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { TelegramShareButton, TwitterShareButton, VKShareButton } from 'react-share';
-import { ReactComponent as TelegramIcon } from '../../../assets/icons/tg-icon.svg';
-import { ReactComponent as TwitterIcon } from '../../../assets/icons/tw-icon.svg';
-import { ReactComponent as VKIcon } from '../../../assets/icons/vk-icon.svg';
-import './SocialButtons.scss';
+import style from './SocialButtons.module.scss';
+import TelegramIcon from '@/app/icons/svg/TelegramIcon';
+import TwitterIcon from '@/app/icons/svg/TwitterIcon';
+import VKIcon from '@/app/icons/svg/VKIcon';
 
 
 interface ISocial {
@@ -17,27 +17,27 @@ const SocialButtons: FC<ISocial> = ({ className, telegram, twitter, vk }) => {
 
 
   return (
-    <div className={`social-buttons ${className}`}>
-      <h4 className='social-buttons__title'>
+    <div className={`${style['social-buttons']} ${className}`}>
+      <h4 className={style['social-buttons__title']}>
         Мы в социальных сетях
       </h4>
-      <div className='social-buttons__wrapper'>
+      <div className={style['social-buttons__wrapper']}>
         <TelegramShareButton
           url={telegram}
-          className='social-buttons__btn'>
-          <TelegramIcon className='social-buttons__icon' />
+          className={style['social-buttons__btn']}>
+          <TelegramIcon className={style['social-buttons__icon' ]}/>
         </TelegramShareButton>
         <TwitterShareButton
-          className='social-buttons__btn'
+          className={style['social-buttons__btn']}
           url={twitter}
         >
-          <TwitterIcon className='social-buttons__icon' />
+          <TwitterIcon className={style['social-buttons__icon' ]}/>
         </TwitterShareButton>
         <VKShareButton
-          className='social-buttons__btn'
+          className={style['social-buttons__btn']}
           url={vk}
         >
-          <VKIcon className='social-buttons__icon' />
+          <VKIcon className={style['social-buttons__icon' ]} />
         </VKShareButton>
       </div>
     </div>

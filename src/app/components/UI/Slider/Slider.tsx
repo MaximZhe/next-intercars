@@ -12,25 +12,26 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import ButtonRoutes from '../Button/ButtonRoutes/ButtonRoutes';
-import RouteItem from '../../RouteItem/RouteItem';
 import { sliderRoutesInternational, sliderRoutesRussia } from '@/app/constant/constant';
+import SlideItem from './SlideItem/SlideItem';
 
 
 
 const Slider = ({ title, className }: { title: string, className: string }) => {
     const [activeTab, setActiveTab] = useState('russia');
     const [swiper, setSwiper] = useState<SwiperType | null>(null);
-    const [isFirstSlide, setIsFirstSlide] = useState(true);
+    const [isFirstSlide, setIsFirstSlide] = useState(false);
     const [isLastSlide, setIsLastSlide] = useState(false);
-    
+
     const handleReachEnd = () => {
         setIsFirstSlide(false);
-        setIsLastSlide(true);
+        setIsLastSlide(false);
     };
 
     const handleReachBeginning = () => {
-        setIsFirstSlide(true);
+        setIsFirstSlide(false);
         setIsLastSlide(false);
+        
     };
 
     useEffect(() => {
@@ -63,14 +64,15 @@ const Slider = ({ title, className }: { title: string, className: string }) => {
                     </h2>
                     <SliderTabsButtons activeTab={activeTab}
                         handleClick={(name) => handleClick(name)}
-                         />
+                    />
                     <SliderNavButtons
                         handleSlidePrev={handleSlidePrev}
                         handleNavButtonNext={handleNavButtonNext}
                         firstSlide={isFirstSlide}
-                        lastSlide={isLastSlide} />
+                        lastSlide={isLastSlide}
+                    />
                 </div>
-                <Swiper className={`${style.slider} ${className}`}
+                <Swiper className={`slider ${className}`}
                     onReachEnd={handleReachEnd}
                     onReachBeginning={handleReachBeginning}
                     onSwiper={setSwiper}
@@ -96,22 +98,22 @@ const Slider = ({ title, className }: { title: string, className: string }) => {
                         sliderRoutesRussia.map((slide) => (
                             <SwiperSlide
                                 key={slide.id}
-                                className={style.slide}
+                                className='slide'
                             >
-                                <RouteItem className={style['slider-main']} data={slide}/>
+                                <SlideItem data={slide} />
                             </SwiperSlide>
                         )) :
                         sliderRoutesInternational.map((slide) => (
                             <SwiperSlide
                                 key={slide.id}
                             >
-                                <RouteItem className={style['slider-main']} data={slide}/>
+                                <SlideItem data={slide} />
                             </SwiperSlide>
                         ))
                     }
                 </Swiper>
                 <div className={style['routes-more']}>
-                    <ButtonRoutes to={'/'} title={'Все маршруты'} className='routes-more__link' />
+                    <ButtonRoutes to={'/'} title={'Все маршруты'} className={style['routes-more__link']} />
                 </div>
             </div>
         </div>
