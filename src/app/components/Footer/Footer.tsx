@@ -26,7 +26,7 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
     return (
         <footer className={style.footer}>
             <div className='container-fluid'>
-            {location.pathname === '/list-result-routes' || location.pathname === '/list-result-routes/choice-tickets' ? null : <Application />}
+            {location.pathname === '/find' || location.pathname === '/list-result-routes/choice-tickets' ? null : <Application />}
                 <div className={style['footer__wrapper']}>
                     <div className={style['footer__top']}>
                         <div className={style['footer-contacts']}>
@@ -55,7 +55,7 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                                 twitter={'https://'}
                                 vk={'https://'} />
                         </div>
-                        <div className={`${style['footer-routes ']}${isOpenRoutes ? style.active : ''}`}>
+                        <div className={`${style['footer-routes']} ${isOpenRoutes ? style.active : ''}`}>
                             <h3 className={style['footer__title']}
                                 onClick={() => setIsOpenRoutes(prev => !prev)}>
                                 Маршруты
@@ -67,7 +67,7 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                                         <Link href={`/route/${item.id}`} className={style['footer-routes__link']}>{item.value}</Link>
                                     </li>)}
                             </ul>
-                            <ButtonRoutes to={'/'} title={'Все маршруты'} className={style['footer-routes__more']}/>
+                            <ButtonRoutes to={{pathname:'/not-found'}} title={'Все маршруты'} className={style['footer-routes__more']}/>
                         </div>
                         <div className={`${style['footer-nav']}  ${isOpenInfo ? style.active : ''}`}>
                             <h3 className={style['footer__title']}
@@ -88,7 +88,7 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/' className={style['footer-nav__link']}>
+                                        <Link href='/not-found' className={style['footer-nav__link']}>
                                             Программа лояльности
                                         </Link>
                                     </li>
@@ -98,22 +98,22 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/' className={style['footer-nav__link']}>
+                                        <Link href='/not-found' className={style['footer-nav__link']}>
                                             Сотрудничество
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/rules'  className={style['footer-nav__link']}>
+                                        <Link href='/pages/agreement'  className={style['footer-nav__link']}>
                                             Правила
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/pay' className={style['footer-nav__link']}>
+                                        <Link href='/not-found' className={style['footer-nav__link']}>
                                             Как оплатить
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/contacts'  className={style['footer-nav__link']}>
+                                        <Link href='/pages/kontakts'  className={style['footer-nav__link']}>
                                             Контакты
                                         </Link>
                                     </li>

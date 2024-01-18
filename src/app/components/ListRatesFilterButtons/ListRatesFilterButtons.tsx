@@ -10,7 +10,7 @@ interface IButtonFilter{
     isSort:boolean
 }
 const ListRatesFilterButtons:FC<IButtonFilter> = ({ title, onClick,isSort}) => {
-    
+    console.log(isSort)
     return (
         <Button className={`${style['filter-button']} ${!isSort ? '' : style.active}`} onClick={onClick}>
             <span className={style['filter-button__text']}>

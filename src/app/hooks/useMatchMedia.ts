@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 
 const queries = [
   "(max-width: 600px)",
@@ -13,7 +13,7 @@ export const useMatchMedia = () => {
 
   const [values, setValues] = useState(getValues);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const handler = () => setValues(getValues);
 
     mediaQueryLists.forEach((list) => list.addEventListener("change", handler));

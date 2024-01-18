@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-sync-scripts */
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -12,6 +13,12 @@ import Footer from './components/Footer/Footer'
 import StoreProvider from '@/redux/StoreProvider/StoreProvider'
 import PersistProvider from '@/redux/PersistProvider/PersistProvider'
 import { routesItems } from './constant/constant'
+import MapLoader from './components/MapLoader/MapLoader'
+import Script from 'next/script'
+<Script
+        src='https://api-maps.yandex.ru/2.1/?apikey=c9273e50-6b61-4b69-a5a9-4ba1f010ec6a&lang=ru_RU'
+        
+      />
 
 
 
@@ -28,22 +35,25 @@ export default function RootLayout({
 }) {
   return (
     <StoreProvider>
-     
+      
         <html lang="ru">
           <Head>
             <meta name="google-site-verification" content="google67984ba37c9a9849.html" />
-
+            
           </Head>
           <body >
             <Header />
             <main style={{ maxWidth: '1244px', margin: '0 auto' }}>
-              {children}
+              
+                 {children}
+              
+             
             </main>
 
             <Footer routes={routesItems} />
+            
           </body>
         </html>
-      
     </StoreProvider>
 
   )

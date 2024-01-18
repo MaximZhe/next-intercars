@@ -1,12 +1,18 @@
 .route-card {
   height: 280px;
+  margin-top: 24px;
   &__item {
     display: flex !important;
     align-items: flex-end;
     border-radius: 12px;
     padding: 0 15px 15px 15px;
     height: 100%;
+    width:100%;
     transition: 0.3s ease-in-out;
+    & > a {
+      max-width: 350px;
+      width: 100%;
+    }
     &:hover > div {
       background: #cbcaca;
     }

@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 }
 const Homepage = () => {
   return (
+    
     <div >
         <div className={style.offer}>
             <div className={style['offer__wrapper']}>

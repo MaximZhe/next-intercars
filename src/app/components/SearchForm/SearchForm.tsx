@@ -70,7 +70,7 @@ const SearchForm:FC <ISearchForm> = ({ className }) => {
     const router = useRouter();
 
     const handleSuccess = () => {
-        router.push('/SearchResultPage', undefined);
+        router.push('/find', undefined);
       };
    console.log(handleSuccess)
 
@@ -92,14 +92,17 @@ const SearchForm:FC <ISearchForm> = ({ className }) => {
     const [date, setDate] = useState(defaultDate);
     const [isCalendarShow, setCalendarShow] = useState(false)
     const [isButtonClicked, setButtonClicked] = useState(false);
-
+    
 
     // Функция для проверки, является ли дата прошедшей
     const isPastDate = (date: any) => {
         return date < TodayDate;
     };
     
-
+    const handleArrowClick = () => {
+        setCityDepartureValue(cityArrivalValue);
+        setCityArrivalValue(cityDepartureValue);
+      };
 
     // Функция для определения, можно ли кликнуть по дате
     const tileDisabled = ({ date }: { date: any }) => {
@@ -177,6 +180,7 @@ const SearchForm:FC <ISearchForm> = ({ className }) => {
             console.log(datas)
             const response = await axios.post('/api/v1/routes/search', datas);
             const dat = response.data;
+            console.log(dat)
             dispatch(setDataRoute(dat));
             handleSuccess();
 
@@ -211,7 +215,7 @@ const SearchForm:FC <ISearchForm> = ({ className }) => {
                             onChange={handleDepartureChange}
                             placeholder='Пункт отправления'
                         />
-                        <ArrowForm className={styles['form-search__image']} />
+                        <ArrowForm className={styles['form-search__image']} onClick={handleArrowClick}/>
                     </div>
                     <div className={styles['form-search__sample']}>
                         <p className={styles['form-search__text']}>Например:</p>

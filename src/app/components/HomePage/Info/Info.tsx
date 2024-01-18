@@ -26,7 +26,7 @@ const Info = () => {
                             маршрутов, периодически 
                             появляются уникальные предложения. Бронируйте места в автобусах и выкупайте их по низкой цене.
                         </p>
-                        <Link href='' className={style['info__link']}>
+                        <Link href='/SearchResultPage' className={style['info__link']}>
                             Забронировать билет на автобус
                         </Link>
                     </div>

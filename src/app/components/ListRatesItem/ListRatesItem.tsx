@@ -47,7 +47,7 @@ const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
       <div className={style['list-item__wrapper']}>
         <div className={style['list-item-info']}>
           <div className={style['list-item-info__top']}>
-            <div className={style['list-item__data text-left']}>
+            <div className={`${style['list-item__data']} ${style['text-left']}`}>
               <p className={style['list-item__date']}>{formatedDate(data.DateDepart)}</p>
               <div className={style['list-item__time']}>{data.TimeDepart}</div>
             </div>
@@ -65,7 +65,7 @@ const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
             </div>
           </div>
           <>
-            <div className={`${style['list-item-spent__img--mobail ']} ${transfer !== 0 ? style['list-item-spent__img--mobail-transfer'] : ''}`}></div>
+            <div className={`${style['list-item-spent__img--mobail']} ${transfer !== 0 ? style['list-item-spent__img--mobail-transfer'] : ''}`}></div>
           </>
           <div className={style['list-item-info__bottom']}>
             <div className={style['list-item__place']}>

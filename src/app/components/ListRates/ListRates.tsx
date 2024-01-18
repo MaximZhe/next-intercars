@@ -42,13 +42,13 @@ const ListRates: FC = () => {
  const [loading, setLoading] = useState(true);
   
   const [routes, setRoutes] = useState<IItemRoutes[]>([]);
-  const [isSortPrice, setIsSortPrice] = useState(false);
-  const [isSortTimeDepart, setIsSortTimeDepart] = useState(false);
-  const [isSortTimeArrive, setIsSortTimeArrive] = useState(false);
-  const [isSortTimeFull, setIsSortTimeFull] = useState(false);
+  const [activeButton, setActiveButton] = useState('Стоимость');
   const { dataRoute } = useAppSelector((state) => state.dataRouteReduser);
   // const { Routes } = useAppSelector(state => state.storegeRouteReduser)
+console.log(dataRoute)
 
+
+  
   useEffect(() => {
     const fetchDynamicRoutes = async (id: string) => {
 
@@ -104,8 +104,8 @@ const ListRates: FC = () => {
     return routes.map(item => item.Price[2].Ptar).sort((a, b) => a - b);
   }
   const sortedRoutesPrice = () => {
-    setIsSortPrice(prev => !prev);
-    if (isSortPrice) {
+    setActiveButton('Стоимость');
+    if (activeButton === 'Стоимость') {
       const newArrayRoutes = [...routes].sort((a, b) =>
       {
         if (a.Price[2].Ptar && b.Price[2].Ptar) {
@@ -127,8 +127,8 @@ const ListRates: FC = () => {
     }
   }
   const sortedRoutesTimeDepart = () => {
-    setIsSortTimeDepart(prev => !prev)
-    if (isSortTimeDepart) {
+    setActiveButton('Время отправления')
+    if (activeButton ===  'Время отправления') {
       const newArrayRoutes = [...routes].sort((a, b) => {
         if (a.TimeDepart && b.TimeDepart) {
           return a.TimeDepart.localeCompare(b.TimeDepart);
@@ -152,8 +152,8 @@ const ListRates: FC = () => {
   //   return parseInt(newTime)
   // }
   const sortedRoutesTimeArrive = () => {
-    setIsSortTimeArrive(prev => !prev)
-    if (isSortTimeArrive) {
+    setActiveButton('Время прибытия')
+    if (activeButton === 'Время прибытия') {
       const newArrayRoutes = [...routes].sort((a, b) => {
         if (a.TimeArrive && b.TimeArrive) {
           return a.TimeArrive.localeCompare(b.TimeArrive);
@@ -173,8 +173,8 @@ const ListRates: FC = () => {
     }
   }
   const sortedRoutesTimeFull = () => {
-    setIsSortTimeFull(prev => !prev)
-    if (isSortTimeFull) {
+    setActiveButton( 'Время в пути')
+    if (activeButton === 'Время в пути') {
       const newArrayRoutes = [...routes].sort((a, b) => {
         if (a.Hour && b.Hour) {
           const hoursComparison = a.Hour.localeCompare(b.Hour);
@@ -210,10 +210,10 @@ const ListRates: FC = () => {
           <div className={style['rates__header']} >
             {/* {!isMobile ? <Breadcrumbs /> : null} */}
             <div className={style['rates__filter']} >
-              <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={isSortTimeDepart} title={'Время отправления'} />
-              <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={isSortTimeArrive} title={'Время прибытия'} />
-              <ListRatesFilterButtons onClick={sortedRoutesTimeFull} isSort={isSortTimeFull} title={'Время в пути'} />
-              <ListRatesFilterButtons onClick={sortedRoutesPrice} title={'Стоимость'} isSort={isSortPrice} />
+              <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={activeButton === 'Время отправления'} title={'Время отправления'} />
+              <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={activeButton === 'Время прибытия'} title={'Время прибытия'} />
+              <ListRatesFilterButtons onClick={sortedRoutesTimeFull} isSort={activeButton === 'Время в пути'} title={'Время в пути'}/>
+              <ListRatesFilterButtons onClick={sortedRoutesPrice} title={'Стоимость'} isSort={activeButton === 'Стоимость'} />
             </div>
           </div>
 

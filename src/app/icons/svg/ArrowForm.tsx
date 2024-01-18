@@ -1,8 +1,8 @@
 import React from 'react';
 
-const ArrowForm = ({ className }: { className?: string }) => {
+const ArrowForm = ({ className, onClick }: { className?: string, onClick?: () => void }) => {
     return (
-        <svg className={className} width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg onClick={onClick} className={className} width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_2985_5275)">
                 <circle cx="16.3458" cy="16" r="15" fill="white" stroke="#0243A6" strokeWidth="2" />
                 <path fillRule="evenodd" clipRule="evenodd" d="M14.1565 16.4999L11.1565 19.4999L14.1565 22.4999L13.0958 23.5606L9.56546 20.0303C9.27257 19.7374 9.27257 19.2625 9.56546 18.9696L13.0958 15.4393L14.1565 16.4999Z" fill="#0243A6" />

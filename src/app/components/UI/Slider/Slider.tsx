@@ -113,7 +113,7 @@ const Slider = ({ title, className }: { title: string, className: string }) => {
                     }
                 </Swiper>
                 <div className={style['routes-more']}>
-                    <ButtonRoutes to={'/'} title={'Все маршруты'} className={style['routes-more__link']} />
+                    <ButtonRoutes to={{ pathname: '/' }} title={'Все маршруты'} className={style['routes-more__link']} />
                 </div>
             </div>
         </div>

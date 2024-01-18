@@ -98,3 +98,6 @@ img {
 .container-fluid{
   max-width: 100%;
 }
+.menu__theme--blue{
+  background:#0243a6!important;
+}

@@ -1,4 +1,4 @@
-import NextLink from 'next/link';
+import Link from 'next/link';
 import ArrowRight from '@/app/icons/svg/ArrowRight';
 import style from './ButtonRoutes.module.scss';
 import { FC } from 'react';
@@ -6,9 +6,15 @@ import { FC } from 'react';
 interface IButtonRoutesProps {
   className: string;
   title: string;
-  to: string;
+  to: {
+    pathname?:string,
+    query?: {
+      slug?:string
+    }
+  };
   state?: string;
   onClick?: () => void;
+  
 }
 
 const ButtonRoutes: FC<IButtonRoutesProps> = ({
@@ -19,7 +25,7 @@ const ButtonRoutes: FC<IButtonRoutesProps> = ({
   onClick,
 }) => {
   return (
-    (<NextLink
+    (<Link
       href={to}
       as={state}
       passHref
@@ -29,7 +35,7 @@ const ButtonRoutes: FC<IButtonRoutesProps> = ({
       {title}
       <ArrowRight className={style['button-more__icon']} />
 
-    </NextLink>)
+    </Link>)
   );
 };
 
