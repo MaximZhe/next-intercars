@@ -11,11 +11,14 @@
     font-weight: 700;
     max-width: 213px;
     width: 100%;
+    color:#ffffff;
+    padding-top: 100px;
   }
   &__text {
     margin-top: 8px;
     font-size: 18px;
     line-height: 28px;
+    color:#FFFFFF;
   }
   &__link {
     margin-top: 32px;
@@ -28,5 +31,16 @@
     line-height: 24px;
     font-weight: 500;
     transition: 0.3s ease-in-out;
+    background:#FFFFFF;
+    & > span {
+        color:#005EE4;
+    }
+    &:hover{
+        background:none;
+        box-shadow: 0px 0px 4px #FFFFFF;
+        & > span {
+            color:#FFFFFF;
+        }
+    }
   }
 }

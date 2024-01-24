@@ -40,13 +40,13 @@ const Menu:FC<IMenuProps> = ({className}) => {
                         <div className={style['menu-dropdown']}
                             onMouseEnter={() => setIsOpenDropdown(true)}
                             onMouseLeave={() => setIsOpenDropdown(false)}>
-                            <Link href='/SalesPage'  className={style['menu-dropdown__link']}>
+                            <Link href='/akcii'  className={style['menu-dropdown__link']}>
                                 Акции
                             </Link>
-                            <Link href='/news'  className={style['menu-dropdown__link']}>
+                            <Link href='/novosti'  className={style['menu-dropdown__link']}>
                                 Новости
                             </Link>
-                            <Link href='/not-found' className={style['menu-dropdown__link']}>
+                            <Link href='/404' className={style['menu-dropdown__link']}>
                                 Программа лояльности
                             </Link>
                         </div>

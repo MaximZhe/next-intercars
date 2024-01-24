@@ -26,7 +26,7 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
     return (
         <footer className={style.footer}>
             <div className='container-fluid'>
-            {location.pathname === '/find' || location.pathname === '/list-result-routes/choice-tickets' ? null : <Application />}
+            {/* {location.pathname === '/find' || location.pathname === '/list-result-routes/choice-tickets' ? null : <Application />} */}
                 <div className={style['footer__wrapper']}>
                     <div className={style['footer__top']}>
                         <div className={style['footer-contacts']}>

@@ -50,30 +50,10 @@
 }
 .news-single-actions {
     min-height: 280px;
-  background: url("../../assets/images/bg-action-card.png") no-repeat;
+  background: url("../../../icons/image/bg-action-card.png") no-repeat;
   background-size: cover;
   background-position-x: right;
   background-position-y: top;
-  &__title{
-    color:#ffffff;
-    padding-top: 100px;
-  }
-  &__text{
-    color:#FFFFFF;
-  }
-  &__link{
-    background:#FFFFFF;
-    & > span {
-        color:#005EE4;
-    }
-    &:hover{
-        background:none;
-        box-shadow: 0px 0px 4px #FFFFFF;
-        & > span {
-            color:#FFFFFF;
-        }
-    }
-  }
 }
 @media (max-width: 991px) {
 }

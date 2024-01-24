@@ -33,7 +33,7 @@ const ItemSalesPage = ({ dataItem }: { dataItem: IItemSalesPageProps }) => {
             </p>
             <ButtonRoutes
                 to={{
-                    pathname: `/SalesPage/${en}`,
+                    pathname: `/akcii/${en}`,
                 }} 
                 
                 title={'Подробнее'}

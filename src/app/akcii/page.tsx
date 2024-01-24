@@ -8,9 +8,13 @@ import RouteItem from '../components/RouteItem/RouteItem';
 import ButtonRoutes from '../components/UI/Button/ButtonRoutes/ButtonRoutes';
 import Button from '../components/UI/Button/Button';
 import ArrowRight from '../icons/svg/ArrowRight';
+import Breadcrumbs from '../components/UI/Breadcrumbs/Breadcrumbs';
 
 
-
+const links = [
+    { label: 'Главная', href: '/' },
+    { label: 'Акции', href: '/akcii', active: true },
+  ];
 const SalesPage = () => {
     
     const [visibleItems, setVisibleItems] = useState(4);
@@ -26,7 +30,7 @@ const SalesPage = () => {
                 <div className='container'>
                     <div className={style['sales__wrapper']}>
                         <div className={style['sales__content']}>
-                          
+                        <Breadcrumbs links={links} />
                             <h1 className={style['sales__title']}>
                                 Выгодные предложения Intercars
                             </h1>
@@ -50,7 +54,7 @@ const SalesPage = () => {
 
                             ))}
                             
-                            <ButtonRoutes to={{pathname:'/not-found'}} title={'Другие популярные маршруты'} className={`${style['sales__more']}`} />
+                            <ButtonRoutes to={{pathname:'/404'}} title={'Другие популярные маршруты'} className={`${style['sales__more']}`} />
                         </div>
                     </div>
 

@@ -1,20 +1,23 @@
+'use client'
 import Link from 'next/link';
 import ArrowRight from '@/app/icons/svg/ArrowRight';
 import style from './ButtonRoutes.module.scss';
 import { FC } from 'react';
 
+
 interface IButtonRoutesProps {
   className: string;
   title: string;
   to: {
-    pathname?:string,
+    pathname?: string,
     query?: {
-      slug?:string
+      slug?: string,
+      newsslug?:string,
     }
   };
   state?: string;
   onClick?: () => void;
-  
+
 }
 
 const ButtonRoutes: FC<IButtonRoutesProps> = ({
@@ -24,6 +27,7 @@ const ButtonRoutes: FC<IButtonRoutesProps> = ({
   state,
   onClick,
 }) => {
+
   return (
     (<Link
       href={to}
