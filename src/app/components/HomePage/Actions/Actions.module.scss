@@ -22,11 +22,12 @@
     color: #005ee4;
     font-weight: 500;
     line-height: 24px;
-    transition: 0.3s ease-in-out;
+    transition: ease-out .8s;
+    
     &:hover {
-      background: transparent;
-      color: #ffffff;
-      box-shadow: 0px 0px 3px #ffffff;
+      background:transparent;
+      color:#ffffff;
+      box-shadow: inset 400px 50px 0 0 #2b394d;
     }
   }
   &__img {

@@ -211,15 +211,17 @@
     justify-content: center;
     align-items: center;
     border-radius: 7px;
-    background: #005ee4;
+    background-size: 300% 100%;
     color: #ffffff;
     font-size: 16px;
     font-weight: 500;
     line-height: 24px;
-    transition: 0.5s ease;
+    transition: all 1s ease-in-out;
     &:hover {
-      background: #0a2a56;
+      background-position: 100% 0;
+      transition: all 1s ease-in-out; 
     }
+    background-image: linear-gradient(to right, #0a2a56, #005ee4, #0a2a56, #005ee4);
   }
 }
 .list-item-offer {

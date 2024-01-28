@@ -2,7 +2,11 @@
 import Menu from '@/app/components/Header/Menu/Menu';
 import style from './Rules.module.scss';
 import Link from 'next/link';
-
+import Breadcrumbs from '@/app/components/UI/Breadcrumbs/Breadcrumbs';
+const links = [
+    { label: 'Главная', href: '/' },
+    { label: 'Правила', href: '/pages/agreement', active: true },
+  ];
 const RulesPage = () => {
     return (
         <>
@@ -10,7 +14,7 @@ const RulesPage = () => {
             <section className={style.rules}>
                 <div className='container'>
                     <div className={style['rules__wrapper']}>
-                        {/* <Breadcrumbs /> */}
+                        <Breadcrumbs links={links} />
                         <div className={style['rules-item']}>
                             <h1 className={style['rules-item__main-title']}>
                                 Правила для пассажиров

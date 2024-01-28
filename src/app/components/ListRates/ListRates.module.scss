@@ -14,7 +14,7 @@
     &__header{
         display: flex;
         align-items:center;
-        justify-content: flex-end;
+        justify-content: space-between;
     }
     &__filter{
         display: flex;
@@ -54,6 +54,11 @@
         }
         &__form{
             flex-direction: column;
+        }
+        &__header{
+            & > div:nth-child(1){
+                display: none;
+            }
         }
     }
   }

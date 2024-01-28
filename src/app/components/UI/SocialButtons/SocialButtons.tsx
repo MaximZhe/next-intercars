@@ -4,6 +4,7 @@ import style from './SocialButtons.module.scss';
 import TelegramIcon from '@/app/icons/svg/TelegramIcon';
 import TwitterIcon from '@/app/icons/svg/TwitterIcon';
 import VKIcon from '@/app/icons/svg/VKIcon';
+import Link from 'next/link';
 
 
 interface ISocial {
@@ -22,23 +23,21 @@ const SocialButtons: FC<ISocial> = ({ className, telegram, twitter, vk }) => {
         Мы в социальных сетях
       </h4>
       <div className={style['social-buttons__wrapper']}>
-        <TelegramShareButton
-          url={telegram}
+        <Link target='_blank' href={telegram}
+          
           className={style['social-buttons__btn']}>
           <TelegramIcon className={style['social-buttons__icon' ]}/>
-        </TelegramShareButton>
-        <TwitterShareButton
+        </Link>
+        <Link target='_blank' href={twitter}
           className={style['social-buttons__btn']}
-          url={twitter}
         >
           <TwitterIcon className={style['social-buttons__icon' ]}/>
-        </TwitterShareButton>
-        <VKShareButton
+        </Link>
+        <Link href={vk} target='_blank'
           className={style['social-buttons__btn']}
-          url={vk}
         >
           <VKIcon className={style['social-buttons__icon' ]} />
-        </VKShareButton>
+        </Link>
       </div>
     </div>
   );

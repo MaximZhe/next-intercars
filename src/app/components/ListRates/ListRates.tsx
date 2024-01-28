@@ -11,17 +11,20 @@ import ListRatesFilterButtons from '../ListRatesFilterButtons/ListRatesFilterBut
 // import { setStoregeRoute } from '../../redux/slice/storegeDataRoute';
 import { GridLoader } from 'react-spinners';
 import { IItemCarrierRoutes, IItemRoutes, ITariffData } from '@/app/types/types';
-import { useMatchMedia } from '@/app/hooks/useMatchMedia';
 import { useAppSelector } from '@/app/hooks/redux';
 import ListRatesItem from '../ListRatesItem/ListRatesItem';
+import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
 
 export interface IRoute {
   CarrierRoutes: IItemCarrierRoutes[];
 }
 const ListRates: FC = () => {
 
-  const { isMobile} = useMatchMedia();
-
+  
+  const links = [
+    { label: 'Главная', href: '/' },
+    { label: 'Поиск билетов', href: '/find', active: true },
+  ];
   // const formatedPrice = (price: number) => {
   //   return Math.floor(price);
   // }
@@ -208,7 +211,7 @@ console.log(dataRoute)
       <div className='container'>
         <div className={style['rates__wrapper']} >
           <div className={style['rates__header']} >
-            {/* {!isMobile ? <Breadcrumbs /> : null} */}
+          <Breadcrumbs links={links} />
             <div className={style['rates__filter']} >
               <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={activeButton === 'Время отправления'} title={'Время отправления'} />
               <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={activeButton === 'Время прибытия'} title={'Время прибытия'} />

@@ -1,74 +1,76 @@
-
-  .slider-main {
-    margin-top: 32px;
-    height: 280px;
-    &__item {
-      display: flex !important;
-      align-items: flex-end;
-      border-radius: 12px;
-      padding: 0 15px 15px 15px;
-      height: 100%;
-      transition: 0.3s ease-in-out;
-      cursor:pointer;
-      &[data-item="1"] {
-        background: url("../../../../icons/image/slide1.jpg") no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-      &[data-item="2"] {
-        background: url("../../../../icons/image/slide2.jpg") no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-      &[data-item="3"] {
-        background: url("../../../../icons/image/slide3.jpg") no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-      &[data-item="4"] {
-        background: url("../../../../icons/image/slide2.jpg") no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-      &[data-item="5"] {
-        background: url("../../../../icons/image/slide3.jpg") no-repeat;
-      }
-      &[data-item="6"] {
-        background: url("../../../../icons/image/slide1.jpg") no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-      &[data-item="7"] {
-        background: url("../../../../icons/image/slide2.jpg") no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-      &:hover > div {
-        background: #cbcaca;
-      }
+.slider-main {
+  margin-top: 32px;
+  height: 280px;
+  &__item {
+    display: flex !important;
+    align-items: flex-end;
+    border-radius: 12px;
+    padding: 0 15px 15px 15px;
+    height: 100%;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+    &[data-item="1"] {
+      background: url("../../../../icons/image/slide1.jpg") no-repeat;
+      background-size: cover;
+      background-position: center;
     }
-    &__content {
-      border-radius: 8px;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 12px 16px;
+    &[data-item="2"] {
+      background: url("../../../../icons/image/slide2.jpg") no-repeat;
+      background-size: cover;
+      background-position: center;
     }
-    &__name {
-      font-size: 16px;
-      line-height: 24px;
-      color: #2b394d;
+    &[data-item="3"] {
+      background: url("../../../../icons/image/slide3.jpg") no-repeat;
+      background-size: cover;
+      background-position: center;
     }
-    &__price {
-      font-size: 16px;
-      line-height: 24px;
-      font-weight: 500;
-      color: #005ee4;
-      & > span {
-        color: #005ee4;
-      }
-      
+    &[data-item="4"] {
+      background: url("../../../../icons/image/slide2.jpg") no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+    &[data-item="5"] {
+      background: url("../../../../icons/image/slide3.jpg") no-repeat;
+    }
+    &[data-item="6"] {
+      background: url("../../../../icons/image/slide1.jpg") no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+    &[data-item="7"] {
+      background: url("../../../../icons/image/slide2.jpg") no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+    &:hover > div {
+      background: transparent;
+      box-shadow: inset 0 0 0 50px #cbcaca;
     }
   }
+  &__content {
+    border-radius: 8px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    box-shadow: inset 0 0 0 0 #cbcaca;
+    -webkit-transition: ease-out .8s;
+    transition: ease-out .8s;
+  }
+  &__name {
+    font-size: 16px;
+    line-height: 24px;
+    color: #2b394d;
+  }
+  &__price {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+    color: #005ee4;
+    & > span {
+      color: #005ee4;
+    }
+  }
+}

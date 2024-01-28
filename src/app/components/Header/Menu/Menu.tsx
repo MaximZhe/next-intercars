@@ -9,6 +9,7 @@ import ArrowIcon from '@/app/icons/svg/ArrowIcon';
 import UserIcon from '@/app/icons/svg/UserIcon';
 import { useAppDispatch, useAppSelector } from '@/app/hooks/redux';
 import { setLanguageValue } from '@/redux/slice/languageSlice';
+import { setIsStateMenuMobail } from '@/redux/slice/menuMobileStateSlice';
 
 interface IMenuProps{
     className?: string
@@ -40,20 +41,29 @@ const Menu:FC<IMenuProps> = ({className}) => {
                         <div className={style['menu-dropdown']}
                             onMouseEnter={() => setIsOpenDropdown(true)}
                             onMouseLeave={() => setIsOpenDropdown(false)}>
-                            <Link href='/akcii'  className={style['menu-dropdown__link']}>
+                            <Link href='/akcii'  
+                            className={style['menu-dropdown__link']}
+                            onClick={() => dispatch(setIsStateMenuMobail(!isShow))}>
                                 Акции
                             </Link>
-                            <Link href='/novosti'  className={style['menu-dropdown__link']}>
+                            <Link href='/novosti'  
+                            className={style['menu-dropdown__link']}
+                            onClick={() => dispatch(setIsStateMenuMobail(!isShow))}>
                                 Новости
                             </Link>
-                            <Link href='/404' className={style['menu-dropdown__link']}>
+                            <Link href='/pages/programma-loyalnosti'
+                             className={style['menu-dropdown__link']}
+                             onClick={() => dispatch(setIsStateMenuMobail(!isShow))}>
                                 Программа лояльности
                             </Link>
                         </div>
                     </div>
-                    <Link className={style['menu__item']} href='/not-found'>Сотрудничество</Link>
-                    <Link className={style['menu__item']} href='/not-found'>Оплата</Link>
-                    <Link className={style['menu__item']} href='/pages/agreement' >Правила</Link>
+                    <Link className={style['menu__item']} href='/pages/agents'
+                    onClick={() => dispatch(setIsStateMenuMobail(!isShow))}>Сотрудничество</Link>
+                    <Link className={style['menu__item']} href='/pages/oplata'
+                    onClick={() => dispatch(setIsStateMenuMobail(!isShow))}>Оплата</Link>
+                    <Link className={style['menu__item']} href='/pages/agreement'
+                    onClick={() => dispatch(setIsStateMenuMobail(!isShow))} >Правила</Link>
                 </nav>
                 
                     <div className={`${style['dropdown-menu']} ${style['dropdown-menu--mobail']}`}>

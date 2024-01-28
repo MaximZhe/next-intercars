@@ -2,54 +2,64 @@ import { FC } from 'react';
 import wifi from '../../icons/image/Wi-Fi.svg';
 import air from '../../icons/image/Air Cond.svg';
 import usb from '../../icons/image/USB.svg';
+import baggage from '../../icons/image/baggage.svg';
+import foldingBacks from '../../icons/image/FoldingBacks.svg'
 import { IItemBusOptions } from '@/app/types/types';
 import Image from 'next/image';
 import style from '../ListRatesItem/ListRatesItem.module.scss'
 
-
 interface IBusOptions {
   options: IItemBusOptions[]
 }
-const ListItemIcons: FC<IBusOptions> = ({ options }) => {
+
+const busOptionsName = [
+{name:'IsAirConditioning',title:'Кондиционер'}, 
+{name:'isWifi',title:'Wi-fi в автобусе'},
+{name:'IsCharger',title:'Индивидуальная розетка'},
+{name:'IsMorePlace',title:''},
+{name:'IsSelectPlace',title:''},
+{name:'IsFoldingBacks',title:'Сиденья откидываются'},
+{name:'IsBaggage',title:'Место дополнительного багажа'} ];
+
+const getIconSrc = (name: string): string => {
+  switch (name) {
+    case 'IsAirConditioning':
+      return air;
+    case 'isWifi':
+      return wifi;
+    case 'IsCharger':
+      return usb;
+    case 'IsFoldingBacks':
+      return foldingBacks;
+    case 'IsBaggage':
+      return baggage;
+    default:
+      return '';
+  }
+};
+const getIconTooltip = (name: string): any => {
+  const icon = busOptionsName.find(option => option.name === name);
+  return icon ? icon.title : '';
+};
+const ListitlemIcons: FC<IBusOptions> = ({ options }) => {
   return (
     <div className={style['list-item-icons']}>
-      {options[0].IsEnabled ?
-        <div className={style['list-item-icons__item']}>
-          <Image width={24} height={24}  src={wifi} alt='' />
-        </div>
-        : null}
-        {options[1].IsEnabled ?
-        <div className={style['list-item-icons__item']}>
-          <Image width={24} height={24}  src={usb} alt='' />
-        </div>
-        : null}
-        {options[2].IsEnabled ?
-        <div className={style['list-item-icons__item']}>
-          <Image width={24} height={24}  src={wifi} alt='' />
-        </div>
-        : null}
-        {options[3].IsEnabled ?
-        <div className={style['list-item-icons__item']}>
-          <Image width={24} height={24}  src={wifi} alt='' />
-        </div>
-        : null}
-        {options[4].IsEnabled ?
-        <div className={style['list-item-icons__item']}>
-          <Image width={24} height={24}  src={wifi} alt='' />
-        </div>
-        : null}
-        {options[5].IsEnabled ?
-        <div className={style['list-item-icons__item']}>
-          <Image  width={24} height={24}  src={wifi} alt='' />
-        </div>
-        : null}
-        {options[6].IsEnabled ?
-        <div className={style['list-item-icons__item']}>
-          <Image width={24} height={24} src={air} alt='' />
-        </div>
-        : null}
+      {options.map((option, index) => {
+        if (option.IsEnabled && busOptionsName.some(item => item.name === option.Name)) {
+          const iconSrc = getIconSrc(option.Name);
+          const tooltip = getIconTooltip(option.Name);
+          return (
+            iconSrc !== '' ?
+            <div key={index} className={style['list-item-icons__item']}>
+              <Image width={24} height={24} src={iconSrc} alt={tooltip} title={tooltip} />
+            </div>
+            : null
+          );
+        }
+        return null;
+      })}
     </div>
   );
 };
 
-export default ListItemIcons;
+export default ListitlemIcons;

@@ -101,3 +101,8 @@ img {
 .menu__theme--blue{
   background:#0243a6!important;
 }
+.loading-spiner{
+  display: flex;
+  justify-content: center;
+
+}

@@ -51,9 +51,9 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                             </ul>
                             <SocialButtons
                                 className={`${style['footer-social']}`}
-                                telegram={'https://'}
-                                twitter={'https://'}
-                                vk={'https://'} />
+                                telegram={'https://t.me/intercars_europe'}
+                                twitter={'https://twitter.com/intercars_ru'}
+                                vk={'https://vk.com/public201988592'} />
                         </div>
                         <div className={`${style['footer-routes']} ${isOpenRoutes ? style.active : ''}`}>
                             <h3 className={style['footer__title']}
@@ -64,10 +64,10 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                             <ul className={`${style['footer__list']} ${style['footer-routes__list']}`}>
                                 {routes.map((item) =>
                                     <li key={item.id} className={style['footer-routes__item']}>
-                                        <Link href={`/route/${item.id}`} className={style['footer-routes__link']}>{item.value}</Link>
+                                        <Link href={`/404`} className={style['footer-routes__link']}>{item.value}</Link>
                                     </li>)}
                             </ul>
-                            <ButtonRoutes to={{pathname:'/not-found'}} title={'Все маршруты'} className={style['footer-routes__more']}/>
+                            <ButtonRoutes to={{pathname:'/404'}} title={'Все маршруты'} className={style['footer-routes__more']}/>
                         </div>
                         <div className={`${style['footer-nav']}  ${isOpenInfo ? style.active : ''}`}>
                             <h3 className={style['footer__title']}
@@ -83,22 +83,22 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/news'  className={style['footer-nav__link']}>
+                                        <Link href='/novosti'  className={style['footer-nav__link']}>
                                             Новости
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/not-found' className={style['footer-nav__link']}>
+                                        <Link href='/pages/programma-loyalnosti' className={style['footer-nav__link']}>
                                             Программа лояльности
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/promos'  className={style['footer-nav__link']}>
+                                        <Link href='/akcii'  className={style['footer-nav__link']}>
                                             Акции
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/not-found' className={style['footer-nav__link']}>
+                                        <Link href='/pages/agents' className={style['footer-nav__link']}>
                                             Сотрудничество
                                         </Link>
                                     </li>
@@ -108,7 +108,7 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                                         </Link>
                                     </li>
                                     <li className={style['footer-nav__item']}>
-                                        <Link href='/not-found' className={style['footer-nav__link']}>
+                                        <Link href='/pages/oplata' className={style['footer-nav__link']}>
                                             Как оплатить
                                         </Link>
                                     </li>
@@ -122,9 +122,9 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                         </div>
                         <SocialButtons
                                 className={`${style['footer-social']} ${style['mobail']}`}
-                                telegram={'https://'}
-                                twitter={'https://'}
-                                vk={'https://'} />
+                                telegram={'https://t.me/intercars_europe'}
+                                twitter={'https://twitter.com/intercars_ru'}
+                                vk={'https://vk.com/public201988592'} />
                     </div>
                     <div className={style['footer__bottom']}>
                         <div className={style['footer-company']}>

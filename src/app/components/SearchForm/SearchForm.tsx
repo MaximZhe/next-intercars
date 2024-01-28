@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import ArrowForm from '@/app/icons/svg/ArrowForm';
 import CalendarIcon from '@/app/icons/svg/CalendarIcon';
 import { defaultCityForm, defaultDateForm } from '@/app/constant/constant';
-
+import { IFetchDataRoutes } from '@/app/types/types';
 
 const initialStateResultCity = {
     Id: 0,
@@ -41,28 +41,8 @@ export interface ICityDataProps {
     ],
     Error: null
 }
-export interface IFetchDataRoutes {
-    SearchId?: string,
-    CityDeparture: number,
-    CityArrival: number,
-    Date: string,
-    Carriers?: number[],
-    IsDynamic?: boolean,
-    Lang?: string
-}
-export interface IRouteData {
-    Result: {
-        CarrierRoutes: [],
-        CityArrival: number,
-        CityDeparture: number
-        Date: string,
-        Id: string,
-        IsActive: boolean,
-        IsDynamic: boolean,
-        SaveDate: string
-    },
-    Error: null
-}
+
+
 interface ISearchForm {
     className: string,
 }
@@ -214,6 +194,7 @@ const SearchForm:FC <ISearchForm> = ({ className }) => {
                             value={cityDepartureValue}
                             onChange={handleDepartureChange}
                             placeholder='Пункт отправления'
+                            required={true}
                         />
                         <ArrowForm className={styles['form-search__image']} onClick={handleArrowClick}/>
                     </div>
@@ -236,6 +217,7 @@ const SearchForm:FC <ISearchForm> = ({ className }) => {
                         value={cityArrivalValue}
                         onChange={handleArrivalChange}
                         placeholder='Пункт назначения'
+                        required={true}
                     />
                     <div className={styles['form-search__sample']}>
                         <p className={styles['form-search__text']}>Например:</p>
@@ -260,7 +242,7 @@ const SearchForm:FC <ISearchForm> = ({ className }) => {
                         <div className={styles['form-search__icon-wrapper']}
                         onClick={() => setCalendarShow(prevState => !prevState)}>
                             <CalendarIcon
-                                className={styles['form-search__icon']}
+                                className={`${styles['form-search__icon']} ${isCalendarShow ? styles.active : '' }`}
                             />
                         </div>
 

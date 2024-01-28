@@ -77,11 +77,11 @@ export interface ITariffData {
     Longitude: null | string;
   }
   export interface IItemBusOptions {
-    Id: number;
+    Id?: number;
     Name: string;
     IsEnabled: boolean;
     Description?: null | string;
-    Link: null | string;
+    Link?: null | string;
   }
   export interface IItemFullBusPlaces {
     Seat: number;
@@ -216,3 +216,16 @@ export interface ITariffData {
       text: string;
     }>;
   }
+  export interface IRouteData {
+    Result: {
+        CarrierRoutes: [],
+        CityArrival: number,
+        CityDeparture: number
+        Date: string,
+        Id: string,
+        IsActive: boolean,
+        IsDynamic: boolean,
+        SaveDate: string
+    },
+    Error: null
+}
