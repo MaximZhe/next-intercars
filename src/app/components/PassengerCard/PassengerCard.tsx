@@ -1,0 +1,268 @@
+
+'use client'
+
+import { FC, useEffect, useState } from 'react';
+import { useFormContext, } from "react-hook-form";
+import Select from 'react-select';
+import InputMask from 'react-input-mask';
+import style from './PassengerCard.module.scss';
+import { useAppDispatch, useAppSelector } from '@/app/hooks/redux';
+import { setPriceFormTarifs } from '@/redux/slice/priceFormTarifsSlice';
+interface IPassengerCard {
+  className: string,
+  countUser: number,
+  controller: any
+}
+// interface IOrderForm {
+//   user: {
+//     citizenship: string,
+//     ageTariff: string,
+//     gender: string,
+//     lastName: string,
+//     firstName: string,
+//     middleName: string,
+//     birthdate: any,
+//     documentType: string,
+//     documentNumber: string
+//   }
+// }
+interface OptionType {
+  value: string | number;
+  label: string | number;
+}
+interface ITypesArraySelect {
+  Name: string,
+  Id:string,
+}
+interface ITypesArraySelectTarifs {
+  Name: number,
+  Value:string,
+}
+interface ITypesArraySelectCitizenship extends ITypesArraySelect {
+  Abbr: string,
+}
+
+
+function transformObjects(arr:ITypesArraySelect[]) {
+  return arr.map(obj => ({ value: obj.Name, label: obj.Name }));
+}
+function transformObjectsTarifs(arr:ITypesArraySelectTarifs[]) {
+  return arr.map(obj => ({ value: obj.Value, label: obj.Name }));
+}
+function transformObjectsDocumentTypes(arr:ITypesArraySelect[]) {
+  return arr.map(obj => ({ value: obj.Id, label: obj.Name }));
+}
+function transformObjectsPassengersCitizenship(arr:ITypesArraySelectCitizenship[]) {
+  return arr.map(obj => ({ value: obj.Abbr, label: obj.Name }));
+}
+const PassengerCard: FC<IPassengerCard> = ({ className, countUser, controller }) => {
+  const dispatch = useAppDispatch();
+  const {priceFormTarifs} = useAppSelector((state) => state.priceFormTarifsReduser);
+  const {Route} = useAppSelector((state:any) => state.singleRouteReduser);
+  const [activeButton, setActiveButton] = useState('');
+  const [countries, setCountries] = useState<OptionType[]>([]);
+  const [documentTypeUser, setDocumentTypeUser] = useState<OptionType[]>([]);
+  const [arrayTariff, setArrayTariff] = useState<OptionType[]>([{value: 0, label:''}]);
+  const [defaultTariff, setDefaultTariff] = useState<any>({value: '', label: ''});
+
+
+  useEffect(() => {
+    if(Route.Result.PassengersCitizenship){
+      const resultArrayContry = transformObjectsPassengersCitizenship(Route.Result.PassengersCitizenship);
+      setCountries(resultArrayContry);
+    }
+  },[Route.Result.PassengersCitizenship,Route])
+
+  useEffect(() => {
+    if(Route.Result.DocumentTypes){
+      const resultArrayDocument = transformObjectsDocumentTypes(Route.Result.DocumentTypes);
+      setDocumentTypeUser(resultArrayDocument);
+    }
+  },[Route.Result.DocumentTypes,Route])
+
+  useEffect(() => {
+    if(Route.Result.Route.Routes[0].Tariffs){
+      const resultArrayAgeTariff = transformObjectsTarifs(Route.Result.Route.Routes[0].Tariffs);
+      setArrayTariff(resultArrayAgeTariff);
+    }
+  },[Route.Result.Route.Routes,Route]);
+
+  useEffect(() => {
+    if(arrayTariff){
+      if(arrayTariff && arrayTariff.length > 1){
+        setDefaultTariff({value: arrayTariff[1].value, label: arrayTariff[1].label})
+      }else if(arrayTariff && arrayTariff.length === 1){
+        setDefaultTariff({value: arrayTariff[0].value, label: arrayTariff[0].label})
+      }
+    }
+    
+  },[arrayTariff])
+console.log(arrayTariff)
+  console.log(defaultTariff)
+  const handleButtonClick = (buttonName: string) => {
+    setActiveButton(buttonName);
+  };
+
+  const { register, control, setValue, watch } = useFormContext();
+  const Controller = controller;
+  const lastName = watch(`Passengers.${countUser}.LastName`);
+  const firstName = watch(`Passengers.${countUser}.FirstName`);
+  const middleName = watch(`Passengers.${countUser}.MiddleName`);
+  const birthDate = watch(`Passengers.${countUser}.Birthdate`);
+  const documentNumber = watch(`Passengers.${countUser}.DocumentNumber`);
+  const tarrifValue = watch(`Passengers.${countUser}.TarifId`);
+
+  useEffect(() => {
+    if(tarrifValue){
+      Route.Result.Route.Routes[0].Tariffs.forEach((item:any) => {
+        if(item.Name === tarrifValue.label){
+       
+         const resultArray = item.Prices[2].Value;
+          dispatch(setPriceFormTarifs(resultArray));
+        }
+      })
+      console.log(tarrifValue)
+    }else{
+
+    }
+  },[tarrifValue])
+  useEffect(() => {
+    const update = () => {
+      setValue(`Passengers.${countUser}.TarifId`, defaultTariff)
+    }
+    if(defaultTariff){
+      update();
+    }
+  },[defaultTariff])
+  return (
+    <div className={`${className}`}>
+      <h2 className={style['order-form__title']}>
+        Данные о пассажире {countUser}
+      </h2>
+      <div className={style['order-form-row']}>
+        <div className={style['order-form-row__wrapper']}>
+          <Controller
+            control={control}
+            name={`Passengers.${countUser}.Citizenship`}
+            render={({ field: { onChange, value, name, ref } }: any) => (
+              <Select
+                name={name}
+                ref={ref}
+                options={countries}
+                value={value}
+                getOptionValue={e => e.value}
+                onChange={(e) => { onChange(e) }}
+                placeholder="Гражданство"
+              />
+            )}
+          />
+        </div>
+        <div className={style['order-form-row__wrapper']}>
+          <Controller
+            control={control}
+            name={`Passengers.${countUser}.TarifId`}
+            render={({ field: { onChange, value, name, ref } }: any) => (
+              <Select
+                name={name}
+                ref={ref}
+                options={arrayTariff}
+                value={value}
+                getOptionValue={e => e.value}
+                onChange={(e) => { onChange(e) }}
+                
+                placeholder="Выбрать тариф"
+              />
+            )}
+          />
+
+        </div>
+        <div className={style['order-form-row__wrapper']}>
+
+          <div className={style['order-form-row__buttons']}>
+            <button 
+              className={`${style['button-man-gender']} ${activeButton === "man" ? style.active : ""}`}
+
+              type="button"
+              name="man"
+              onClick={() => {
+                setValue(`Passengers.${countUser}.Gender`, 'M');
+                handleButtonClick("man")
+              }}
+            >
+              М
+            </button>
+            <button
+              className={`${style['button-woman-gender']} ${activeButton === "woman" ? style.active : ""}`}
+              type="button"
+              name="woman"
+              onClick={() => {
+                setValue(`Passengers.${countUser}.Gender`, 'F');
+                handleButtonClick("woman")
+              }
+              }
+            >
+              Ж
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className={style['order-form-row']}>
+        <div className={style['order-form-row__box']}>
+          <div className={style['order-form-row__wrapper']}>
+            <input
+              type="text"
+              {...register(`Passengers.${countUser}.LastName`, { required: 'Введите имя' })}
+            />
+            <label className={`${lastName ? style.active : ""}`}>Фамилия</label>
+          </div>
+          <div>
+            
+          </div>
+        </div>
+
+        <div className={style['order-form-row__wrapper']}>
+          <input {...register(`Passengers.${countUser}.FirstName`)} />
+          <label className={`${firstName ? style.active : ""}`}>Имя</label>
+        </div>
+        <div className={style['order-form-row__wrapper']}>
+          <input {...register(`Passengers.${countUser}.MiddleName`)} />
+          <label className={`${middleName ? style.active : ""}`}>Отчество</label>
+        </div>
+      </div>
+      <div className={style['order-form-row']}>
+      <div className={style['order-form-row__wrapper']}>
+  <InputMask
+    mask="99.99.9999"
+    {...register(`Passengers.${countUser}.Birthdate`)}
+    placeholder='ДД.ММ.ГГГГ'
+  />
+  <label className={style.active}>Дата рождения</label>
+</div>
+        <div className={style['order-form-row__wrapper']}>
+          <Controller
+            control={control}
+            name={`Passengers.${countUser}.DocumentId`}
+            render={({ field: { onChange, value, name, ref } }: any) => (
+              <Select
+                name={name}
+                ref={ref}
+                options={documentTypeUser}
+                value={value}
+                getOptionValue={e => e.value}
+                onChange={(e) => { onChange(e) }}
+                placeholder="Тип документа"
+              />
+            )}
+          />
+        </div>
+        <div className={style['order-form-row__wrapper']}>
+          <input {...register(`Passengers.${countUser}.DocumentNumber`)
+          } />
+          <label className={`${documentNumber ? style.active : ""}`}>Номер документа</label>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PassengerCard;

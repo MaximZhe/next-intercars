@@ -13,17 +13,62 @@ import ListItemIcons from '../ListItemIcons/ListItemIcons';
 
 
 import { formatedDate } from '@/app/utils/formatedDateRates';
-import Link from 'next/link';
+
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/app/hooks/redux';
+import axios from 'axios';
+import { setSingleRoute } from '@/redux/slice/singleRouteDataSlice';
 
 interface ItemRatesProps {
   data: IItemRoutes;
   sortedPrices: number[];
 }
 
+export interface ISingleRouteProps {
+    RouteId: string,
+    SearchId: string,
+    Lang?: string
+}
 
+const clientID = '1fgyer3863h21ps'
 const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
+  const { dataRoute } = useAppSelector((state: { dataRouteReduser: any; }) => state.dataRouteReduser);
+  const [isLoadingFetch, setIsLoadingFetch] = useState(false);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  
+  const getSingleRoute = async (valueId:string) => {
+    setIsLoadingFetch(true);
+    try {
+        const datas: ISingleRouteProps = {
+          RouteId: data.Id,
+          SearchId: dataRoute.Result.Id,
+          Lang: 'RUS'
+        };
+        console.log(datas)
+        const response = await axios.post('/api/v1/routes/getRoute', datas);
+        const dat = response.data;
+        if(dat){
+          router.push(`/find/client?id=${valueId}`, undefined);
+          console.log(dat)
+          dispatch(setSingleRoute(dat))
+          setIsLoadingFetch(false);
+        }else{
+          console.log('нет данных')
+        }
+        
+    } catch (error) {
 
+        console.error('Ошибка при отправке данных на сервер:', error);
+    } finally {
+        
+    }
+};
+  const handleSuccess = (valueId:string) => {
+      getSingleRoute(valueId)
+    };
+  
   const width = WindowScreenUser()
   const transfer = 0;
   const transferStart = 0;
@@ -33,7 +78,7 @@ const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
   const formatedPrice = (price: number) => {
     return Math.floor(price);
   }
-  
+
   return (
     <div className={`${style['list-item']} ${sortedPrices[0] === data.Price[2].Ptar ? style['list-item--best'] : ''} `}>
       <div className={style['list-item-offer--mobail']}>
@@ -132,16 +177,17 @@ const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
           <p className={style['list-item-order__price']}>{data.Price[2].Ptar ? formatedPrice(data.Price[2].Ptar) : null} {data.Price[2].CurrencyName}</p>
           <div className={style['list-item-places--mobail']}>
             <p className={style['list-item-places__free']}>Осталось мест: {data.FreePlace} </p>
-            <p className={style['list-item-places__stock']}>Aкционных мест: {data.CountFreePromos}</p>
+            <p className={style['list-item-places__stock']}>{data.CountFreePromos > 0 ? `Aкционных мест: ${data.CountFreePromos}` : null}</p>
           </div>
         </div>
-        <Link className={style['list-item-order__btn']} href={`/list-result-routes/choice-tickets` } 
-       >
-          Выбрать билет
-        </Link>
+        <button className={style['list-item-order__btn']}
+          onClick={() => handleSuccess(dataRoute.Result.Id)}
+        >
+         {isLoadingFetch ? 'Идет поиск...' : 'Выбрать билет'} 
+        </button>
         <div className={style['list-item-places']}>
           <p className={style['list-item-places__free']}>Осталось мест: {data.FreePlace} </p>
-          <p className={style['list-item-places__stock']}>Aкционных мест: {data.CountFreePromos } </p>
+          <p className={style['list-item-places__stock']}>{data.CountFreePromos > 0 ? `Aкционных мест: ${data.CountFreePromos}` : null} </p>
         </div>
       </div>
     </div>

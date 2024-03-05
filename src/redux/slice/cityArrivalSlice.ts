@@ -1,36 +1,21 @@
-
-import { ICityDataProps } from "@/app/types/types";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: ICityDataProps = {
-  Result: [
-    {
-      Id: 0,
+const initialState= {
       Name: "",
-      Coordinates: {
-        Latitude: "",
-        Longitude: "",
-      },
-    }
-  ],
-  Error: null,
 };
 
 const cityArrivalSlice = createSlice({
   name: "cityArrival",
   initialState,
   reducers: {
-    setCityArrivalData: (state, action) => {
-      state.Result = action.payload;
-      state.Error = null;
+    setCityArrivalName: (state, action) => {
+      state.Name = action.payload;
     },
-    setCityArrivalError: (state, action) => {
-      state.Error = action.payload;
-    },
+
   },
 });
 
-export const { setCityArrivalData, setCityArrivalError } =
+export const { setCityArrivalName } =
   cityArrivalSlice.actions;
 
 export default cityArrivalSlice.reducer;

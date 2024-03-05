@@ -5,9 +5,9 @@ export interface ITariffData {
       Id: string;
       CityDeparture: number;
       CityArrival: number;
-      Date: string;
-      SaveDate: string;
       IsDynamic: boolean;
+      DateDeparture: string,  
+      DateCreate: string
     };
     Error: null | string;
   }
@@ -15,7 +15,7 @@ export interface ITariffData {
       SearchId?: string,
       CityDeparture: number,
       CityArrival: number,
-      Date: string,
+      DateDeparture: string,
       Carriers?: number[],
       IsDynamic?: boolean,
       Lang?: string
@@ -147,59 +147,59 @@ export interface ITariffData {
   }
   
   export interface IItemRoutes {
-    SessionRouteId?: null;
+    AddInfo: null | number | string;
+    AdditionalPlace?: null | number;
+    AllStops: IItemStop[];
+    AnnylationRules?: string;
+    ArriveDateTime?: string;
+    ArriveName: string;
+    BaggageDescription?: string;
+    BaggagePrices?: IItemBaggagePrices[];
+    BusId?: null | number;
+    BusOptions?: IItemBusOptions[];
+    BusPlaces?: null | number;
+    Carrier: number;
+    CarrierLogo?: null;
+    CarrierName: string;
     City1: string;
     City2: string;
-    DepartName: string;
-    ArriveName: string;
-    DateDepart1?: string;
-    DateArrive1?: string;
-    TimeArrive: string;
+    CountFreePromos: number;
     DateArrive: string;
-    TimeDepart: string;
+    DateArrive1?: string;
     DateDepart: string;
+    DateDepart1?: string;
+    Delete?: string;
     DepartDateTime?: string;
-    ArriveDateTime?: string;
-    Hour: string;
-    Minuts: string;
+    DepartName: string;
+    FullBusPlaces: IItemFullBusPlaces[];
+    FullPrice?: null | string | number;
     FreePlace?: number;
-    Price: IItemPrice[];
-    BaggagePrices?: IItemBaggagePrices[];
-    BaggageDescription?: string;
-    Path?: string;
+    FreePlaces?: null | number;
+    HasExpressAttr?: boolean;
+    Hour: string;
     Id: string;
+    IsCache: boolean;
+    IsInternationalAbroad?: boolean;
+    IsPartnerRoute: boolean;
+    IsSpecialRules?: boolean;
+    Link?: null;
+    MaxDiscountPercent?: null;
+    Minuts: string;
+    Path?: string;
+    Platforma?: string;
+    Price: IItemPrice[];
+    RealCarrierId?: number;
+    RealCarrierName: string;
+    RealIsPersonalCarrier?: boolean;
+    Route: string;
     RouteNumber?: null;
     Routes: IItemRoutesProps[];
-    Carrier: number;
-    CarrierName: string;
-    CarrierLogo?: null;
-    RealCarrierName: string;
-    RealCarrierId?: number;
-    RealIsPersonalCarrier?: boolean;
-    Delete?: string;
-    CountFreePromos: number;
-    MaxDiscountPercent?: null;
-    IsSpecialRules?: boolean;
-    IsInternationalAbroad?: boolean;
-    Platforma?: string;
-    Link?: null;
-    AllStops: IItemStop[];
-    IsCache: boolean;
-    FullPrice?: null | string | number;
-    BusId?: null | number;
-    BusPlaces?: null | number;
-    FreePlaces?: null | number;
-    AdditionalPlace?: null | number;
-    AddInfo: null | number | string;
-    BusOptions?: IItemBusOptions[];
-    FullBusPlaces?: IItemFullBusPlaces[];
-    TicketRules?: null | string;
-    UsedByArtmark?: null | string;
-    HasExpressAttr?: boolean;
-    IsPartnerRoute: boolean;
+    SessionRouteId?: null;
     SortPriority?: number;
-    AnnylationRules?: string;
-    Route: string;
+    TicketRules?: null | string;
+    TimeArrive: string;
+    TimeDepart: string;
+    UsedByArtmark?: null | string;
   }
   export interface IItemCarrierRoutes{
     Routes: IItemRoutes[];
@@ -221,11 +221,69 @@ export interface ITariffData {
         CarrierRoutes: [],
         CityArrival: number,
         CityDeparture: number
-        Date: string,
+        DateDeparture: string,
         Id: string,
         IsActive: boolean,
         IsDynamic: boolean,
-        SaveDate: string
+        DateCreate: string
     },
     Error: null
+}
+export type IDocumentType = {
+  Id: string;
+  Name: string;
+};
+export type IPassengersCitizenship = {
+  Name: string | null,
+  Abbr: string | null,
+  Id: number
+}
+export type IPaymentTypes = {
+  Name: string,
+  Id: number
+}
+export type IPaySystems = {
+  Name: string,
+  Id: number
+}
+
+export interface ISingleRouteData {
+  Result: {
+   Route: IItemRoutes;
+   DocumentTypes: IDocumentType[];
+   PassengersCitizenship: IPassengersCitizenship[];
+   PaymentTypes: IPaymentTypes[];
+   PaySystems: IPaySystems[];
+   MultiplePassengersBooking: boolean;
+   HasPlacesSelection: boolean;
+   HasPromoPermission: boolean;
+ };
+ Error: null;
+}
+
+export interface Passenger {
+  FirstName: string;
+  LastName: string;
+  MiddleName: string;
+  Citizenship: string;
+  Birthdate: Date;
+  TarifId: number;
+  PlaceNumber: number;
+  Gender: 'M' | 'F'; // Мужской или женский пол
+  DocumentId: string;
+  DocumentNumber: string;
+}
+
+export interface ServerData {
+  Passengers: Passenger[];
+  Phone: string;
+  Email: string;
+  CurrencyId: number;
+  PaySystem: string;
+  ExtraBaggage: number;
+  PromoCode: string;
+  Note: string;
+  RouteId: string;
+  SearchId: string;
+  Lang: 'RUS' | 'ENG'; // Язык: русский или английский
 }

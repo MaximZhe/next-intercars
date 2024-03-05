@@ -14,13 +14,14 @@ import { IItemCarrierRoutes, IItemRoutes, ITariffData } from '@/app/types/types'
 import { useAppSelector } from '@/app/hooks/redux';
 import ListRatesItem from '../ListRatesItem/ListRatesItem';
 import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
+import { useRouter } from 'next/navigation';
+
 
 export interface IRoute {
   CarrierRoutes: IItemCarrierRoutes[];
 }
 const ListRates: FC = () => {
 
-  
   const links = [
     { label: 'Главная', href: '/' },
     { label: 'Поиск билетов', href: '/find', active: true },
@@ -33,33 +34,40 @@ const ListRates: FC = () => {
       CarrierRoutes: [],
       CityArrival: 0,
       CityDeparture: 0,
-      Date: '',
+      DateDeparture: '',
       Id: '',
       IsActive: false,
       IsDynamic: false,
-      SaveDate: ''
+      DateCreate: ''
     },
     Error: null
   })
-
+  const router = useRouter();
+  console.log()
  const [loading, setLoading] = useState(true);
   
   const [routes, setRoutes] = useState<IItemRoutes[]>([]);
-  const [activeButton, setActiveButton] = useState('Стоимость');
+  const [activeButton, setActiveButton] = useState('');
   const { dataRoute } = useAppSelector((state) => state.dataRouteReduser);
+  const { NameDeparture } = useAppSelector((state) => state.cityDepartureReduser);
+  const { Name } = useAppSelector((state) => state.cityArrivalReduser);
+  const { dateSearchRoute } = useAppSelector((state) => state.dateSearchRouteReduser);
   // const { Routes } = useAppSelector(state => state.storegeRouteReduser)
 console.log(dataRoute)
-
-
-  
+  const searchProps = {
+    citySearchDeparture: NameDeparture,
+    citySearchArrival: Name,
+    dateSearch: dateSearchRoute
+  }
+  console.log(searchProps)
   useEffect(() => {
     const fetchDynamicRoutes = async (id: string) => {
-
+      console.log(id)
       try {
         const data = {
           "SearchId": id,
         };
-        const response = await axios.post('/api/v1/routes/search', data);
+        const response = await axios.post('/api/v1/routes/getSearch', data);
         const dat = response.data;
         setRouteData(dat);
         setRoutes(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat())
@@ -101,7 +109,9 @@ console.log(dataRoute)
      }
 
   }, [dataRoute, routeData.Result.Id, routeData.Result.IsActive])
-
+  useEffect(() => {
+    console.log(routeData)
+  },[routeData])
   // const routesArray = routes.map((item: { Routes: any; }) => item.Routes).flat();
   const sortedRoutesPriceBest = (routes: any[]) => {
     return routes.map(item => item.Price[2].Ptar).sort((a, b) => a - b);
@@ -204,10 +214,10 @@ console.log(dataRoute)
     }
   }
   const sortedPrices = sortedRoutesPriceBest(routes)
-  console.log(routes)
+  console.log(sortedPrices)
   return (
     <section className={style.rates}>
-      <SearchForm className={style['rates__form']} />
+      <SearchForm className={style['rates__form']} searchProps={searchProps}/>
       <div className='container'>
         <div className={style['rates__wrapper']} >
           <div className={style['rates__header']} >
@@ -223,9 +233,14 @@ console.log(dataRoute)
           <div className={style.list}>
             <GridLoader color={'#0243A6'} loading={ loading} size={10}/>
             
-            {routes.map((data) => (
-              <ListRatesItem key={data.Id} data={data} sortedPrices={sortedPrices} />
-            ))}
+            {routes.length !== 0 ? (
+              routes.map((data) => (
+                <ListRatesItem key={data.Id} data={data} sortedPrices={sortedPrices} />
+              ))
+            ) : (
+              !loading ? <p>Извините, маршруты не найдены</p> : ''
+              
+            )}
           </div>
         </div>
       </div>

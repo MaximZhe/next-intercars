@@ -9,7 +9,10 @@ import dataOrderFormReduser from '../slice/dataOrderFormUsers';
 import storegeRouteReduser from '../slice/storegeDataRoute';
 import cityDepartureReduser from '../slice/cityDepartureSlice';
 import cityArrivalReduser from '../slice/cityArrivalSlice';
-import dataRoutesReduser from '../slice/getRoutesSearchSlice'
+import dataRoutesReduser from '../slice/getRoutesSearchSlice';
+import singleRouteReduser from '../slice/singleRouteDataSlice';
+import dateSearchRouteReduser from '../slice/dateSearchRouteSlice';
+import priceFormTarifsReduser from '../slice/priceFormTarifsSlice';
 import {
   persistStore,
   persistReducer,
@@ -41,6 +44,9 @@ const rootReduсer = combineReducers({
   storegeRouteReduser,
   cityDepartureReduser,
   dataOrderFormReduser,
+  singleRouteReduser,
+  dateSearchRouteReduser,
+  priceFormTarifsReduser,
   cityDepartureApi: cityDepartureApi.reducer, 
   cityArrivalReduser,
   cityArrivalApi: cityArrivalApi.reducer, 
@@ -66,7 +72,7 @@ export const setupStore = () => {
  
    
 };
-export const persist = persistStore(setupStore());
+export const persistor = persistStore(setupStore());
 export type RootSate = ReturnType<typeof persistedReducer>;
 export type AppStore = ReturnType<typeof setupStore>;
 export type AppDispatch = AppStore["dispatch"];

@@ -68,7 +68,7 @@
   &__content {
     display: flex;
     flex-direction: column;
-    justify-content: end;
+    justify-content: flex-end;
     transition: .3s ease-in-out;
     &:nth-child(2) {
       margin-left: 6px;

@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import type { Metadata } from 'next';
 
@@ -16,12 +14,16 @@ import { accordionItemsLeft, accordionItemsRight } from '@/app/constant/constant
 import Slider from '../UI/Slider/Slider';
 import SearchForm from '../SearchForm/SearchForm';
 import style from './HomePage.module.scss';
+import axios from 'axios';
+import { getServerSideProps } from '@/app/utils/actionCity';
 
 export const metadata: Metadata = {
     title:'Homepage',
     description:'This HomePage'
 }
-const Homepage = () => {
+
+export default function Homepage()  {
+    
   return (
     
     <div >
@@ -49,5 +51,3 @@ const Homepage = () => {
     </div>
 );
 };
-
-export default Homepage;

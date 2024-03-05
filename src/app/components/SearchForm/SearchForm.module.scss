@@ -20,13 +20,15 @@
       margin-top: 20px;
       max-width: 160px;
     }
-    &:nth-child(2) > input {
+    &:nth-child(2) > .form-search__container > input {
       padding-left: 20px;
+      border-radius: 0px 0px 0px 0px!important;
     }
     &:nth-child(3) {
       position: relative;
     }
   }
+  
   &__container {
     width: 100%;
     display: flex;
@@ -49,6 +51,22 @@
     right: -16px;
     width: 33px;
     height: 32px;
+    z-index: 10;
+    cursor: pointer;
+    transition: ease 1s all;
+    &.clicked > g > path:nth-child(2) {
+      transform: translateX(-3px);
+    }
+    &.clicked > g > path:nth-child(3) {
+      transform: translateX(-3px);
+    }
+    &.clicked > g > path:nth-child(4) {
+      transform: translateX(3px);
+    }
+    &.clicked > g > path:nth-child(5) {
+      transform: translateX(3px);
+    }
+
   }
   &__icon {
     position: absolute;
@@ -91,7 +109,35 @@
       color: #9fb1c9;
     }
   }
+&__select {
+  position: absolute;
+  top: 97%;
+  max-width: 271px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 0px 0px 6px 6px;
+  padding: 12px;
+  max-height: 70px;
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-y: auto;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar { width: 0 !important };
+  z-index: 500;
+  box-shadow: 0px -1px 2px #000000;
 
+  & > button {
+    font-size: 14px;
+    line-height: 17px;
+    color: #445978;
+    background: none;
+    padding: 3px 0;
+  }
+  &.active{
+    display: flex;
+  }
+}
   &__sample {
     margin-top: 8px;
     display: flex;
@@ -140,6 +186,9 @@
     background-image: linear-gradient(to right, #e23f35, #b7170d, #e23f35, #b7170d);
   }
 }
+.clicked > g > path.leftArrow {
+  transform: translateX(-3px);
+}
 .active {
   & > path {
     fill:#0243a6;
@@ -149,35 +198,7 @@
   max-width: 271px;
   width: 100%;
 }
-.react-calendar__navigation {
-  height: 25px;
-}
-.react-calendar__navigation button {
-  min-width: 30px;
-}
-.react-calendar__tile {
-  padding: 5px 6.6667px;
-}
-.react-calendar__tile--now {
-  background: #0243a6 !important;
-}
-.react-calendar__month-view__days__day--neighboringMonth {
-  pointer-events: none;
-}
-.react-calendar__tile--now {
-  cursor: pointer;
-  pointer-events: inherit;
-}
-.react-calendar__tile:disabled {
-  background: none;
-  pointer-events: none;
-}
-.react-calendar__tile--now:hover,
-.react-calendar__tile--now:focus {
-  color: #0243a6 !important;
-  background: #ffffff !important;
-  box-shadow: 0px 0px 2px #0243a6 !important;
-}
+
 @media (max-width: 768px) {
   .form-search {
     &__wrapper {
@@ -194,6 +215,9 @@
         margin-top: 24px;
         justify-content: center;
       }
+    }
+    &__select{
+      max-width: 100%;
     }
     &__label {
       position: absolute;
@@ -240,6 +264,7 @@
     max-width: 310px;
     width: 100%;
   }
+  
 }
 @media (max-width: 576px) {
   .react-calendar {

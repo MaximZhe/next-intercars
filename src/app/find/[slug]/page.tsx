@@ -1,9 +1,8 @@
 
-import React from 'react';
-import ListRates from '../components/ListRates/ListRates';
+import ListRates from '../../components/ListRates/ListRates';
 
 const SearchResultPage = () => {
-  
+   
     return (
         <>
            <ListRates/>

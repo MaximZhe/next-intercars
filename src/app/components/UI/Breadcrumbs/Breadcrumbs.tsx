@@ -3,19 +3,25 @@
 import { FC, useEffect, useState } from 'react';
 
 import './Breadcrumbs.scss';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface ILink {
   label: string;
   href?: string;
   active?: boolean;
+  backPage?:() => void;
+  back?:boolean
 }
 
 interface ILinks {
   links: ILink[];
 }
 const Breadcrumbs:FC<ILinks> = ({ links }) => {
+  const router = useRouter();
+  function handleBackPage() {
+    router.back()
+  }
   return (
     <div>
       {links.map((link : any, index:number) => (
@@ -24,9 +30,15 @@ const Breadcrumbs:FC<ILinks> = ({ links }) => {
           {link.active ? (
             <span>{link.label}</span>
           ) : (
-            <Link href={link.href}>
-              {link.label}
-            </Link>
+            link.back ? (
+              <Link href={link.href} onClick={handleBackPage}>
+                {link.label}
+              </Link>
+            ) : (
+              <Link href={link.href}>
+                {link.label}
+              </Link>
+            )
           )}
         </span>
       ))}

@@ -120,6 +120,13 @@
   }
 }
 @media (max-width: 480px) {
+  .info{
+    &__link{
+      &::after {
+        transform: scale(1.05);
+      }
+    }
+  }
 }
 @media (max-width: 359px) {
   .actions {
