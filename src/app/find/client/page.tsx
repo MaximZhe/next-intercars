@@ -10,6 +10,7 @@ import { useAppSelector } from '@/app/hooks/redux';
 import { usePathname, useRouter } from 'next/navigation';
 import { IItemFullBusPlaces } from '@/app/types/types';
 import { formatedDateRoute } from '@/app/utils/formatedDateRoute';
+import { WindowScreenUser } from '@/app/utils/windowScreen';
 
 
 
@@ -35,19 +36,21 @@ interface IArrayDateRoute {
 const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
   const {Route} = useAppSelector((state:any) => state.singleRouteReduser)
   const {priceFormTarifs} = useAppSelector((state) => state.priceFormTarifsReduser);
- console.log(Route)
   // const { isMobile,isTablet } = useMatchMedia();
   const valueId = params.slug
   const pathname = usePathname();
- console.log(valueId)
   
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isTicketPage, setIsTicketPage] = useState(false);
-  const [fullPrice, setFullPrice] = useState(0);
   const [countUser, setCountUser] = useState(1)
   const [arrayPlaces, setArrayPlaces] = useState<IItemFullBusPlaces[]>([])
   const [dateRoute, setDateRoute] = useState<IArrayDateRoute>({dateDepart: '', dateArrival: ''})
   const [dataResultRoute, setDataResultRoute] = useState<any>([])
-  
+
+  const [resultSumPrice, setResultSumPrice] = useState(0);
+  const [selectedTariffs, setSelectedTariffs] = useState<any[]>([]);
+  const [resultArrayPrice, setResultArrayPrice] = useState<any[]>([]);
+
   useEffect(() => {
     const isTicketPage = pathname === `/find/client`; // Замените '/booking' на путь к Вашей странице бронирования билета
     setIsTicketPage(isTicketPage);
@@ -59,7 +62,6 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
     // Проверяем, есть ли данные в localStorage
     const storedData = localStorage.getItem('routePlaces');
     const storeRoute = localStorage.getItem('routeData');
-    console.log(storedData)
     if(storeRoute){
       const parseDataRoute = JSON.parse(storeRoute);
       setDataResultRoute(parseDataRoute);
@@ -84,8 +86,8 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
     }
   }, [Route]);
   
+  // При обновлении данных из Redux, обновляем данные в state и localStorage
   useEffect(() => {
-    // При обновлении данных из Redux, обновляем данные в state и localStorage
     const res = Route.Result.Route.FullBusPlaces;
     if (res && res.length > 0) {
       const sortedRes = [...res];
@@ -120,7 +122,7 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
   };
 
   const FullBusPlaces = arrayPlaces
-  console.log(dataResultRoute)
+  
   const sortedArrays = [];
   let currentRow = 0;
 
@@ -146,12 +148,71 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
     { label: 'Поиск билетов', href: '/find', back: true },
     { label: 'Оформление билетов', href: `/find/client/${valueId}`, active: true },
   ];
+const handleifChangeTariffs = (index: number, selectedTarifId: any) => {
+  setSelectedTariffs((prevPassengers:any) => {
+    const updatedPassengers = [...prevPassengers];
+    const existingPassenger = updatedPassengers.find((passenger: any) => passenger.index === index);
+    if (existingPassenger) {
+      existingPassenger.selectedTarifId = selectedTarifId;
+    } else {
+      updatedPassengers.push({ index, selectedTarifId });
+    }
+    return updatedPassengers.filter(item => item.selectedTarifId !== undefined && item.selectedTarifId.label !== '');
+  });
+};
+
 useEffect(() => {
-  if(priceFormTarifs){
-    setFullPrice(priceFormTarifs[1]);
+  const handleArraySlice = (arr:any[], countUser:number) => {
+    const newArray = arr.slice(0, countUser);
+    return newArray;
+  };
+
+  if (selectedTariffs.length > countUser) {
+    const newSelectedTariffs = handleArraySlice(selectedTariffs, countUser);
+    setSelectedTariffs(newSelectedTariffs);
   }
-  console.log(priceFormTarifs[0])
-},[priceFormTarifs])
+}, [countUser]);
+
+
+
+// Создаем новый массив цен на основе выбранных тарифов
+useEffect(() => {
+  const newResultArrayPrice = selectedTariffs.map((selectedItem: any) => {
+    const selectedTarifId = selectedItem.selectedTarifId.label;
+    const price = Route.Result.Route.Routes[0].Tariffs.find((item: any) => item.Name === selectedTarifId)?.Prices[2].Value || 0;
+    return price;
+  });
+
+  setResultArrayPrice(newResultArrayPrice);
+}, [selectedTariffs]);
+
+useEffect(() => {
+  if (resultArrayPrice.length > 0) {
+    const currentSum = resultArrayPrice.reduce((acc, curr) => acc + curr, 0);
+    const prevSum = resultSumPrice;
+    const diff = currentSum - prevSum;
+    if (diff > 0) {
+      setResultSumPrice(prev => prev + diff);
+    } else if (diff < 0) {
+      setResultSumPrice(prev => prev + diff);
+    }
+  }
+}, [resultArrayPrice]);
+
+
+
+    useEffect(() => {
+        const handleResize = () => {
+          const windowSize = WindowScreenUser();
+            setWindowWidth(windowSize);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
   return (
     <>
      <Menu className='menu__theme--blue'/>
@@ -166,7 +227,7 @@ useEffect(() => {
               </h1>
               <div className={style['tickets-item-info-timer']}>
                 <p className={style['tickets-item-info-timer__text']}>
-                   {/* isMobile ? 'Осталось:' : 'До конца оформления осталось*/}
+                   {windowWidth < 768 ? 'Осталось:' : 'До конца оформления осталось'}
                 </p>
                 <div className={style['tickets-item-info-timer__value']}>
                   <Timer isTicketPage={isTicketPage} />
@@ -175,7 +236,6 @@ useEffect(() => {
             </div>
             <div className={style['tickets-item-info']}>
               <div className={style['tickets-item-info__left']}>
-
                 <p className={style['tickets-item-info__subtitle']}>
                   Отправление
                 </p>
@@ -193,7 +253,6 @@ useEffect(() => {
                     className={`${style['tickets-item-info-counter']}`}
                     initialStateValue={1}
                     getCountValue={handleGetCountValue} />
-
                 </div>
               </div>
               <div className={style['tickets-item-info__right']}>
@@ -213,20 +272,19 @@ useEffect(() => {
                       Стоимость
                     </p>
                     <p className={style['tickets-item-info-price__full']}>
-                      {fullPrice} RUB
+                      {resultSumPrice} RUB
                     </p>
                     <p className={style['tickets-item-info-price__tickets']}>
-                      за {countUser} билета
+                      за {countUser} {countUser > 1 ? 'билета' : 'билет'}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-            <OrderForm countUser={countUser} places={sortedArrays} maxCol={maxCol} pricePay={dataResultRoute.Price} />
+            <OrderForm countUser={countUser} places={sortedArrays} maxCol={maxCol} pricePay={resultSumPrice} getTarrifs={handleifChangeTariffs} />
           </div>
         </div>
       </div>
-
     </section>
     </>
     

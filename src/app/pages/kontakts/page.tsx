@@ -14,7 +14,6 @@ import { sliderRoutesInternational } from '@/app/constant/constant';
 import RouteItem from '@/app/components/RouteItem/RouteItem';
 import ButtonRoutes from '@/app/components/UI/Button/ButtonRoutes/ButtonRoutes';
 import MapContact from '@/app/components/MapContact/MapContact';
-import MapLoader from '@/app/components/MapLoader/MapLoader';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import Breadcrumbs from '@/app/components/UI/Breadcrumbs/Breadcrumbs';
@@ -50,12 +49,7 @@ const ContactPage = () => {
                                     <p className={style['contacts-box__text']}>
                                         125167, г. Москва, Пр-т Ленинградский, д. 37к3
                                     </p>
-                                    
                                         <MapContact/>
-                           
-
-
-
                                     <div className={style['contacts-box__wrapper']}>
                                         <ul className={style['contacts-box__list']}>
                                             <li className={style['contacts-box__item']}>

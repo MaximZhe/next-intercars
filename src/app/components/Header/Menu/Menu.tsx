@@ -22,7 +22,6 @@ const Menu:FC<IMenuProps> = memo(({className}) => {
     const { language } = useAppSelector((state: { languageReduser: any; }) => state.languageReduser);
     const { isShow } = useAppSelector((state: { stateMobileMenuReduser: any; }) => state.stateMobileMenuReduser);
     const dispatch = useAppDispatch();
-    console.log(isShow)
     return (
         <div className={`${style.nav} ${!isShow ? style.hide : style.show} ${className ? className : ''} `}>
             <div className='container'>

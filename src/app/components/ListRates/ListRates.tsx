@@ -14,8 +14,6 @@ import { IItemCarrierRoutes, IItemRoutes, ITariffData } from '@/app/types/types'
 import { useAppSelector } from '@/app/hooks/redux';
 import ListRatesItem from '../ListRatesItem/ListRatesItem';
 import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
-import { useRouter } from 'next/navigation';
-
 
 export interface IRoute {
   CarrierRoutes: IItemCarrierRoutes[];
@@ -42,24 +40,21 @@ const ListRates: FC = () => {
     },
     Error: null
   })
-  const router = useRouter();
-  console.log()
- const [loading, setLoading] = useState(true);
-  
+
+  const [loading, setLoading] = useState(true);
   const [routes, setRoutes] = useState<IItemRoutes[]>([]);
   const [activeButton, setActiveButton] = useState('');
   const { dataRoute } = useAppSelector((state) => state.dataRouteReduser);
   const { NameDeparture } = useAppSelector((state) => state.cityDepartureReduser);
   const { Name } = useAppSelector((state) => state.cityArrivalReduser);
   const { dateSearchRoute } = useAppSelector((state) => state.dateSearchRouteReduser);
-  // const { Routes } = useAppSelector(state => state.storegeRouteReduser)
 console.log(dataRoute)
   const searchProps = {
     citySearchDeparture: NameDeparture,
     citySearchArrival: Name,
     dateSearch: dateSearchRoute
   }
-  console.log(searchProps)
+ 
   useEffect(() => {
     const fetchDynamicRoutes = async (id: string) => {
       console.log(id)
@@ -104,8 +99,7 @@ console.log(dataRoute)
        setLoading(false)
      } else {
       fetchDynamicRoutes(dataRoute.Result.Id);
-       console.log("Данные не найдены в localStorage");
-       
+       console.log("Данные не найдены в localStorage"); 
      }
 
   }, [dataRoute, routeData.Result.Id, routeData.Result.IsActive])
@@ -119,25 +113,29 @@ console.log(dataRoute)
   const sortedRoutesPrice = () => {
     setActiveButton('Стоимость');
     if (activeButton === 'Стоимость') {
-      const newArrayRoutes = [...routes].sort((a, b) =>
-      {
+      const newArrayRoutes = [...routes].sort((a, b) => {
         if (a.Price[2].Ptar && b.Price[2].Ptar) {
           return a.Price[2].Ptar - b.Price[2].Ptar;
         }
         return 0;
-      } );
+      });
       setRoutes(newArrayRoutes);
-
+      setActiveButton('Стоимость по убыванию');
+    } else if (activeButton === 'Стоимость по возрастанию') {
+      const newArrayRoutes = [...routes].sort((a, b) => {
+        if (a.Price[2].Ptar && b.Price[2].Ptar) {
+          return b.Price[2].Ptar - a.Price[2].Ptar;
+        }
+        return 0;
+      });
+      setRoutes(newArrayRoutes);
+      setActiveButton('Стоимость по убыванию');
     } else {
-      const newArrayRoutes = [...routes].sort((a, b) => 
-      {
-        if (a.Price[2].Ptar && b.Price[2].Ptar) {
-          return a.Price[2].Ptar - b.Price[2].Ptar;
-        }
-        return 0;
-      }).reverse();
+      const newArrayRoutes = [...routes].reverse();
       setRoutes(newArrayRoutes);
+      setActiveButton('Стоимость по возрастанию');
     }
+    
   }
   const sortedRoutesTimeDepart = () => {
     setActiveButton('Время отправления')
@@ -149,8 +147,8 @@ console.log(dataRoute)
         return 0;
       });
       setRoutes(newArrayRoutes);
-
-    } else {
+      setActiveButton('Время отправления по убыванию');
+    } else if (activeButton === 'Время отправления по возрастанию') {
       const newArrayRoutes = [...routes].sort((a, b) => {
         if (b.TimeDepart && a.TimeDepart) {
           return b.TimeDepart.localeCompare(a.TimeDepart);
@@ -158,6 +156,12 @@ console.log(dataRoute)
         return 0;
       });
       setRoutes(newArrayRoutes);
+      setActiveButton('Время отправления по убыванию');
+    }
+    else {
+      const newArrayRoutes = [...routes].reverse();
+      setRoutes(newArrayRoutes);
+      setActiveButton('Время отправления по возрастанию');
     }
   }
   // function formatedTime(time: string) {
@@ -174,8 +178,8 @@ console.log(dataRoute)
         return 0;
       });
       setRoutes(newArrayRoutes);
-
-    } else {
+      setActiveButton('Время прибытия по убыванию');
+    } else if (activeButton === 'Время прибытия по возрастанию') {
       const newArrayRoutes = [...routes].sort((a, b) => {
         if (b.TimeArrive && a.TimeArrive) {
           return b.TimeArrive.localeCompare(a.TimeArrive);
@@ -183,6 +187,11 @@ console.log(dataRoute)
         return 0;
       });
       setRoutes(newArrayRoutes);
+      setActiveButton('Время прибытия по убыванию');
+    } else {
+      const newArrayRoutes = [...routes].reverse();
+      setRoutes(newArrayRoutes);
+      setActiveButton('Время прибытия по возрастанию');
     }
   }
   const sortedRoutesTimeFull = () => {
@@ -198,8 +207,8 @@ console.log(dataRoute)
         return a.Minuts.localeCompare(b.Minuts);
       });
       setRoutes(newArrayRoutes);
-
-    } else {
+      setActiveButton('Время в пути по убыванию');
+    } else if (activeButton === 'Время в пути по возрастанию') {
       const newArrayRoutes = [...routes].sort((a, b) => {
         
           if (b.Hour && a.Hour) {
@@ -211,10 +220,15 @@ console.log(dataRoute)
           return b.Minuts.localeCompare(a.Minuts);
       });
       setRoutes(newArrayRoutes);
+      setActiveButton('Время в пути по убыванию');
+    } else {
+      const newArrayRoutes = [...routes].reverse();
+      setRoutes(newArrayRoutes);
+      setActiveButton('Время в пути по возрастанию');
     }
   }
   const sortedPrices = sortedRoutesPriceBest(routes)
-  console.log(sortedPrices)
+
   return (
     <section className={style.rates}>
       <SearchForm className={style['rates__form']} searchProps={searchProps}/>
@@ -223,29 +237,28 @@ console.log(dataRoute)
           <div className={style['rates__header']} >
           <Breadcrumbs links={links} />
             <div className={style['rates__filter']} >
-              <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={activeButton === 'Время отправления'} title={'Время отправления'} />
-              <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={activeButton === 'Время прибытия'} title={'Время прибытия'} />
-              <ListRatesFilterButtons onClick={sortedRoutesTimeFull} isSort={activeButton === 'Время в пути'} title={'Время в пути'}/>
-              <ListRatesFilterButtons onClick={sortedRoutesPrice} title={'Стоимость'} isSort={activeButton === 'Стоимость'} />
+              <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={activeButton === 'Время отправления по возрастанию'} title={'Время отправления '} />
+              <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={activeButton === 'Время прибытия по возрастанию'} title={'Время прибытия'} />
+              <ListRatesFilterButtons onClick={sortedRoutesTimeFull} isSort={activeButton === 'Время в пути по возрастанию'} title={'Время в пути'}/>
+              <ListRatesFilterButtons onClick={sortedRoutesPrice} title={'Стоимость'} isSort={activeButton === 'Стоимость по возрастанию'} />
             </div>
           </div>
 
           <div className={style.list}>
-            <GridLoader color={'#0243A6'} loading={ loading} size={10}/>
-            
+            {routeData.Result.IsActive === true ? 
+            <GridLoader color={'#0243A6'} loading={ loading} size={10}/> 
+            : null}
             {routes.length !== 0 ? (
               routes.map((data) => (
                 <ListRatesItem key={data.Id} data={data} sortedPrices={sortedPrices} />
               ))
             ) : (
-              !loading ? <p>Извините, маршруты не найдены</p> : ''
-              
+              loading === false ? <p>Извините, маршруты не найдены</p> : null
             )}
           </div>
         </div>
       </div>
     </section>
-
   );
 };
 

@@ -6,12 +6,12 @@ import { useFormContext, } from "react-hook-form";
 import Select from 'react-select';
 import InputMask from 'react-input-mask';
 import style from './PassengerCard.module.scss';
-import { useAppDispatch, useAppSelector } from '@/app/hooks/redux';
-import { setPriceFormTarifs } from '@/redux/slice/priceFormTarifsSlice';
+import { useAppSelector } from '@/app/hooks/redux';
 interface IPassengerCard {
   className: string,
   countUser: number,
-  controller: any
+  controller: any,
+  handleifChangeTariffs:(index: number, selectedTarifId: any) => void
 }
 // interface IOrderForm {
 //   user: {
@@ -42,10 +42,6 @@ interface ITypesArraySelectCitizenship extends ITypesArraySelect {
   Abbr: string,
 }
 
-
-function transformObjects(arr:ITypesArraySelect[]) {
-  return arr.map(obj => ({ value: obj.Name, label: obj.Name }));
-}
 function transformObjectsTarifs(arr:ITypesArraySelectTarifs[]) {
   return arr.map(obj => ({ value: obj.Value, label: obj.Name }));
 }
@@ -55,16 +51,13 @@ function transformObjectsDocumentTypes(arr:ITypesArraySelect[]) {
 function transformObjectsPassengersCitizenship(arr:ITypesArraySelectCitizenship[]) {
   return arr.map(obj => ({ value: obj.Abbr, label: obj.Name }));
 }
-const PassengerCard: FC<IPassengerCard> = ({ className, countUser, controller }) => {
-  const dispatch = useAppDispatch();
-  const {priceFormTarifs} = useAppSelector((state) => state.priceFormTarifsReduser);
+const PassengerCard: FC<IPassengerCard> = ({ className, countUser, controller, handleifChangeTariffs }) => {
   const {Route} = useAppSelector((state:any) => state.singleRouteReduser);
   const [activeButton, setActiveButton] = useState('');
   const [countries, setCountries] = useState<OptionType[]>([]);
   const [documentTypeUser, setDocumentTypeUser] = useState<OptionType[]>([]);
   const [arrayTariff, setArrayTariff] = useState<OptionType[]>([{value: 0, label:''}]);
   const [defaultTariff, setDefaultTariff] = useState<any>({value: '', label: ''});
-
 
   useEffect(() => {
     if(Route.Result.PassengersCitizenship){
@@ -95,37 +88,21 @@ const PassengerCard: FC<IPassengerCard> = ({ className, countUser, controller })
         setDefaultTariff({value: arrayTariff[0].value, label: arrayTariff[0].label})
       }
     }
-    
   },[arrayTariff])
-console.log(arrayTariff)
-  console.log(defaultTariff)
+
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
   };
 
-  const { register, control, setValue, watch } = useFormContext();
+  const { register, control, setValue, watch, getValues } = useFormContext();
   const Controller = controller;
   const lastName = watch(`Passengers.${countUser}.LastName`);
   const firstName = watch(`Passengers.${countUser}.FirstName`);
   const middleName = watch(`Passengers.${countUser}.MiddleName`);
   const birthDate = watch(`Passengers.${countUser}.Birthdate`);
   const documentNumber = watch(`Passengers.${countUser}.DocumentNumber`);
-  const tarrifValue = watch(`Passengers.${countUser}.TarifId`);
+  const tarrifValue = getValues(`Passengers.${countUser}.TarifId`);
 
-  useEffect(() => {
-    if(tarrifValue){
-      Route.Result.Route.Routes[0].Tariffs.forEach((item:any) => {
-        if(item.Name === tarrifValue.label){
-       
-         const resultArray = item.Prices[2].Value;
-          dispatch(setPriceFormTarifs(resultArray));
-        }
-      })
-      console.log(tarrifValue)
-    }else{
-
-    }
-  },[tarrifValue])
   useEffect(() => {
     const update = () => {
       setValue(`Passengers.${countUser}.TarifId`, defaultTariff)
@@ -134,6 +111,12 @@ console.log(arrayTariff)
       update();
     }
   },[defaultTariff])
+  useEffect(() => {
+    console.log(countUser)
+  },[countUser])
+  useEffect(() => {
+    handleifChangeTariffs(countUser, tarrifValue)
+  },[tarrifValue,countUser])
   return (
     <div className={`${className}`}>
       <h2 className={style['order-form__title']}>
@@ -168,13 +151,14 @@ console.log(arrayTariff)
                 options={arrayTariff}
                 value={value}
                 getOptionValue={e => e.value}
-                onChange={(e) => { onChange(e) }}
-                
+                onChange={(e) => {
+                  onChange(e);
+                  handleifChangeTariffs(countUser, e);
+                }}
                 placeholder="Выбрать тариф"
               />
             )}
           />
-
         </div>
         <div className={style['order-form-row__wrapper']}>
 

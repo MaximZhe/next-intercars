@@ -1,5 +1,4 @@
-
-import ListRates from '../../components/ListRates/ListRates';
+import ListRates from "@/app/components/ListRates/ListRates";
 
 const SearchResultPage = () => {
    

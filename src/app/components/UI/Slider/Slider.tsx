@@ -23,6 +23,7 @@ const Slider = ({ title, className }: { title: string, className: string }) => {
     const [isFirstSlide, setIsFirstSlide] = useState(false);
     const [isLastSlide, setIsLastSlide] = useState(false);
 
+
     const handleReachEnd = () => {
         setIsFirstSlide(false);
         setIsLastSlide(false);

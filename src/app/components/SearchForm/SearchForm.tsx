@@ -11,13 +11,13 @@ import styles from './SearchForm.module.scss';
 import { setDataRoute } from '@/redux/slice/getRoutesSlice';
 import {setCityDepartureName} from '@/redux/slice/cityDepartureSlice';
 import { useAppDispatch } from '@/app/hooks/redux';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import ArrowForm from '@/app/icons/svg/ArrowForm';
 import CalendarIcon from '@/app/icons/svg/CalendarIcon';
 import { defaultCityForm, defaultDateForm } from '@/app/constant/constant';
 import { IFetchDataRoutes } from '@/app/types/types';
 import { formatedDateFetch } from '@/app/utils/formatedDateFetch';
-import { getServerSideProps } from '@/app/utils/actionCity';
+import { getServerSideProps } from '@/app/api/actionCity';
 import { useDebounce } from '@/app/hooks/useDebounce';
 import { setCityArrivalName } from '@/redux/slice/cityArrivalSlice';
 import { setDateSearchRoute } from '@/redux/slice/dateSearchRouteSlice';
@@ -66,7 +66,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
     
     const router = useRouter();
     const handleSuccess = (cityNameDeparture:string, cityNameArrival:string, valueDate:string) => {
-        router.push(`/find/${cityNameDeparture}-${cityNameArrival}?date=${valueDate}`, undefined);
+        router.push(`/find/route/${cityNameDeparture}-${cityNameArrival}?date=${valueDate}`, undefined);
       };
       
     const dispatch = useAppDispatch();
@@ -337,31 +337,28 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
                     const dat = response.data;
                     console.log(dat);
                     dispatch(setDataRoute(dat));
-                    
+                    setIsLoadingForm(false)
                     handleSuccess(cityDepartureData.Result[0].Name.toLowerCase(), cityArrivalData.Result[0].Name.toLowerCase(), date);
                 } catch (error) {
                     console.error('Ошибка при отправке данных на сервер:', error);
                 } finally {
                     setCityArrivalValue('');
                     setCityDepartureValue('');
-                }
-            
+                    setDate('');
+                } 
         };
-    
         if (isButtonClicked) {
-            
-           
             if(cityDepartureData.Result.length > 0 && cityArrivalData.Result.length > 0){
                setIsLoadingForm(true);
                 if (cityDepartureData.Result[0].Id !== 0 && cityArrivalData.Result[0].Id !== 0) {
                     fetchData();
                     setButtonClicked(false);
-                    setIsLoadingForm(false);
+                 
                     dispatch(setCityDepartureName(debbounceDeparture));
                     dispatch(setCityArrivalName(debbounceArrival));
                     setDate(date); 
                 } else {
-                    setIsLoadingForm(true);
+                  
                     console.log('loading...');
                 }
             }else{
@@ -495,7 +492,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
                         : null}
                 </div>
                 <div className={styles['form-search__wrapper']}>
-                    <button className={styles['form-search__btn-submit']} type='button' onClick={handleSubmit}>{isLoadingForm ? 'Идет поиск...' : 'Найти билеты'}</button>
+                    <button className={styles['form-search__btn-submit']} type='button' onClick={() =>{handleSubmit(),setIsLoadingForm(true)}}>{isLoadingForm ? 'Идет поиск...' : 'Найти билеты'}</button>
                 </div>
             </form>
         </>

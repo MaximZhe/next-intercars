@@ -1,5 +1,4 @@
-
-   'use server'
+'use server'
 export async function getServerSideProps() {
  
     // Здесь можно выполнить запрос на сервер для получения данных

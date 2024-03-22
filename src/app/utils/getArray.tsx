@@ -1,7 +1,6 @@
 import axios from "axios";
-import { useCallback } from "react";
 
-export const fetchCityArray = useCallback(async () => {
+export const fetchCityArray = async () => {
     try {
         const data = {
             Page: 0,
@@ -14,4 +13,4 @@ export const fetchCityArray = useCallback(async () => {
     } catch (error) {
         console.error('Ошибка при отправке данных на сервер:', error);
     }
-}, []);
+};

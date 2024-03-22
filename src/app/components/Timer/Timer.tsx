@@ -1,11 +1,11 @@
 'use client'
 
 import { backPage } from '@/app/utils/backPage';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const Timer = ({ isTicketPage }: { isTicketPage: boolean }) => {
-  const [timeLeft, setTimeLeft] = useState('01:00');
+  const [timeLeft, setTimeLeft] = useState('20:00');
   const [stopTimer, setStopTimer] = useState(false);
   const pathname = usePathname();
 
@@ -35,9 +35,9 @@ const Timer = ({ isTicketPage }: { isTicketPage: boolean }) => {
       if (minutesLeft === 0 && secondsLeft === 0) {
         clearInterval(timerInterval);
         setStopTimer(true);
-        // if(pathname === '/find/client'){
-        //   backPage();
-        // }
+        if(pathname === '/find/client'){
+          backPage();
+        }
       }
 
       if (!isTicketPage) {

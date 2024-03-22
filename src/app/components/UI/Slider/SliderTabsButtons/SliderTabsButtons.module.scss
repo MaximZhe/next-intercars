@@ -16,11 +16,16 @@
       text-transform: uppercase;
       background: none;
       color: #9fb1c9;
+      transition: .3s ease-in-out all;
       &.active {
         color: #005ee4;
       }
       &:first-child {
         border-right: 1px solid #9fb1c9;
+      }
+      &:hover{
+        background: #005ee4;
+        color:#FFFFFF;
       }
     }
   }

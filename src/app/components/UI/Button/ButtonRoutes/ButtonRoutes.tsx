@@ -13,6 +13,7 @@ interface IButtonRoutesProps {
     query?: {
       slug?: string,
       newsslug?:string,
+      id?:number
     }
   };
   state?: string;

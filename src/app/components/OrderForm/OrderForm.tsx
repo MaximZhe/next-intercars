@@ -27,67 +27,68 @@ interface ICountUser {
   countUser: number,
   places: IBusPlace[][],
   maxCol: number,
-  pricePay: any[]
+  pricePay: number
+  getTarrifs: (index: number, selectedTarifId: any) => void
 }
 interface IPricePayTarifs {
-  PriceArray: any[];
+  PriceArray: any;
 }
 interface IIDRoutes {
   searchId: string,
   routeId: string
 }
 
-const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay }) => {
+const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, getTarrifs }) => {
   const dispatch = useAppDispatch();
-  const {Route} = useAppSelector((state:any) => state.singleRouteReduser);
+  const { Route } = useAppSelector((state: any) => state.singleRouteReduser);
   const { dataRoute } = useAppSelector((state) => state.dataRouteReduser);
   const numberArray = createNumberArray(countUser);
-  const [idRoutes, setIdRoutes] = useState<IIDRoutes>({searchId: '', routeId: ''});
+  const [idRoutes, setIdRoutes] = useState<IIDRoutes>({ searchId: '', routeId: '' });
   const [selectedPlaces, setSelectedPlaces] = useState<any[]>([]);
   const [selectedBaggage, setSelectedBaggage] = useState<number>(0);
   const [selectedPromoCode, setSelectedPromoCode] = useState<string>('');
   const [pricePayTarifs, setPricePayTarifs] = useState<IPricePayTarifs>({
-    PriceArray: [],
+    PriceArray: new Set(),
   })
 
   useEffect(() => {
     if (Route && dataRoute) {
-      setIdRoutes({searchId: dataRoute.Result.Id, routeId: Route.Result.Route.Id })
+      setIdRoutes({ searchId: dataRoute.Result.Id, routeId: Route.Result.Route.Id })
     }
-  },[Route,dataRoute])
-  
+  }, [Route, dataRoute])
+
   function transformArray(passengersArray: any) {
     return Object.values(passengersArray);
-}
-  const getSingleRoute = async (fomDatas:any) => {
+  }
+  const getSingleRoute = async (fomDatas: any) => {
     const transformedPassengers = transformArray(fomDatas.Passengers);
     const datas: any =
-        {
-          Passengers: transformedPassengers,
-          Phone: fomDatas.Phone,
-          Email: fomDatas.Email,
-          CurrencyId: fomDatas.CurrencyId,
-          PaySystem: fomDatas.PaySystem,
-          ExtraBaggage: fomDatas.ExtraBaggage,
-          PromoCode: fomDatas.PromoCode,
-          Note: fomDatas.Note,
-          RouteId: fomDatas.RouteId,
-          SearchId: fomDatas.SearchId,
-          Lang: fomDatas.Lang,
-          SiteVersionId:fomDatas.SiteVersionId
-        } ;
+    {
+      Passengers: transformedPassengers,
+      Phone: fomDatas.Phone,
+      Email: fomDatas.Email,
+      CurrencyId: fomDatas.CurrencyId,
+      PaySystem: fomDatas.PaySystem,
+      ExtraBaggage: fomDatas.ExtraBaggage,
+      PromoCode: fomDatas.PromoCode,
+      Note: fomDatas.Note,
+      RouteId: fomDatas.RouteId,
+      SearchId: fomDatas.SearchId,
+      Lang: fomDatas.Lang,
+      SiteVersionId: fomDatas.SiteVersionId
+    };
     try {
-        const response = await axios.post('/api/v1/tickets/booking', datas);
-        const dat = response.data;
-        console.log(dat)
+      const response = await axios.post('api/v1/tickets/booking', datas);
+      const dat = response.data;
+      console.log(dat)
     } catch (error) {
 
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      console.error('Ошибка при отправке данных на сервер:', errorMessage);
+      
+      console.error('Ошибка при отправке данных на сервер:');
     } finally {
       console.log(datas)
     }
-};
+  };
 
   const handlePlaceSelection = (selectedPlace: any) => {
     const index = selectedPlaces.findIndex((place) => place === selectedPlace);
@@ -109,7 +110,7 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay }) 
   const handlePromoCode = (valuePromoCode: string) => {
     setSelectedPromoCode(valuePromoCode)
   }
-  
+
   const methods = useForm({
     defaultValues: {
       Passengers: {
@@ -118,16 +119,16 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay }) 
           LastName: '',
           MiddleName: '',
           PlaceNumber: 0,
-          TarifId: {value: 0, label: ''},
+          TarifId: { value: 0, label: '' },
         }
       },
       Phone: '',
       Email: '',
       CurrencyId: 4,
-      PaySystem:'alfaBank',
-      PromoCode:'',
-      ExtraBaggage:0,
-      Note:'',
+      PaySystem: 'alphaBank',
+      PromoCode: '',
+      ExtraBaggage: 0,
+      Note: '',
       SiteVersionId: 2,
       RouteId: '',
       SearchId: '',
@@ -136,22 +137,23 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay }) 
     mode: 'onBlur'
   });
   const { isValid } = methods.formState;
-  
-  
+
+
   const handleFormSubmit = (data: any) => {
-    // Обновляем первого пассажира в Passengers с выбранным местом
+    // Обновляем пассажира в Passengers с выбранным местом
     const updatedPassengers = Object.keys(data.Passengers).map((passengerKey, index) => {
-      const newDatePassager = formatedDateFetch(data.Passengers[passengerKey].Birthdate)
+      const newDatePassager = formatedDateFetch(data.Passengers[passengerKey].Birthdate);
       const updatedPassenger = {
-          ...data.Passengers[passengerKey],
-          PlaceNumber: selectedPlaces[index].Seat || data.Passengers[passengerKey].PlaceNumber,
-          Birthdate: newDatePassager,
-          TarifId:data.Passengers[passengerKey].TarifId.value,
-          Citizenship: data.Passengers[passengerKey].Citizenship.value,
-          DocumentId: data.Passengers[passengerKey].DocumentId.value,
+        ...data.Passengers[passengerKey],
+        PlaceNumber: selectedPlaces[index] && selectedPlaces[index].Seat ? selectedPlaces[index].Seat : data.Passengers[passengerKey].PlaceNumber,
+        Birthdate: newDatePassager,
+        TarifId: data.Passengers[passengerKey].TarifId.value,
+        Citizenship: data.Passengers[passengerKey].Citizenship.value,
+        DocumentId: data.Passengers[passengerKey].DocumentId.value,
       };
-      return { [passengerKey]: updatedPassenger };
-  });
+      return Object.keys(updatedPassenger).length > 0 ? { [passengerKey]: updatedPassenger } : null;
+    }).filter(passenger => passenger !== null);
+
     const updatedData = {
       ...data,
       Passengers: Object.assign({}, ...updatedPassengers),
@@ -163,47 +165,18 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay }) 
     console.log(updatedData);
     methods.reset();
     getSingleRoute(updatedData);
-    // navigate('/list-result-routes/choice-tickets/ending-order', { state: 'Поиск билетов/Оформление билетов/Завершение покупки' });
-    // Выводит объект с данными всех пассажиров
   };
 
- 
-  const formData = methods.watch();
-  useEffect(() => {
-    if(formData){
-      console.log(formData.Passengers)
-    }
-    const changePayTarifsArray = (priceses: any) => {
-      console.log(priceses)
-      
-    };
- 
-    if(pricePayTarifs){
-      console.log(pricePayTarifs.PriceArray)
-    }
-    if (formData && formData.Passengers) {
-      const transformedPassengers = transformArray(formData.Passengers);
-      transformedPassengers.forEach((passenger:any) => {
-        if(passenger.TarifId){
-          changePayTarifsArray(passenger.TarifId.label);
-        }else{
-          console.log('нет тарифа')
-        }
-          
-      });
-  }
-  },[formData, pricePayTarifs])
-
-  
   return (
     <>
       <FormProvider {...methods}>
         <form className={style['order-form']} onSubmit={methods.handleSubmit(handleFormSubmit)}>
           <div className={style['order-form__users']}>
-            {numberArray.map((number:any) => (
+            {numberArray.map((number: any) => (
               <PassengerCard key={number} countUser={number}
                 className={`${style['order-form__item']}`}
-                controller={Controller} />
+                controller={Controller}
+                handleifChangeTariffs={getTarrifs} />
             ))}
           </div>
           <BusTicket places={places} maxCol={maxCol}
@@ -224,7 +197,7 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay }) 
                   К оплате
                 </p>
                 <p className={style['order-form-price__value']}>
-                 {pricePayTarifs.PriceArray[0]} RUB
+                  {pricePay} RUB
                 </p>
               </div>
               <input className={style['order-form__submit']} disabled={!isValid}

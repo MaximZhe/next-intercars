@@ -102,9 +102,9 @@ img {
   background:#0243a6!important;
 }
 .loading-spiner{
-  display: flex;
-  justify-content: center;
-
+  display: block!important;
+  max-width: 42px;
+  margin: 20px auto 40px!important;
 }
 .css-1jqq78o-placeholder {
   font-size: 16px;
@@ -171,6 +171,7 @@ div.react-calendar__month-view__days{
 }
 .react-calendar__tile--active{
   background: #0243a6!important;
+  color:#FFFFFF!important;
 }
 .react-calendar__month-view__days__day--neighboringMonth {
   pointer-events: none;

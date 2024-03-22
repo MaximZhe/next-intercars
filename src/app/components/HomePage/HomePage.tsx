@@ -14,8 +14,6 @@ import { accordionItemsLeft, accordionItemsRight } from '@/app/constant/constant
 import Slider from '../UI/Slider/Slider';
 import SearchForm from '../SearchForm/SearchForm';
 import style from './HomePage.module.scss';
-import axios from 'axios';
-import { getServerSideProps } from '@/app/utils/actionCity';
 
 export const metadata: Metadata = {
     title:'Homepage',

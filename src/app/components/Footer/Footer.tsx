@@ -11,6 +11,7 @@ import ButtonRoutes from '../UI/Button/ButtonRoutes/ButtonRoutes';
 import EmailContacts from '../ContactsItemsLinks/EmailContacts/EmailContacts';
 import PhoneContacts from '../ContactsItemsLinks/PhoneContacts/PhoneContacts';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 
 
@@ -19,14 +20,14 @@ interface IRoutesList {
 }
 
 const Footer: FC<IRoutesList> = ({ routes }) => {
-    
+    const pathname = usePathname();
     const [isOpenRoutes, setIsOpenRoutes] = useState(false);
     const [isOpenInfo, setIsOpenInfo] = useState(false);
-    
+
     return (
         <footer className={style.footer}>
             <div className='container-fluid'>
-            {/* {location.pathname === '/find' || location.pathname === '/list-result-routes/choice-tickets' ? null : <Application />} */}
+            {pathname.startsWith('/find/') || pathname === '/find/client' ? null : <Application />}
                 <div className={style['footer__wrapper']}>
                     <div className={style['footer__top']}>
                         <div className={style['footer-contacts']}>
