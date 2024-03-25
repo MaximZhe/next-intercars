@@ -40,12 +40,13 @@ const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
   
   const getSingleRoute = async (valueId:string) => {
     setIsLoadingFetch(true);
+    const datas: ISingleRouteProps = {
+      RouteId: data.Id,
+      SearchId: dataRoute.Result.Id,
+      Lang: 'RUS'
+    };
     try {
-        const datas: ISingleRouteProps = {
-          RouteId: data.Id,
-          SearchId: dataRoute.Result.Id,
-          Lang: 'RUS'
-        };
+        
         console.log(datas)
         const response = await axios.post('/api/v1/routes/getRoute', datas);
         const dat = response.data;
@@ -59,7 +60,7 @@ const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
         }
         
     } catch (error) {
-
+      console.log(datas)
         console.error('Ошибка при отправке данных на сервер:', error);
     } finally {
         
@@ -174,7 +175,7 @@ const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
           }
         </div>
         <div className={style['list-item-order__inner']}>
-          <p className={style['list-item-order__price']}>{data.Price[2].Ptar ? formatedPrice(data.Price[2].Ptar) : null} {data.Price[2].CurrencyName}</p>
+          <p className={style['list-item-order__price']}>{data.Price[2].Ptar ? data.Price[2].Ptar : null} {data.Price[2].CurrencyName}</p>
           <div className={style['list-item-places--mobail']}>
             <p className={style['list-item-places__free']}>Осталось мест: {data.FreePlace} </p>
             <p className={style['list-item-places__stock']}>{data.CountFreePromos > 0 ? `Aкционных мест: ${data.CountFreePromos}` : null}</p>

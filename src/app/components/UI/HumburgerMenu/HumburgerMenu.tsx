@@ -10,7 +10,7 @@ const HumburgerMenu: FC = () => {
     const { isShow } = useAppSelector((state: { stateMobileMenuReduser: any; }) => state.stateMobileMenuReduser);
     const dispatch = useAppDispatch();
     return (
-      <div className={`${style['menu-humburger']} ${isShow ? style.open : ""}`} onClick={() => dispatch(setIsStateMenuMobail(!isShow))}>
+      <div className={`${style['menu-humburger']} ${isShow === true ? style.open : ""}`} onClick={() => dispatch(setIsStateMenuMobail(!isShow))}>
         <div className={style['menu-humburger-line']}></div>
         <div className={style['menu-humburger-line']}></div>
         <div className={style['menu-humburger-line']}></div>

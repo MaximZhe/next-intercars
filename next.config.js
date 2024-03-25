@@ -1,4 +1,4 @@
-/* @type {import('next').NextConfig} */
+/**  @type {import('next').NextConfig}  */
 
 const nextConfig = {
   basePath: '',
@@ -9,6 +9,7 @@ const nextConfig = {
         source: '/api/:path*',
         destination: 'http://api.intercars-tickets.com/api/:path*',
       },
+      
     
     ];
   },

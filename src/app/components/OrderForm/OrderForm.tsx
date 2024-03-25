@@ -10,10 +10,11 @@ import BusTicket from '../BusTicket/BusTicket';
 import ContactsUser from '../ContactsUser/ContactsUser';
 import PromoOrder from '../PromoOrder/PromoOrder';
 import { createNumberArray } from '@/app/utils/createCountUsers';
-import { useAppDispatch, useAppSelector } from "@/app/hooks/redux";
+import { useAppSelector } from "@/app/hooks/redux";
 import { formatedDateFetch } from "@/app/utils/formatedDateFetch";
-import axios from "axios";
-import { setPriceFormTarifs } from "@/redux/slice/priceFormTarifsSlice";
+import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+
 
 
 export interface IBusPlace {
@@ -39,18 +40,16 @@ interface IIDRoutes {
 }
 
 const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, getTarrifs }) => {
-  const dispatch = useAppDispatch();
+ 
   const { Route } = useAppSelector((state: any) => state.singleRouteReduser);
   const { dataRoute } = useAppSelector((state) => state.dataRouteReduser);
-  const numberArray = createNumberArray(countUser);
   const [idRoutes, setIdRoutes] = useState<IIDRoutes>({ searchId: '', routeId: '' });
   const [selectedPlaces, setSelectedPlaces] = useState<any[]>([]);
   const [selectedBaggage, setSelectedBaggage] = useState<number>(0);
   const [selectedPromoCode, setSelectedPromoCode] = useState<string>('');
-  const [pricePayTarifs, setPricePayTarifs] = useState<IPricePayTarifs>({
-    PriceArray: new Set(),
-  })
-
+  const [isLoadingPay, setIsLoadingPay] = useState(false);
+  const numberArray = createNumberArray(countUser);
+  const router = useRouter();
   useEffect(() => {
     if (Route && dataRoute) {
       setIdRoutes({ searchId: dataRoute.Result.Id, routeId: Route.Result.Route.Id })
@@ -60,7 +59,8 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
   function transformArray(passengersArray: any) {
     return Object.values(passengersArray);
   }
-  const getSingleRoute = async (fomDatas: any) => {
+  const getPay = async (fomDatas: any) => {
+    setIsLoadingPay(true);
     const transformedPassengers = transformArray(fomDatas.Passengers);
     const datas: any =
     {
@@ -78,13 +78,18 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
       SiteVersionId: fomDatas.SiteVersionId
     };
     try {
-      const response = await axios.post('api/v1/tickets/booking', datas);
+      const response = await axios.post('/api/v1/tickets/booking', datas);
       const dat = response.data;
-      console.log(dat)
+      setIsLoadingPay(false);
+      console.log(dat.Result.ExternalUrl)
+      router.push(dat.Result.ExternalUrl)
     } catch (error) {
-
-      
-      console.error('Ошибка при отправке данных на сервер:');
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        console.log(onmessage, axiosError.message);
+        console.log(axiosError.response);
+      }
+      setIsLoadingPay(false);
     } finally {
       console.log(datas)
     }
@@ -164,7 +169,7 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
     };
     console.log(updatedData);
     methods.reset();
-    getSingleRoute(updatedData);
+    getPay(updatedData);
   };
 
   return (
@@ -201,7 +206,7 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
                 </p>
               </div>
               <input className={style['order-form__submit']} disabled={!isValid}
-                type="submit" value='Перейти к оплате' />
+                type="submit" value={isLoadingPay ? 'Идет бронирование...' : 'Перейти к оплате'} />
             </div>
           </div>
 

@@ -13,7 +13,8 @@ interface IButtonRoutesProps {
     query?: {
       slug?: string,
       newsslug?:string,
-      id?:number
+      id?:number | string,
+      niceUrl?:string
     }
   };
   state?: string;

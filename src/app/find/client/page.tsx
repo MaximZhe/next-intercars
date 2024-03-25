@@ -40,7 +40,8 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
   const valueId = params.slug
   const pathname = usePathname();
   
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  
+  const [windowWidth, setWindowWidth] = useState(0);
   const [isTicketPage, setIsTicketPage] = useState(false);
   const [countUser, setCountUser] = useState(1)
   const [arrayPlaces, setArrayPlaces] = useState<IItemFullBusPlaces[]>([])
@@ -227,7 +228,7 @@ useEffect(() => {
               </h1>
               <div className={style['tickets-item-info-timer']}>
                 <p className={style['tickets-item-info-timer__text']}>
-                   {windowWidth < 768 ? 'Осталось:' : 'До конца оформления осталось'}
+                   {windowWidth < 768 ? 'Осталось:' : 'До конца оформления осталось:'}
                 </p>
                 <div className={style['tickets-item-info-timer__value']}>
                   <Timer isTicketPage={isTicketPage} />

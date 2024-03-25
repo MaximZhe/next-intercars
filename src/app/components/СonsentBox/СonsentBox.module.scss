@@ -28,6 +28,8 @@
         color: #445978;
         padding-left: 8px;
         position: relative;
+        display: flex;
+        flex-wrap: wrap;
         &::before {
           position: absolute;
           content: "";
@@ -53,6 +55,7 @@
         }
         & > a {
           display: block;
+          margin-left: 5px;
         }
       }
     }

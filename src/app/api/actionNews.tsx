@@ -1,5 +1,4 @@
 'use server'
-
 export async function getServerSideProps(countNews: number) {
  
     // Здесь можно выполнить запрос на сервер для получения данных
@@ -21,5 +20,11 @@ export async function getServerSideProps(countNews: number) {
     if (!res.ok) {
         throw new Error('Failed to fetch data')
       }
-      return res.json()
+      const data = await res.json();
+      const arrayId = data.Result.Collection.map((item: any) => ({ [item.NiceUrl]: item.Id }));
+      const resultArray = {
+              Collection: arrayId,
+              DataResult : data
+            }
+      return resultArray;
 }

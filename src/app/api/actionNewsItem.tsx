@@ -1,5 +1,5 @@
 'use server'
-export async function getFetchNewsItem(id: string) {
+export async function getFetchNewsItem(id: any) {
   try {
     const parsedId = parseInt(id, 10); // Преобразуем id в число
     if (isNaN(parsedId)) {

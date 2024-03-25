@@ -36,10 +36,10 @@ const ContactsUser = () => {
                         <div className={`${style['contacts-user-form__wrapper']}  ${errors['Phone'] ? `${style['errors-validate']}` : ''}`}>
                             
                             <InputMask type='tel'
-     mask="+7 999 999 99 99"
-    {...register('Phone', { required: 'Пожалуйста, введите номер телефона' })}
-    placeholder='+7 000 000 00 00'
-  />
+                                mask="+7 999 999 99 99"
+                                {...register('Phone', { required: 'Пожалуйста, введите номер телефона' })}
+                                placeholder='+7 000 000 00 00'
+                            />
                             <label className={style.active}>Контактный телефон</label>
                         </div>
 

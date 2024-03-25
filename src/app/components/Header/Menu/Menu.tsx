@@ -2,7 +2,7 @@
 
 
 import style from './Menu.module.scss'
-import { FC, memo, useState } from 'react';
+import { FC, useState } from 'react';
 
 import Link from 'next/link';
 import ArrowIcon from '@/app/icons/svg/ArrowIcon';
@@ -16,7 +16,7 @@ interface IMenuProps{
 }
 
 // eslint-disable-next-line react/display-name
-const Menu:FC<IMenuProps> = memo(({className}) => {
+const Menu:FC<IMenuProps> = ({className}) => {
    
     const [isOpenDropdown, setIsOpenDropdown] = useState(false);
     const { language } = useAppSelector((state: { languageReduser: any; }) => state.languageReduser);
@@ -87,6 +87,6 @@ const Menu:FC<IMenuProps> = memo(({className}) => {
 
         </div>
     );
-});
+};
 
 export default Menu;

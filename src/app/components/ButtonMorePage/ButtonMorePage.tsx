@@ -25,7 +25,7 @@ const ButtonMorePage: FC<IButtonMorePageProps> = ({ }) => {
     const fetchNewsArray = async () => {
 
       const result = await getServerSideProps(itemNewsLength);
-      setArrayLengthNews(result.Result.Collection.length);
+      setArrayLengthNews(result.DataResult.Result.Collection.length);
     }
     fetchNewsArray();
   },[])
