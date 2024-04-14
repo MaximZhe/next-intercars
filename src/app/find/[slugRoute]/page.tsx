@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import TicketImg from '../../icons/image/ticket-icon.svg';
 
 import BusSalon from '../../icons/image/bus-salon.jpg';
@@ -16,13 +16,51 @@ import Link from 'next/link';
 import Accordion from '@/app/components/HomePage/FAQ/FAQ';
 import { accordionItemsLeft, accordionItemsRight } from '@/app/constant/constant';
 import Reviews from '@/app/components/Reviews/Reviews';
+import { getRouteContent } from '@/app/api/actionGetRouteContent';
+import { getServerSideProps } from '@/app/api/actionCity';
+
+const splitParamsText = (text:string) => {
+    const arr = text.split('-');
+    return arr
+}
 
 
-
-
-const RouteDescriptionPage = () => {
-
-    
+const fetchContent = async (cityDepart: number, cityArraval: number) => {
+    try {
+        const datas = {
+            CityDeparture: cityDepart,
+            CityArrival: cityArraval,
+            SiteVersionId: 2,
+            Lang: "RUS"
+        }
+        const response = await fetch ('http://api.intercars-tickets.com/api/v1/content/get', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datas)
+        })
+        return response.json()
+    }
+    catch (error){
+        console.log(error)
+    }
+}
+const RouteDescriptionPage = async ({params}:{params:any}) => {
+    const links = [
+        { label: 'Главная', href: '/' },
+        { label: 'Поиск билетов', href: `/find/${params.slugRoute}`, active: true },
+      ];
+    const nameCityRoute = splitParamsText(params.slugRoute);
+    const resultArrayCitys = await getRouteContent(nameCityRoute[0], nameCityRoute[1]);
+    if(resultArrayCitys !== undefined){
+        const resultContent = await fetchContent(resultArrayCitys?.cityIdDeparture, resultArrayCitys?.cityIdArrival);
+        console.log(resultContent)
+    }
+    console.log(resultArrayCitys)
+    console.log(nameCityRoute)
+    // const resi = await getServerSideProps();
+    // console.log(resi)
     return (
         <>
         {/* {isMobile && !isTablet   ? <Menu/> : null} */}
@@ -30,8 +68,15 @@ const RouteDescriptionPage = () => {
             <section className={style.path}>
                 <div className='container'>
                     <div className={style.path__wrapper}>
-                        <Breadcrumbs links={[]} />
-                        <SearchForm className={style.path__form} />
+                    <Breadcrumbs links={links} />
+                    <Suspense>
+                    <div className={style['path__content']}>
+                        <h1 className={style['path__title']}>Поиск билетов по маршруту {resultArrayCitys?.cityDepartName} — {resultArrayCitys?.cityArravalName}</h1>
+                          <SearchForm className={style.path__form} citySeoRoute={resultArrayCitys}/>  
+                        </div>
+                    </Suspense>
+                        
+                        
                         <div className={style['path-description']}>
                             <div className={style['path-description__wrapper']}>
                                 <div className={style['path-description__content']}>

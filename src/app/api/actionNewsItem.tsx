@@ -1,7 +1,7 @@
 'use server'
 export async function getFetchNewsItem(id: any) {
   try {
-    const parsedId = parseInt(id, 10); // Преобразуем id в число
+    const parsedId = parseInt(id, 10);
     if (isNaN(parsedId)) {
         throw new Error('Invalid id provided');
     }

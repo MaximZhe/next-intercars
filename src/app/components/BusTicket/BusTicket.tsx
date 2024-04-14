@@ -5,6 +5,7 @@ import style from './BusTicket.module.scss'
 import BusDriver from '../../icons/image/driver-bus.svg';
 import Counter from '../Counter/Counter';
 import Image from 'next/image';
+import { useAppSelector } from '@/app/hooks/redux';
 
 
 interface IBusPlace {
@@ -20,15 +21,64 @@ export interface IPlaces {
   handlePlaceSelection: (selectedPlace: any) => void,
   countUser: number,
   selectedPlaces: any[],
-  handleBaggage: (baggageCount: number) => void
+  handleBaggage: (baggageCount: number) => void;
 }
-
+interface ISelectePlace {
+  NumberPlace: number,
+  RouteId: string,
+  SearchId: string,
+  Lang: string
+}
 const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, handleBaggage }) => {
+  const { Route } = useAppSelector((state: any) => state.singleRouteReduser);
+  const { dataRoute } = useAppSelector((state: any) => state.dataRouteReduser);
+  const [isBook, setIsBook] = useState(true)
   const [countBaggage, setCountBaggage] = useState(0)
-
+  const selectedPlace = async ( placeDataFetch: ISelectePlace) => {
+    const responce = await fetch ('/api/v1/tickets/selectplace', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(placeDataFetch)
+    })
+    try{
+      const data = await responce.json();
+      console.log(data)
+    } catch(error){
+      console.log(error)
+    }
+  }
+  const removePlace = async ( placeData: ISelectePlace) => {
+    const responce = await fetch ('/api/v1/tickets/removeplace', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(placeData)
+    })
+    try{
+      const data = await responce.json();
+      console.log(data)
+    } catch(error){
+      console.log(error)
+    }
+  }
 
   const handleSeatClick = (place: IBusPlace) => {
-
+    if(place.IsFree){
+      if(isBook === true){
+        selectedPlace({NumberPlace: place.Seat, RouteId: Route.Result.Route.Id, SearchId: dataRoute.Result.Id, Lang: 'RU'})
+        setIsBook(prev => !prev)
+      }else if(isBook === false){
+        removePlace({NumberPlace: place.Seat, RouteId: Route.Result.Route.Id, SearchId: dataRoute.Result.Id, Lang: 'RU'})
+        setIsBook(prev => !prev)
+      }else{
+        console.log('ошибка')
+      }
+    }else{
+      console.log('место занято')
+    }
     handlePlaceSelection(place);
   };
   const handleGetCountBaggage = (value: number) => {

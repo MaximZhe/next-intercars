@@ -13,6 +13,7 @@ import dataRoutesReduser from '../slice/getRoutesSearchSlice';
 import singleRouteReduser from '../slice/singleRouteDataSlice';
 import dateSearchRouteReduser from '../slice/dateSearchRouteSlice';
 import priceFormTarifsReduser from '../slice/priceFormTarifsSlice';
+import dataReducer, { fetchInitialData } from "../slice/getArrayCitys";
 import {
   persistStore,
   persistReducer,
@@ -51,7 +52,8 @@ const rootReduсer = combineReducers({
   cityArrivalReduser,
   cityArrivalApi: cityArrivalApi.reducer, 
   dataRoutesReduser,
-  SearchRoutesApi: SearchRoutesApi.reducer, 
+  SearchRoutesApi: SearchRoutesApi.reducer,
+  data: dataReducer, 
 });
 const persistedReducer = persistReducer(persistConfig, rootReduсer);
 

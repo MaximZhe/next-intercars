@@ -11,6 +11,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { IItemFullBusPlaces } from '@/app/types/types';
 import { formatedDateRoute } from '@/app/utils/formatedDateRoute';
 import { WindowScreenUser } from '@/app/utils/windowScreen';
+import { usePriceContext } from '@/contex';
 
 
 
@@ -40,6 +41,8 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
   const valueId = params.slug
   const pathname = usePathname();
   
+  const { pricePromo, setPricePromo} = usePriceContext();
+  console.log(pricePromo)
   
   const [windowWidth, setWindowWidth] = useState(0);
   const [isTicketPage, setIsTicketPage] = useState(false);
@@ -56,6 +59,7 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
     const isTicketPage = pathname === `/find/client`; // Замените '/booking' на путь к Вашей странице бронирования билета
     setIsTicketPage(isTicketPage);
   }, [pathname]);
+
   useEffect(() => {
       const dateDepartRoute = formatedDateRoute(Route.Result.Route.DateDepart);
       const dateArrivalRoute = formatedDateRoute(Route.Result.Route.DateArrive);
@@ -102,6 +106,18 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
       setDataResultRoute(resultGetRoute);
     }
   }, [Route]);
+  useEffect(() => {
+    const newPricePromo = parseFloat(pricePromo);
+    if(newPricePromo > 0){
+      setResultSumPrice(newPricePromo)
+      console.log(resultSumPrice)
+      setPricePromo('')
+    }else{
+      console.log('скидки нет')
+    }
+
+  }, [pricePromo]);
+
   function compare(a: { Row: number; Col: number; }, b: { Row: number; Col: number; }) {
     if (a.Row < b.Row) {
       return -1;
@@ -214,6 +230,8 @@ useEffect(() => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    
   return (
     <>
      <Menu className='menu__theme--blue'/>
@@ -282,7 +300,8 @@ useEffect(() => {
                 </div>
               </div>
             </div>
-            <OrderForm countUser={countUser} places={sortedArrays} maxCol={maxCol} pricePay={resultSumPrice} getTarrifs={handleifChangeTariffs} />
+            <OrderForm countUser={countUser} places={sortedArrays} maxCol={maxCol} pricePay={resultSumPrice} getTarrifs={handleifChangeTariffs}
+            arrayTariffs={selectedTariffs} />
           </div>
         </div>
       </div>

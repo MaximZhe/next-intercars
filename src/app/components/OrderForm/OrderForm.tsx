@@ -1,7 +1,7 @@
 'use client'
 
 import { FC, useEffect, useState } from "react";
-import { FormProvider, useForm, Controller } from "react-hook-form";
+import { FormProvider, useForm, Controller} from "react-hook-form";
 
 import ConsentBox from '../СonsentBox/СonsentBox';
 import style from './OrderForm.module.scss'
@@ -14,6 +14,10 @@ import { useAppSelector } from "@/app/hooks/redux";
 import { formatedDateFetch } from "@/app/utils/formatedDateFetch";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import CommentOrder from "../CommentOrder/CommentOrder";
+
+import { Passenger, ServerData } from "@/app/types/types";
+import { updatePassengerArray } from "@/app/utils/updatePassengerArray";
 
 
 
@@ -28,21 +32,22 @@ interface ICountUser {
   countUser: number,
   places: IBusPlace[][],
   maxCol: number,
-  pricePay: number
-  getTarrifs: (index: number, selectedTarifId: any) => void
+  pricePay: number,
+  getTarrifs: (index: number, selectedTarifId: any) => void,
+  arrayTariffs: any[]
 }
 interface IPricePayTarifs {
   PriceArray: any;
 }
-interface IIDRoutes {
+export interface IIDRoutes {
   searchId: string,
   routeId: string
 }
 
-const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, getTarrifs }) => {
+const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, getTarrifs, arrayTariffs }) => {
  
   const { Route } = useAppSelector((state: any) => state.singleRouteReduser);
-  const { dataRoute } = useAppSelector((state) => state.dataRouteReduser);
+  const { dataRoute } = useAppSelector((state: any) => state.dataRouteReduser);
   const [idRoutes, setIdRoutes] = useState<IIDRoutes>({ searchId: '', routeId: '' });
   const [selectedPlaces, setSelectedPlaces] = useState<any[]>([]);
   const [selectedBaggage, setSelectedBaggage] = useState<number>(0);
@@ -56,32 +61,31 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
     }
   }, [Route, dataRoute])
 
-  function transformArray(passengersArray: any) {
+  function transformArray(passengersArray: Passenger[]) {
     return Object.values(passengersArray);
   }
-  const getPay = async (fomDatas: any) => {
+  const getPay = async (formDatas: any) => {
     setIsLoadingPay(true);
-    const transformedPassengers = transformArray(fomDatas.Passengers);
+    const transformedPassengers = transformArray(formDatas.Passengers);
     const datas: any =
     {
       Passengers: transformedPassengers,
-      Phone: fomDatas.Phone,
-      Email: fomDatas.Email,
-      CurrencyId: fomDatas.CurrencyId,
-      PaySystem: fomDatas.PaySystem,
-      ExtraBaggage: fomDatas.ExtraBaggage,
-      PromoCode: fomDatas.PromoCode,
-      Note: fomDatas.Note,
-      RouteId: fomDatas.RouteId,
-      SearchId: fomDatas.SearchId,
-      Lang: fomDatas.Lang,
-      SiteVersionId: fomDatas.SiteVersionId
+      Phone: formDatas.Phone,
+      Email: formDatas.Email,
+      CurrencyId: formDatas.CurrencyId,
+      PaySystem: formDatas.PaySystem,
+      ExtraBaggage: formDatas.ExtraBaggage,
+      PromoCode: formDatas.PromoCode,
+      Note: formDatas.Note,
+      RouteId: formDatas.RouteId,
+      SearchId: formDatas.SearchId,
+      Lang: formDatas.Lang,
+      SiteVersionId: formDatas.SiteVersionId
     };
     try {
       const response = await axios.post('/api/v1/tickets/booking', datas);
       const dat = response.data;
       setIsLoadingPay(false);
-      console.log(dat.Result.ExternalUrl)
       router.push(dat.Result.ExternalUrl)
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -143,10 +147,12 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
   });
   const { isValid } = methods.formState;
 
-
   const handleFormSubmit = (data: any) => {
     // Обновляем пассажира в Passengers с выбранным местом
-    const updatedPassengers = Object.keys(data.Passengers).map((passengerKey, index) => {
+    console.log(data.Passengers)
+    const checkLengthPassengers = updatePassengerArray(data.Passengers, countUser);
+    console.log(checkLengthPassengers)
+    const updatedPassengers = Object.keys(checkLengthPassengers).map((passengerKey, index) => {
       const newDatePassager = formatedDateFetch(data.Passengers[passengerKey].Birthdate);
       const updatedPassenger = {
         ...data.Passengers[passengerKey],
@@ -158,7 +164,9 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
       };
       return Object.keys(updatedPassenger).length > 0 ? { [passengerKey]: updatedPassenger } : null;
     }).filter(passenger => passenger !== null);
-
+    
+    
+    console.log(updatedPassengers);
     const updatedData = {
       ...data,
       Passengers: Object.assign({}, ...updatedPassengers),
@@ -171,7 +179,7 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
     methods.reset();
     getPay(updatedData);
   };
-
+  
   return (
     <>
       <FormProvider {...methods}>
@@ -191,8 +199,12 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
             handleBaggage={handleBaggage}
 
           />
+          <CommentOrder />
           <ContactsUser />
-          <PromoOrder handlePromoCode={handlePromoCode} />
+          {countUser === 1 && arrayTariffs.length > 0 && arrayTariffs[0].selectedTarifId.label !== 'DT (до 12 лет)' ? 
+          <PromoOrder handlePromoCode={handlePromoCode} routeIds={idRoutes} control={methods.control} places={selectedPlaces}/> 
+          : null }
+          
 
           <div className={style['order-form__container']}>
             <ConsentBox />

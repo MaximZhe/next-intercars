@@ -266,10 +266,10 @@ export interface Passenger {
   LastName: string;
   MiddleName: string;
   Citizenship: string;
-  Birthdate: Date;
+  Birthdate: Date | string;
   TarifId: number;
-  PlaceNumber: number;
-  Gender: "M" | "F"; // Мужской или женский пол
+  PlaceNumber?: number;
+  Gender: string | string; 
   DocumentId: string;
   DocumentNumber: string;
 }
@@ -285,5 +285,6 @@ export interface ServerData {
   Note: string;
   RouteId: string;
   SearchId: string;
-  Lang: "RUS" | "ENG"; // Язык: русский или английский
+  Lang: string;
+  SiteVersionId: number;
 }

@@ -25,9 +25,9 @@ const Counter:FC <ICounterProps>= ({className, initialStateValue, getCountValue}
         <div className={`${style.counter} ${className}`}>
             <button type='button' name='decrement'
                 id='decrement'
-                className={style['counter__btn']}
+                className={`${style['counter__btn']} ${count > 1 ? style.active : ''}`}
                 onClick={() => setCount((prev) => prev - 1)}
-                disabled={count < 1 ? true : false}
+                disabled={count < 2 ? true : false}
             >
                 <Image width={24} height={24}
                     className={style['counter__icon']}

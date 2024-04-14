@@ -1,19 +1,13 @@
 
 import style from './NewsPage.module.scss';
-import { getServerSideProps } from '@/app/api/actionNews';
 import { Suspense } from 'react';
 import Breadcrumbs from '@/app/components/UI/Breadcrumbs/Breadcrumbs';
 import Menu from '@/app/components/Header/Menu/Menu';
-import { IItemNewsPageProps } from '@/app/types/types';
-import Button from '@/app/components/UI/Button/Button';
-import ArrowRight from '@/app/icons/svg/ArrowRight';
-import ItemNewsPage from './ItemNewsPage/ItemNewsPage';
 import { sliderRoutesInternational } from '@/app/constant/constant';
 import RouteItem from '@/app/components/RouteItem/RouteItem';
 import ButtonRoutes from '@/app/components/UI/Button/ButtonRoutes/ButtonRoutes';
 import ButtonMorePage from '@/app/components/ButtonMorePage/ButtonMorePage';
 import NewsAll, { fetchCityArrays } from './NewsAll/NewsAll';
-import Link from 'next/link';
 import Loading from './loading';
 
 

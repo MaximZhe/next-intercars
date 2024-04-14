@@ -11,7 +11,7 @@ import styles from './SearchForm.module.scss';
 import { setDataRoute } from '@/redux/slice/getRoutesSlice';
 import {setCityDepartureName} from '@/redux/slice/cityDepartureSlice';
 import { useAppDispatch } from '@/app/hooks/redux';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import ArrowForm from '@/app/icons/svg/ArrowForm';
 import CalendarIcon from '@/app/icons/svg/CalendarIcon';
 import { defaultCityForm, defaultDateForm } from '@/app/constant/constant';
@@ -50,7 +50,7 @@ export interface ICityDataProps {
 interface ISearchForm {
     className: string,
     searchProps?:any,
-    
+    citySeoRoute?:any,
 }
 
 interface IDataCity {
@@ -62,7 +62,7 @@ interface IDataCity {
       }
 }    
 
-const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
+const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => {
     
     const router = useRouter();
     const handleSuccess = (cityNameDeparture:string, cityNameArrival:string, valueDate:string) => {
@@ -90,6 +90,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
     const [isLoadingForm, setIsLoadingForm] = useState(false);
     const [isErrorSearchDeparture, setIsErrorSearchDeparture] = useState(false);
     const [isErrorSearchArrival, setIsErrorSearchArrival] = useState(false);
+    const [isSearchForm, setIsSearchForm] = useState(true);
     const TodayDate = new Date();
 
     const defaultDate = moment(TodayDate).format('DD.MM.YYYY');
@@ -100,6 +101,14 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
     const [isCalendarShow, setCalendarShow] = useState(false)
     const [isButtonClicked, setButtonClicked] = useState(false);
     
+    useEffect(() => {
+        if(citySeoRoute){
+            setIsSearchForm(false)
+            setCityDepartureValue(citySeoRoute.cityDepartName);
+            setCityArrivalValue(citySeoRoute.cityArravalName);
+            setDate('Дата выезда')
+        }
+    },[citySeoRoute]);
     useEffect(() => {
         if(searchProps && searchProps.citySearchArrival && searchProps.citySearchDeparture){
             setCityDepartureValue(searchProps.citySearchDeparture);
@@ -169,12 +178,27 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
     const handleDepartureChangeFilter = (inputVal: string) => {
         const inputValue = inputVal.toLowerCase();
         console.log(inputValue);
-        if (inputValue && inputValue.length > 2) {
+        const fetchCityDeparture = async (cityDeparture: string) => {
+            try {
+                const data = {
+                    name: cityDeparture,
+                    lang: 'RU'
+                }
+                const response = await axios.post('/api/v1/cities/find', data);
+                const dat = response.data;
+                
+                console.log(dat)
+            }
+            catch (error) {
+                console.error('Ошибка при отправке данных на сервер:', error);
+            }
+        }
+        if (inputValue && inputValue.length > 0) {
+            fetchCityDeparture(inputValue);
             const filteredCities = cityArray.filter((city: any) => 
                 city.Name && city.Name.toLowerCase().startsWith(inputValue)
             );
             setCityDepartSearch(filteredCities);
-            // Далее используем отфильтрованный массив городов для отображения в выпадающем списке
         }
     };
     const handleArrivalChangeFilter = (inputVal: string) => {
@@ -185,9 +209,18 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
                 city.Name && city.Name.toLowerCase().startsWith(inputValue)
             );
             setCitySearchArrival(filteredCities);
-            // Далее можешь использовать отфильтрованный массив городов для отображения в выпадающем списке
         }
     };
+    // const data = useAppSelector((state:any) => state.data.data);
+   
+    // useEffect(() => {
+    //     if(data){
+    //       console.log(data)
+    //     }
+    // })
+    //   useEffect(() => {
+    //     dispatch(fetchInitialData());
+    //   }, []);
     useEffect(() => {
         const fetchCityArray = async () => {
             const result = await getServerSideProps();
@@ -220,7 +253,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
                 console.error('Ошибка при отправке данных на сервер:', error);
             }
         }
-        if (debbounceDeparture && debbounceDeparture.length > 2) {
+        if (debbounceDeparture && debbounceDeparture.length > 0) {
             if(isSelectedChange === true){
                 handleDepartureChangeFilter(debbounceDeparture);
                 setIDepartureSelect({
@@ -253,6 +286,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
         if (debbounceDeparture && debbounceDeparture.length > 3) {
             fetchCityDeparture(debbounceDeparture);
         }
+        
     },[debbounceDeparture])
     useEffect(() => {
         const fetchCityArrival = async (cityArrival: string) => {
@@ -390,6 +424,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
       };
     return (
         <>
+        
             <form className={`${styles['form-search']} ${className}`}>
                 <div className={styles['form-search__wrapper']}>
                     <label className={styles['form-search__label']}>Откуда</label>
@@ -399,7 +434,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
                             name='departure'
                             type="text"
                             value={cityDepartureValue}
-                            onChange={(e) => {setCityDepartureValue(e.target.value), setIsSelectedChange(true)}}
+                            onChange={(e) => {setCityDepartureValue(e.target.value), setIsSelectedChange(true), setIsSearchForm(true)}}
                             placeholder='Пункт отправления'
                             required={true}
                         />
@@ -437,7 +472,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps}) => {
                         name='arrival'
                         type="text"
                         value={cityArrivalValue}
-                        onChange={(e) => {setCityArrivalValue(e.target.value), setIsSelectedChange(true)}}
+                        onChange={(e) => {setCityArrivalValue(e.target.value), setIsSelectedChange(true),setIsSearchForm(true)}}
                         placeholder='Пункт назначения'
                         required={true}
                     />
