@@ -18,8 +18,10 @@ import { accordionItemsLeft, accordionItemsRight } from '@/app/constant/constant
 import Reviews from '@/app/components/Reviews/Reviews';
 import { getRouteContent } from '@/app/api/actionGetRouteContent';
 import { getServerSideProps } from '@/app/api/actionCity';
+import { parseData } from '@/app/utils/parserContentSeoPage';
+import { Metadata } from 'next';
 
-const splitParamsText = (text:string) => {
+const splitParamsText = (text: string) => {
     const arr = text.split('-');
     return arr
 }
@@ -33,7 +35,7 @@ const fetchContent = async (cityDepart: number, cityArraval: number) => {
             SiteVersionId: 2,
             Lang: "RUS"
         }
-        const response = await fetch ('http://api.intercars-tickets.com/api/v1/content/get', {
+        const response = await fetch('http://api.intercars-tickets.com/api/v1/content/get', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -42,46 +44,64 @@ const fetchContent = async (cityDepart: number, cityArraval: number) => {
         })
         return response.json()
     }
-    catch (error){
+    catch (error) {
         console.log(error)
     }
 }
-const RouteDescriptionPage = async ({params}:{params:any}) => {
+interface IParamsContent {
+    slugRoute: string;
+}
+
+// export async function generateMetadata(
+//     {params}: any
+//   ): Promise<Metadata> {
+  
+   
+   
+   
+//     return {
+//       title: news.SeoTitle,
+//       description: news.SeoDescription,
+      
+//     }
+//   }
+const RouteDescriptionPage = async ({ params }: { params: IParamsContent }) => {
     const links = [
         { label: 'Главная', href: '/' },
         { label: 'Поиск билетов', href: `/find/${params.slugRoute}`, active: true },
-      ];
+    ];
+   
     const nameCityRoute = splitParamsText(params.slugRoute);
     const resultArrayCitys = await getRouteContent(nameCityRoute[0], nameCityRoute[1]);
-    if(resultArrayCitys !== undefined){
-        const resultContent = await fetchContent(resultArrayCitys?.cityIdDeparture, resultArrayCitys?.cityIdArrival);
-        console.log(resultContent)
-    }
+    const resultContent = await fetchContent(resultArrayCitys?.cityIdDeparture, resultArrayCitys?.cityIdArrival);
+    console.log(resultContent.Result.Routes[0])
+
     console.log(resultArrayCitys)
     console.log(nameCityRoute)
-    // const resi = await getServerSideProps();
-    // console.log(resi)
+   
+    const resultsContentPage = parseData(resultContent.Result.Page.Html);
+    console.log(resultsContentPage)
     return (
         <>
-        {/* {isMobile && !isTablet   ? <Menu/> : null} */}
-            
+            {/* {isMobile && !isTablet   ? <Menu/> : null} */}
+
             <section className={style.path}>
                 <div className='container'>
                     <div className={style.path__wrapper}>
-                    <Breadcrumbs links={links} />
-                    <Suspense>
-                    <div className={style['path__content']}>
-                        <h1 className={style['path__title']}>Поиск билетов по маршруту {resultArrayCitys?.cityDepartName} — {resultArrayCitys?.cityArravalName}</h1>
-                          <SearchForm className={style.path__form} citySeoRoute={resultArrayCitys}/>  
-                        </div>
-                    </Suspense>
-                        
-                        
+                        <Breadcrumbs links={links} />
+                        <Suspense>
+                            <div className={style['path__content']}>
+                                <h1 className={style['path__title']}>Поиск билетов по маршруту {resultContent.Result.Routes[0].City1} — {resultContent.Result.Routes[0].City2}</h1>
+                                <SearchForm className={style.path__form} citySeoRoute={resultArrayCitys} />
+                            </div>
+                        </Suspense>
+
+
                         <div className={style['path-description']}>
                             <div className={style['path-description__wrapper']}>
                                 <div className={style['path-description__content']}>
                                     <h1 className={style['path-description__title']}>
-                                        Маршрут Минск — Москва
+                                        {resultsContentPage[0]['route-title'][0].route__title}
                                     </h1>
                                     <div className={style['path-description-row']}>
                                         <div className={style['path-description-row__item']}>
@@ -89,7 +109,7 @@ const RouteDescriptionPage = async ({params}:{params:any}) => {
                                                 Расстояние
                                             </p>
                                             <p className={style['path-description-row__text']}>
-                                                550 км
+                                                {resultsContentPage[1]['info-route-subtitle'][0]['info-route__subtitle']}
                                             </p>
                                         </div>
                                         <div className={style['path-description-row__line']}></div>
@@ -98,7 +118,7 @@ const RouteDescriptionPage = async ({params}:{params:any}) => {
                                                 Среднее время рейса в пути
                                             </p>
                                             <p className={style['path-description-row__text']}>
-                                                9-10 часов
+                                                {resultsContentPage[1]['info-route-subtitle'][1]['info-route__subtitle']}
                                             </p>
                                         </div>
                                         <div className={style['path-description-row__line']}></div>
@@ -107,7 +127,7 @@ const RouteDescriptionPage = async ({params}:{params:any}) => {
                                                 Цена билета на автобус
                                             </p>
                                             <p className={style['path-description-row__text']}>
-                                                от 90 BYN
+                                                {resultsContentPage[1]['info-route-subtitle'][2]['info-route__subtitle']}
                                             </p>
                                         </div>
                                     </div>
@@ -121,34 +141,27 @@ const RouteDescriptionPage = async ({params}:{params:any}) => {
                                             </p>
                                         </div>
                                         <div className={style['path-description-schedule__content']}>
-                                            <p className={style['path-description-schedule__text']}>
-                                                22:45
-                                            </p>
-                                            <p className={style['path-description-schedule__text']}>
-                                                06:00
-                                            </p>
-                                            <p className={style['path-description-schedule__text']}>
-                                                22:45
-                                            </p>
-                                            <p className={style['path-description-schedule__text']}>
-                                                06:00
-                                            </p>
+                                            {resultsContentPage[3]['schedule-text'].map((item: any, id: number) => {
+                                                return (
+
+                                                    <p key={id} className={style['path-description-schedule__text']}>
+                                                        {item['schedule__text']}
+                                                    </p>
+                                                )
+                                            })}
+
                                         </div>
                                     </div>
-                                    <p className={style['path-description__text']}>
-                                        Уже давно прошли те времена, когда междугородний
-                                        транспорт был крайне некомфортабельным и ненадежным.
-                                        Сегодня для перевозки пассажиров между двумя
-                                        столицами используется преимущественно новая
-                                        техника, которая проходит обязательное
-                                        обслуживание. Вы можете не переживать по поводу
-                                        того, что сильно опоздаете. Среднее время в
-                                        пути составляет 9-11 часов, что не так уж и много.
-                                        Расстояние между мегаполисами чуть более 700 км,
-                                        дорожное покрытие находится в хорошем состоянии.
-                                    </p>
+                                    {resultsContentPage[4]['route-text'].map((item: any, id: number) => {
+                                        return (
+                                            <p key={id} className={style['path-description__text']}>
+                                                {item['route__text']}
+                                            </p>
+                                        )
+                                    })}
+
                                     <div className={style['path-description__map']}>
-                                        <MapRoute />
+                                        <MapRoute  cityStart={resultArrayCitys?.cityDepartName} cityEnd={resultArrayCitys?.cityArravalName}/>
                                     </div>
                                 </div>
                                 <div className={style['path-description__info']}>
@@ -162,54 +175,29 @@ const RouteDescriptionPage = async ({params}:{params:any}) => {
                                             </p>
                                         </div>
                                         <div className={style['path-description-schedule__content']}>
-                                            <p className={style['path-description-schedule__text']}>
-                                                22:45
-                                            </p>
-                                            <p className={style['path-description-schedule__text']}>
-                                                06:00
-                                            </p>
-                                            <p className={style['path-description-schedule__text']}>
-                                                22:45
-                                            </p>
-                                            <p className={style['path-description-schedule__text']}>
-                                                06:00
-                                            </p>
+                                            {resultsContentPage[3]['schedule-text'].map((item: any, id: number) => {
+                                                return (
+                                                    <p key={id} className={style['path-description-schedule__text']}>
+                                                        {item['schedule__text']}
+                                                    </p>
+                                                )
+                                            })}
                                         </div>
                                     </div>
                                     <div className={style['path-description-list']}>
                                         <h4 className={style['path-description-list__title']}>Остановки по маршуту</h4>
-                                        <div className={style['path-description-list__item']}>
-                                            <p className={style['path-description-list__city']}>
-                                                Минск
-                                            </p>
-                                            <p className={style['path-description-list__street']}>
-                                                Центральный автовокзал, ул. Бобруйская, 6
-                                            </p>
-                                        </div>
-                                        <div className={style['path-description-list__item']}>
-                                            <p className={style['path-description-list__city']}>
-                                                Минск
-                                            </p>
-                                            <p className={style['path-description-list__street']}>
-                                                Центральный автовокзал, ул. Бобруйская, 6
-                                            </p>
-                                        </div>
-                                        <div className={style['path-description-list__item']}>
-                                            <p className={style['path-description-list__city']}>
-                                                Минск
-                                            </p>
-                                            <p className={style['path-description-list__street']}>
-                                                Центральный автовокзал, ул. Бобруйская, 6
-                                            </p>
-                                        </div>
-                                        <div className={style['path-description-list__item']}>
-                                        <p className={style['path-description-list__city']}>
-                                                Минск
-                                            </p>
-                                            <p className={style['path-description-list__street']}>
-                                                Центральный автовокзал, ул. Бобруйская, 6
-                                            </p>
-                                        </div>
+                                        {resultContent.Result.Routes[0].AllStops.map((item: any) => {
+                                            return (
+                                                <div key={item.Name} className={style['path-description-list__item']}>
+                                                    <p className={style['path-description-list__city']}>
+                                                        {item.City}
+                                                    </p>
+                                                    <p className={style['path-description-list__street']}>
+                                                        {item.Name}
+                                                    </p>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             </div>
@@ -220,28 +208,16 @@ const RouteDescriptionPage = async ({params}:{params:any}) => {
                                 <h3 className={style['path-manual__title']}>
                                     Как купить билет на автобус
                                 </h3>
-                                <ButtonRoutes className={`${style['path-manual__link']}`} title={'Инструкция'} to={{ pathname: '/not-found', query: {slug:'Новости'} }}/>
+                                <ButtonRoutes className={`${style['path-manual__link']}`} title={'Инструкция'} to={{ pathname: '/not-found', query: { slug: 'Новости' } }} />
                             </div>
                             <div className={style['path-manual__col-right']}>
-                                <p className={style['path-manual__text']}>
-                                    Система автоматически выделит
-                                    самые выгодные предложения.
-                                    Если у компании имеются
-                                    акционные предложения, то
-                                    вы обязательно увидите их.
-                                    Хотите купить билет на автобус до Москвы из Минска?
-                                    Этот процесс не
-                                    отнимет у вас много времени.
-                                </p>
-                                <p className={style['path-manual__text']}>
-                                    Если у вас возникнут какие-либо вопросы,
-                                    то сотрудники обязательно на них ответят.
-                                    Они расскажут, как оформить покупку.
-                                    Данные на сайте обновляются на постоянной основе.
-                                    Здесь появляется информация только об
-                                    актуальных рейсах. Купить обратный билет
-                                    на автобус Москва - Минск.
-                                </p>
+                                {resultsContentPage[7]['buy-ticket-text'].map((item: any, id: number) => {
+                                    return (
+                                        <p key={id} className={style['path-manual__text']}>
+                                            {item['buy-ticket__text']}
+                                        </p>
+                                    )
+                                })}
                             </div>
                         </div>
                         <div className={style['path-benefits']}>
@@ -295,67 +271,22 @@ const RouteDescriptionPage = async ({params}:{params:any}) => {
                                 <Image className={style['path-roads__icon']}
                                     src={RoadIcon} width={40} height={40} alt='' />
                                 <h3 className={style['path-roads__title']}>
-                                    Маршруты в Москву из других городов
+                                    {resultsContentPage[8]['all-routes-title'][0]['all-routes__title']}
                                 </h3>
-                                <ButtonRoutes className={`${style['path-roads__link']}`} title={'Все маршруты'} to={{ pathname: '/not-found', query: {slug:'Все маршруты'} }} />
+                                <ButtonRoutes className={`${style['path-roads__link']}`} title={'Все маршруты'} to={{ pathname: '/not-found', query: { slug: 'Все маршруты' } }} />
                             </div>
                             <div className={style['path-roads__colum-right']}>
                                 <ul className={style['path-roads-list']}>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
+                                {resultsContentPage[9]['all-routes-item'].map((item: any, id: number) => {
+                                    return (
+                                       
+                                        <li key={id} className={style['path-roads-list__item']}>
+                                        <Link href={`/find/${resultsContentPage[10]['all-routes-link'][id]['all-routes__link']}`} className={style['path-roads-list__link']}>
+                                            {item['all-routes__item']}
                                         </Link>
                                     </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
-                                    <li className={style['path-roads-list__item']}>
-                                        <Link href='/' className={style['path-roads-list__link']}>
-                                            Могилев - Москва
-                                        </Link>
-                                    </li>
+                                    )
+                                })}
                                 </ul>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-import { IItemNewsPageProps, IItemSalesPageProps, IRouteItem, ISliderRoute } from "../types/types";
+import { IItemSalesPageProps, IRouteItem, ISliderRoute } from "../types/types";
 import { IAccordionItem } from "../types/types";
 
 export const accordionItemsLeft: IAccordionItem[] = [
@@ -43,14 +43,14 @@ export const accordionItemsRight: IAccordionItem[] = [
 ];
 
 export const routesItems: IRouteItem[] = [
-  { id: 1, value: "Санкт-Петербург–Минск" },
-  { id: 2, value: "Санкт-Петербург–Гомель" },
-  { id: 3, value: "Москва-Брянск" },
-  { id: 4, value: "Санкт-Петербург–Брянск" },
-  { id: 5, value: "Брянск-Симферополь" },
-  { id: 6, value: "Москва-Варшава" },
-  { id: 7, value: "Санкт-Петербург-Варшава" },
-  { id: 8, value: "Москва-Казань" },
+  { id: 1, value: "Санкт-Петербург–Минск", link: '/find/minsk-moscow' },
+  { id: 2, value: "Санкт-Петербург–Гомель", link: '/find/minsk-moscow' },
+  { id: 3, value: "Минск-Москва", link: '/find/minsk-moscow' },
+  { id: 4, value: "Санкт-Петербург–Брянск", link: '/find/minsk-moscow' },
+  { id: 5, value: "Брянск-Симферополь", link: '/find/minsk-moscow' },
+  { id: 6, value: "Москва-Варшава", link: '/find/minsk-moscow' },
+  { id: 7, value: "Санкт-Петербург-Варшава", link: '/find/minsk-moscow' },
+  { id: 8, value: "Москва-Казань", link: '/find/minsk-moscow' },
 ];
 
 export const sliderRoutesRussia: ISliderRoute[] = [

@@ -27,7 +27,7 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
     return (
         <footer className={style.footer}>
             <div className='container-fluid'>
-            {pathname.startsWith('/find/') || pathname === '/find/client' ? null : <Application />}
+            {pathname.startsWith('/find/route/') || pathname === '/find/client' ? null : <Application />}
                 <div className={style['footer__wrapper']}>
                     <div className={style['footer__top']}>
                         <div className={style['footer-contacts']}>
@@ -65,7 +65,7 @@ const Footer: FC<IRoutesList> = ({ routes }) => {
                             <ul className={`${style['footer__list']} ${style['footer-routes__list']}`}>
                                 {routes.map((item) =>
                                     <li key={item.id} className={style['footer-routes__item']}>
-                                        <Link href={`/404`} className={style['footer-routes__link']}>{item.value}</Link>
+                                        <Link href={item.link} className={style['footer-routes__link']}>{item.value}</Link>
                                     </li>)}
                             </ul>
                             <ButtonRoutes to={{pathname:'/404'}} title={'Все маршруты'} className={style['footer-routes__more']}/>

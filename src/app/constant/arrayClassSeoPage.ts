@@ -1,0 +1,2 @@
+export const arrayClassName =['route__title', 'info-route__subtitle','schedule__title', 'schedule__text','route__text','route-stops__station','route-stops__desc','buy-ticket__text', 'all-routes__title','all-routes__item','all-routes__link'];
+export const arrayKeyName =['route-title', 'info-route-subtitle','schedule-title', 'schedule-text','route-text','route-stops-station','route-stops-desc','buy-ticket-text', 'all-routes-title','all-routes-item','all-routes-link'];

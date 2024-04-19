@@ -51,6 +51,7 @@ interface ISearchForm {
     className: string,
     searchProps?:any,
     citySeoRoute?:any,
+    prop?:any,
 }
 
 interface IDataCity {
@@ -62,7 +63,7 @@ interface IDataCity {
       }
 }    
 
-const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => {
+const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute, prop}) => {
     
     const router = useRouter();
     const handleSuccess = (cityNameDeparture:string, cityNameArrival:string, valueDate:string) => {

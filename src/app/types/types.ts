@@ -36,6 +36,7 @@ export interface ICityDataProps {
 export interface IRouteItem {
   id: number;
   value: string;
+  link: string;
 }
 export interface IAccordionItem {
   id: number;

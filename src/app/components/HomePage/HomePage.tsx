@@ -15,12 +15,16 @@ import Slider from '../UI/Slider/Slider';
 import SearchForm from '../SearchForm/SearchForm';
 import style from './HomePage.module.scss';
 
+
 export const metadata: Metadata = {
     title:'Homepage',
     description:'This HomePage'
 }
 
+
+
 export default function Homepage()  {
+    
     
   return (
     

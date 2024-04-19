@@ -16,6 +16,7 @@
     "@yandex/ymaps3-types": "^0.0.20",
     "axios": "^1.6.1",
     "http-proxy-middleware": "^2.0.6",
+    "jsdom": "^24.0.0",
     "moment": "^2.29.4",
     "next": "^14.0.2",
     "node-sass": "^9.0.0",
@@ -32,6 +33,7 @@
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

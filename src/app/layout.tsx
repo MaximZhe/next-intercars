@@ -17,7 +17,7 @@ import { routesItems } from './constant/constant'
 
 <Script
         src='https://api-maps.yandex.ru/2.1/?apikey=c9273e50-6b61-4b69-a5a9-4ba1f010ec6a&lang=ru_RU'
-        
+        strategy='lazyOnload'
       />
 
 

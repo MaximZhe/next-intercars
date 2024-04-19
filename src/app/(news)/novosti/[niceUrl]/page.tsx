@@ -1,14 +1,9 @@
 
-
-
-
-
 import style from './SingleNewsPage.module.scss';
 import styles from '../ItemNewsPage/ItemNewsPage.module.scss'
 import styleNews from '../NewsPage.module.scss'
 // import { useParams } from 'react-router-dom';
 import { FC } from 'react';
-import { IItemNewsPageProps } from '../../../types/types';
 import { sliderRoutesInternational } from '../../../constant/constant';
 import Menu from '../../../components/Header/Menu/Menu';
 import ActionCardItem from '../../../components/ActionCardItem/ActionCardItem';
@@ -60,7 +55,7 @@ export async function generateMetadata(
     }
     const id = findIdByNiceUrl(resultParams, params);
    
-    // fetch data
+   
     const news = await fetchNewsItem(id)
     return {
       title: news.SeoTitle,

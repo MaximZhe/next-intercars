@@ -14,8 +14,8 @@ const Application = () => {
                 <div 
                  className={style['applications__img']} ></div>
                 <div className={style['applications-links']}>
-                    <Link href='' className={style['applications-links__item']}></Link>
-                    <Link href='' className={style['applications-links__item']}></Link>
+                    <Link href='https://apps.apple.com/by/app/intercars-билеты-на-автобус/id1525584784' className={style['applications-links__item']}></Link>
+                    <Link href='https://play.google.com/store/apps/details?id=org.nativescript.Intercars&pcampaignid=web_share' className={style['applications-links__item']}></Link>
                 </div>
             </div>
         </div>
