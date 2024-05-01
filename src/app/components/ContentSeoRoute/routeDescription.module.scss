@@ -1,11 +1,5 @@
 .path {
   padding-top: 16px;
-  &__routes{
-    gap: 25px 0;
-    display: flex;
-    flex-direction: column;
-    margin-top: 30px;
-  }
   &__wrapper {
     max-width: 1000px;
     width: 100%;

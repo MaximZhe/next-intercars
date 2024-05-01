@@ -1,7 +1,6 @@
 .order-form-row {
     display: flex;
     gap: 0 16px;
-    align-items: center;
     margin-top: 26px;
     &:nth-child(2) {
       margin-top: 16px;
@@ -75,6 +74,16 @@
         }
       }
     }
+    &__error {
+      font-size: 14px;
+      color:red;
+      line-height:18px;
+      margin-top: 3px;
+    }
+  }
+ 
+  .error-validate{
+    border-color: #FF2417;
   }
   .order-form-row__wrapper input:focus + label {
     top: 9px;

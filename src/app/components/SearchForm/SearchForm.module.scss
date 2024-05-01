@@ -206,8 +206,10 @@
       position: relative;
       flex-direction: row;
       align-items: center;
-      &:nth-child(2) > input {
+    
+      &:nth-child(2) > .form-search__container > input {
         padding-left: 12px;
+        
       }
       &:last-child {
         max-width: 100%;

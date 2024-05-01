@@ -73,7 +73,7 @@ const Slider = ({ title, className }: { title: string, className: string }) => {
                         lastSlide={isLastSlide}
                     />
                 </div>
-                <Swiper className={`slider ${className}`}
+                <Swiper className={`slider ${className}`} loop={true}
                     onReachEnd={handleReachEnd}
                     onReachBeginning={handleReachBeginning}
                     onSwiper={setSwiper}

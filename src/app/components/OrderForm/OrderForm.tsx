@@ -86,7 +86,7 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
       const response = await axios.post('/api/v1/tickets/booking', datas);
       const dat = response.data;
       setIsLoadingPay(false);
-      router.push(dat.Result.ExternalUrl)
+      router.replace(dat.Result.ExternalUrl)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;

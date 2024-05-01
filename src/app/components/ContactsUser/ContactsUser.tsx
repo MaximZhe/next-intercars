@@ -21,9 +21,14 @@ const ContactsUser = () => {
             <div className={style['contacts-user-form']}>
                 <div className={style['contacts-user-form__box']}>
                     <div className={style['contacts-user-form__input']}>
-                        <div className={style['contacts-user-form__wrapper']}>
+                        <div className={`${errors['Email'] ? `${style['errors-validate']}` : ''} ${style['contacts-user-form__wrapper']} `}>
                             <input type='email'
-                                {...register('Email', { required: 'Пожалуйста, введите адрес электронной почты' })}
+                                {...register('Email', { required: 'Пожалуйста, введите адрес электронной почты',
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                                    message: 'Укажите @ для адреса электронной почты'
+                                }
+                                 })}
                             />
                             <label className={`${emailUser ? style.active : ""}`}>Адрес электронной почты</label>
                         </div>
@@ -32,7 +37,7 @@ const ContactsUser = () => {
                             <ErrorMessage errors={errors} name="Email" />
                         </div>
                     </div>
-                    <div className={style['contacts-user-form__input']}>
+                    <div className={`${errors['Phone'] ? `${style['errors-validate']}` : ''} ${style['contacts-user-form__input']}`}>
                         <div className={`${style['contacts-user-form__wrapper']}  ${errors['Phone'] ? `${style['errors-validate']}` : ''}`}>
                             
                             <InputMask type='tel'

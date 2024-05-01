@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import Button from '../UI/Button/Button';
 
 import ReviewsItem from './ReviewsItem/ReviewsItem';
@@ -9,7 +9,12 @@ import ReviewsForm from './ReviewsForm/ReviewsForm';
 import style from './reviews.module.scss';
 import { ReviewsData } from '@/app/constant/constant';
 import ArrowRight from '@/app/icons/svg/ArrowRight';
-const Reviews = () => {
+
+interface IReviewsData {
+    idDeparture: number,
+    idArrival: number,
+}
+const Reviews:FC <IReviewsData> = ({idDeparture, idArrival}) => {
     const [visibleItems, setVisibleItems] = useState(2);
     const itemsPerPage = 2;
 
@@ -35,7 +40,7 @@ const Reviews = () => {
                 </Button>
 
             </div>
-            <ReviewsForm />
+            <ReviewsForm idDeparture={idDeparture} idArrival={idArrival}/>
         </div>
     );
 };

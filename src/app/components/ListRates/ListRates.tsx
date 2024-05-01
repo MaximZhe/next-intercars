@@ -3,7 +3,6 @@ import { FC, useEffect, useState } from 'react';
 import style from './ListRates.module.scss';
 import SearchForm from '../SearchForm/SearchForm';
 // import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
-import axios from 'axios';
 
 import ListRatesFilterButtons from '../ListRatesFilterButtons/ListRatesFilterButtons';
 
@@ -14,6 +13,7 @@ import { IItemCarrierRoutes, IItemRoutes, ITariffData } from '@/app/types/types'
 import { useAppSelector } from '@/app/hooks/redux';
 import ListRatesItem from '../ListRatesItem/ListRatesItem';
 import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
+import { useSearchParams } from 'next/navigation';
 
 export interface IRoute {
   CarrierRoutes: IItemCarrierRoutes[];
@@ -27,6 +27,9 @@ const ListRates: FC = () => {
   // const formatedPrice = (price: number) => {
   //   return Math.floor(price);
   // }
+  const searchParams = useSearchParams();
+  const newDates = searchParams.get('date');
+  
   const [routeData, setRouteData] = useState<ITariffData>({
     Result: {
       CarrierRoutes: [],
@@ -47,32 +50,43 @@ const ListRates: FC = () => {
   const { dataRoute } = useAppSelector((state) => state.dataRouteReduser);
   const { NameDeparture } = useAppSelector((state) => state.cityDepartureReduser);
   const { Name } = useAppSelector((state) => state.cityArrivalReduser);
-  const { dateSearchRoute } = useAppSelector((state) => state.dateSearchRouteReduser);
-console.log(dataRoute)
+
   const searchProps = {
     citySearchDeparture: NameDeparture,
     citySearchArrival: Name,
-    dateSearch: dateSearchRoute
+    dateSearch: newDates
   }
  
   useEffect(() => {
     const fetchDynamicRoutes = async (id: string) => {
-      console.log(id)
+      console.log(id);
       try {
-        const data = {
-          "SearchId": id,
-        };
-        const response = await axios.post('/api/v1/routes/getSearch', data);
-        const dat = response.data;
-        setRouteData(dat);
-        setRoutes(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat())
-        localStorage.setItem("userData", JSON.stringify(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat()));
-        // dispatch(setStoregeRoute(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat()));
-        setLoading(routeData.Result.IsActive)
+          const data = {
+              "SearchId": id,
+          };
+  
+          const response = await fetch('/api/v1/routes/getSearch', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+          });
+  
+          if (!response.ok) {
+              throw new Error('Ошибка HTTP: ' + response.status);
+          }
+  
+          const dat = await response.json();
+          setRouteData(dat);
+          setRoutes(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat())
+          localStorage.setItem("userData", JSON.stringify(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat()));
+          // dispatch(setStoregeRoute(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat()));
+          setLoading(routeData.Result.IsActive)
       } catch (error) {
-        console.error('Ошибка при отправке данных на сервер:', error);
+          console.error('Ошибка при отправке данных на сервер:', error);
       }
-    };
+  };
     fetchDynamicRoutes(dataRoute.Result.Id);
     if (routeData.Result.IsActive) {
       
@@ -246,7 +260,7 @@ console.log(dataRoute)
 
           <div className={style.list}>
             {routeData.Result.IsActive === true ? 
-            <GridLoader color={'#0243A6'} loading={ loading} size={10}/> 
+            <GridLoader color={'#0243A6'} loading={loading} size={10}/> 
             : null}
             {routes.length !== 0 ? (
               routes.map((data) => (

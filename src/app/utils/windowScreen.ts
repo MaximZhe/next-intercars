@@ -1,4 +1,5 @@
 
 export function WindowScreenUser () {
-   return window.innerWidth  
+   const wind = window.innerWidth  
+   return  wind
 }

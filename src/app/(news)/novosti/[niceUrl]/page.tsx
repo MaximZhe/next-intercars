@@ -68,7 +68,7 @@ const SingleNewsPage:FC<ISingleNewsProps> = async ({params}) => {
     const resultParams = await generateStaticParams()
 
     function findIdByNiceUrl(resultArray: any[], params: any) {
-        const  niceUrl  = params.niceUrl;
+        const niceUrl  = params.niceUrl;
         const foundObject = resultArray.find((item) => item.params.niceUrl === niceUrl);
         
         if (foundObject) {

@@ -1,7 +1,5 @@
 "use client"
 
-import axios from 'axios';
-
 import React, { FC, useEffect, useState } from 'react';
 import moment from 'moment';
 import Calendar from 'react-calendar';
@@ -20,7 +18,7 @@ import { formatedDateFetch } from '@/app/utils/formatedDateFetch';
 import { getServerSideProps } from '@/app/api/actionCity';
 import { useDebounce } from '@/app/hooks/useDebounce';
 import { setCityArrivalName } from '@/redux/slice/cityArrivalSlice';
-import { setDateSearchRoute } from '@/redux/slice/dateSearchRouteSlice';
+
 
 
 
@@ -51,7 +49,7 @@ interface ISearchForm {
     className: string,
     searchProps?:any,
     citySeoRoute?:any,
-    prop?:any,
+    
 }
 
 interface IDataCity {
@@ -63,9 +61,9 @@ interface IDataCity {
       }
 }    
 
-const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute, prop}) => {
-    
+const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => {
     const router = useRouter();
+
     const handleSuccess = (cityNameDeparture:string, cityNameArrival:string, valueDate:string) => {
         router.push(`/find/route/${cityNameDeparture}-${cityNameArrival}?date=${valueDate}`, undefined);
       };
@@ -126,29 +124,16 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute, prop
     useEffect(() => {
         if(searchProps && searchProps.dateSearch){
             const formattedDate = moment(searchProps.dateSearch, 'DD.MM.YYYY').toDate();
-            const dateObject = new Date(formattedDate);
-            console.log(dateObject);
-            setUpdateDate(dateObject);
-            // const newDate = moment(searchProps.dateSearch).format('DD.MM.YYYY');
-            setDate(searchProps.dateSearch);
-
-        } else {
-            if(searchProps && searchProps.dateSearch !== undefined){
-                const formattedDate = moment(searchProps.dateSearch, 'DD.MM.YYYY').toDate();
                 const dateObject = new Date(formattedDate);
                 setUpdateDate(dateObject);
-                setDate(searchProps.dateSearch);
-            } else {
-                return;
-            }
-        }
+            setDate(searchProps.dateSearch);
+        } 
     }, [searchProps]);
-    // Функция для проверки, является ли дата прошедшей
+    // является ли дата прошедшей
     const isPastDate = (date: any) => {
         return date < TodayDate;
     };
     
-   
     useEffect(() => {
         const animatedIcon = setTimeout(() => {
             setIsAnimatedArrow(false);
@@ -170,32 +155,15 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute, prop
         setUpdateDate(selectedDate);
         setDate(newDate);
         setCalendarShow(prevState => !prevState);
-        dispatch(setDateSearchRoute(newDate));
         dispatch(setCityDepartureName(debbounceDeparture));
         dispatch(setCityArrivalName(debbounceArrival));
-        console.log(newDate)
     };
 
     const handleDepartureChangeFilter = (inputVal: string) => {
         const inputValue = inputVal.toLowerCase();
-        console.log(inputValue);
-        const fetchCityDeparture = async (cityDeparture: string) => {
-            try {
-                const data = {
-                    name: cityDeparture,
-                    lang: 'RU'
-                }
-                const response = await axios.post('/api/v1/cities/find', data);
-                const dat = response.data;
-                
-                console.log(dat)
-            }
-            catch (error) {
-                console.error('Ошибка при отправке данных на сервер:', error);
-            }
-        }
+     
         if (inputValue && inputValue.length > 0) {
-            fetchCityDeparture(inputValue);
+        
             const filteredCities = cityArray.filter((city: any) => 
                 city.Name && city.Name.toLowerCase().startsWith(inputValue)
             );
@@ -204,7 +172,6 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute, prop
     };
     const handleArrivalChangeFilter = (inputVal: string) => {
         const inputValue = inputVal.toLowerCase();
-        console.log(inputValue);
         if (inputValue && inputValue.length > 2) {
             const filteredCities = cityArray.filter((city: any) => 
                 city.Name && city.Name.toLowerCase().startsWith(inputValue)
@@ -225,28 +192,39 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute, prop
     useEffect(() => {
         const fetchCityArray = async () => {
             const result = await getServerSideProps();
-            const resultCity = result.Result.Cities
-            console.log(resultCity)
-           setCityArray(resultCity)
+            const resultCity = result.Result.Cities;
+            console.log(resultCity);
+            setCityArray(resultCity);
+            localStorage.setItem('cityArray', JSON.stringify(resultCity)); // Сохраняем данные в localStorage
+        };
+    
+        if (cityArray.length === 0) {
+            const savedDataCity = localStorage.getItem('cityArray');
+            if (savedDataCity) {
+                const parseSavedDataCity = JSON.parse(savedDataCity);
+                setCityArray(parseSavedDataCity); // Если данные есть в localStorage, загружаем их
+            } else {
+                fetchCityArray();
+            }
         }
-        if(cityArray.length === 0) {
-           fetchCityArray();
-           console.log(cityArray)
-        }else{
-            return
-        }
-        
     }, [])
 
     useEffect(() => {
         const fetchCityDeparture = async (cityDeparture: string) => {
             try {
                 const data = {
-                    name: cityDeparture,
-                    lang: 'ENG'
+                    Name: cityDeparture,
+                    Lang: 'ENG'
                 }
-                const response = await axios.post('/api/v1/cities/find', data);
-                const dat = response.data;
+                const response = await fetch('/api/v1/cities/find', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body:JSON.stringify(data)
+                });
+                const dat = await response.json();
                 setCityDepartureData(dat);
                 console.log(dat)
             }
@@ -293,11 +271,18 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute, prop
         const fetchCityArrival = async (cityArrival: string) => {
             try {
                 const data = {
-                    name: cityArrival,
-                    lang: 'ENG'
+                    Name: cityArrival,
+                    Lang: 'ENG'
                 }
-                const response = await axios.post('/api/v1/cities/find', data);
-                const dat = response.data;
+                const response = await fetch('/api/v1/cities/find', {
+                    method:'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body:JSON.stringify(data)
+                });
+                const dat = await response.json();
                 setCityArrivalData(dat);
                 console.log(dat)
             }
@@ -368,8 +353,15 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute, prop
                         IsDynamic: true,
                     };
                     console.log(datas);
-                    const response = await axios.post('/api/v1/routes/search', datas);
-                    const dat = response.data;
+                    const response = await fetch ('/api/v1/routes/search', {
+                        method:'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(datas)
+                    });
+                    const dat = await response.json();
                     console.log(dat);
                     dispatch(setDataRoute(dat));
                     setIsLoadingForm(false)

@@ -16,7 +16,7 @@ export async function getRouteContent(cityDepart: string, cityArraval: string) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                next: { revalidate: 60 },
+                
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch data');

@@ -3,6 +3,7 @@
 
 import { FC, useEffect, useState } from 'react';
 import { useFormContext, } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message"
 import Select from 'react-select';
 import InputMask from 'react-input-mask';
 import style from './PassengerCard.module.scss';
@@ -94,7 +95,7 @@ const PassengerCard: FC<IPassengerCard> = ({ className, countUser, controller, h
     setActiveButton(buttonName);
   };
 
-  const { register, control, setValue, watch, getValues } = useFormContext();
+  const { register, control, setValue, watch, getValues, formState: { errors } } = useFormContext();
   const Controller = controller;
   const lastName = watch(`Passengers.${countUser}.LastName`);
   const firstName = watch(`Passengers.${countUser}.FirstName`);
@@ -102,7 +103,6 @@ const PassengerCard: FC<IPassengerCard> = ({ className, countUser, controller, h
   const birthDate = watch(`Passengers.${countUser}.Birthdate`);
   const documentNumber = watch(`Passengers.${countUser}.DocumentNumber`);
   const tarrifValue = getValues(`Passengers.${countUser}.TarifId`);
-
   useEffect(() => {
     const update = () => {
       setValue(`Passengers.${countUser}.TarifId`, defaultTariff)
@@ -191,27 +191,53 @@ const PassengerCard: FC<IPassengerCard> = ({ className, countUser, controller, h
         </div>
       </div>
       <div className={style['order-form-row']}>
-        <div className={style['order-form-row__box']}>
-          <div className={style['order-form-row__wrapper']}>
+        <div className={`${style['order-form-row__box']}`}>
+          <div className={`${style['order-form-row__wrapper']} `}>
             <input
               type="text"
-              {...register(`Passengers.${countUser}.LastName`, { required: 'Введите имя' })}
+              {...register(`Passengers.${countUser}.LastName`, { required: 'Введите фамилию',
+              pattern: {
+                value: /^[a-zA-Zа-яА-Я]+$/,
+                message: 'Можно использовать только буквы',
+              }
+               })}
             />
             <label className={`${lastName ? style.active : ""}`}>Фамилия</label>
           </div>
-          <div>
-            
+          <div className={style['order-form-row__error']}>
+              <ErrorMessage errors={errors} name={`Passengers.${countUser}.LastName`} />
           </div>
         </div>
-
-        <div className={style['order-form-row__wrapper']}>
-          <input {...register(`Passengers.${countUser}.FirstName`)} />
-          <label className={`${firstName ? style.active : ""}`}>Имя</label>
+        <div className={style['order-form-row__box']}>
+            <div className={style['order-form-row__wrapper']}>
+              <input {...register(`Passengers.${countUser}.FirstName`, { required: 'Введите имя',
+                pattern: {
+                  value: /^[a-zA-Zа-яА-Я]+$/,
+                  message: 'Можно использовать только буквы',
+                }
+              })} />
+              <label className={`${firstName ? style.active : ""}`}>Имя</label>
+            </div>
+            <div className={style['order-form-row__error']}>
+                <ErrorMessage errors={errors} name={`Passengers.${countUser}.FirstName`} />
+            </div>
         </div>
-        <div className={style['order-form-row__wrapper']}>
-          <input {...register(`Passengers.${countUser}.MiddleName`)} />
-          <label className={`${middleName ? style.active : ""}`}>Отчество</label>
+        
+        <div className={style['order-form-row__box']}>
+          <div className={style['order-form-row__wrapper']}>
+            <input {...register(`Passengers.${countUser}.MiddleName`,{
+              pattern: {
+                value: /^[a-zA-Zа-яА-Я]+$/,
+                message: 'Можно использовать только буквы',
+              }
+            })} />
+            <label className={`${middleName ? style.active : ""}`}>Отчество</label>
+          </div>
+            <div className={style['order-form-row__error']}>
+                <ErrorMessage errors={errors} name={`Passengers.${countUser}.MiddleName`} />
+            </div>
         </div>
+        
       </div>
       <div className={style['order-form-row']}>
       <div className={style['order-form-row__wrapper']}>
@@ -240,7 +266,7 @@ const PassengerCard: FC<IPassengerCard> = ({ className, countUser, controller, h
           />
         </div>
         <div className={style['order-form-row__wrapper']}>
-          <input {...register(`Passengers.${countUser}.DocumentNumber`)
+          <input {...register(`Passengers.${countUser}.DocumentNumber`, { required: 'Введите номер документа',})
           } />
           <label className={`${documentNumber ? style.active : ""}`}>Номер документа</label>
         </div>
