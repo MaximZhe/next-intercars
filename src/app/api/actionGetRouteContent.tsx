@@ -16,6 +16,7 @@ export async function getRouteContent(cityDepart: string, cityArraval: string) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                cache: 'no-store',
                 
             });
             if (!response.ok) {
@@ -57,10 +58,10 @@ export async function getRouteContent(cityDepart: string, cityArraval: string) {
         const cityIdDeparture = await fetchCityDeparture(cityDepart);
         const cityIdArrival = await fetchCityArrival(cityArraval);
         const resultObject = {
-            cityDepartName: cityIdDeparture.Result[0].Name,
-            cityArravalName: cityIdArrival.Result[0].Name,
-            cityIdDeparture: cityIdDeparture.Result[0].Id,
-            cityIdArrival: cityIdArrival.Result[0].Id
+            cityDepartName: cityIdDeparture.Result[0]?.Name,
+            cityArravalName: cityIdArrival.Result[0]?.Name,
+            cityIdDeparture: cityIdDeparture.Result[0]?.Id,
+            cityIdArrival: cityIdArrival.Result[0]?.Id
         }
         return resultObject
     }

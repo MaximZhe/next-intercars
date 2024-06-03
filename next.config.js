@@ -13,6 +13,16 @@ const nextConfig = {
     
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'testkurs.intercars-tickets.com',
+        port: '',
+        pathname: '/Images/**',
+      },
+    ],
+  },
   
 }
 

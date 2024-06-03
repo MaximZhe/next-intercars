@@ -49,13 +49,13 @@ export interface ISliderRoute {
   price: number;
 }
 export interface IItemSalesPageProps {
-  id: number;
-  date: Date;
-  title: string;
-  startSale: {
-    dateStart: Date;
-    timeStart: Date;
-  };
+  Date: string,
+    DescribeShort: string,
+    Id: number,
+    Kind: string,
+    Lang?: string,
+    Name: string,
+    NiceUrl: string
 }
 
 export interface IItemNewsPageProps {

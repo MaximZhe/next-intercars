@@ -49,6 +49,9 @@ function transformObjectsTarifs(arr:ITypesArraySelectTarifs[]) {
 function transformObjectsDocumentTypes(arr:ITypesArraySelect[]) {
   return arr.map(obj => ({ value: obj.Id, label: obj.Name }));
 }
+/*Преобразует массив объектов Select Citizenship в массив 
+объектов со свойствами 
+"значение" и "метка".*/
 function transformObjectsPassengersCitizenship(arr:ITypesArraySelectCitizenship[]) {
   return arr.map(obj => ({ value: obj.Abbr, label: obj.Name }));
 }
@@ -84,7 +87,7 @@ const PassengerCard: FC<IPassengerCard> = ({ className, countUser, controller, h
   useEffect(() => {
     if(arrayTariff){
       if(arrayTariff && arrayTariff.length > 1){
-        setDefaultTariff({value: arrayTariff[1].value, label: arrayTariff[1].label})
+        setDefaultTariff({value: arrayTariff[2].value, label: arrayTariff[2].label})
       }else if(arrayTariff && arrayTariff.length === 1){
         setDefaultTariff({value: arrayTariff[0].value, label: arrayTariff[0].label})
       }

@@ -2,7 +2,7 @@
 
 import { FC, useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from 'swiper/modules';
+import { Autoplay,EffectFade } from 'swiper/modules';
 import type { Swiper as SwiperType } from "swiper";
 import Image from 'next/image';
 import Bus from '../../../icons/image/bus.jpg';
@@ -12,9 +12,9 @@ import BusFour from '../../../icons/image/bus3.jpg';
 
 import 'swiper/css';
 import 'swiper/css/autoplay';
+import 'swiper/css/effect-fade';
 
-import ButtonRoutes from '../Button/ButtonRoutes/ButtonRoutes';
-import { sliderRoutesInternational, sliderRoutesRussia } from '@/app/constant/constant';
+
 
 interface ISliderSeo {
     
@@ -35,7 +35,8 @@ const SliderSeo:FC <ISliderSeo> = ({className}) => {
             </div>
             <Swiper className={`slider ${className}`} loop={true}
                 onSwiper={setSwiper}
-                modules={[Autoplay]}
+                modules={[Autoplay, EffectFade]}
+                effect="fade"
                 spaceBetween={32}
                 autoplay={{
                     delay: 3000,

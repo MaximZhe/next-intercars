@@ -1,6 +1,7 @@
 
 
 import { PricePromoContext } from "@/contex"
+import { ModalContext } from "@/contex/modal"
 
 export default function BookingLayout({
     children,
@@ -10,7 +11,9 @@ export default function BookingLayout({
     return (
         <>
             <PricePromoContext>
-                {children}
+                <ModalContext>
+                   {children} 
+                </ModalContext>  
             </PricePromoContext>
 
         </>

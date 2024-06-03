@@ -56,15 +56,7 @@
         }
       }
       &.disabled {
-        opacity: 0.3;
-        &:hover {
-          background: none;
-          color: #005ee4;
-          & > svg {
-            right: -2px;
-            fill: #005ee4;
-          }
-        }
+        display: none;
       }
     }
     &__icon {
@@ -144,6 +136,7 @@
         display: none;
       }
       &__promo {
+        margin-top: 15px;
         max-width: 620px;
         padding-top: 0;
       }

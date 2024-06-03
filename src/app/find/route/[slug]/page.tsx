@@ -4,6 +4,7 @@ import ListRates from "@/app/components/ListRates/ListRates";
 import { parseData } from "@/app/utils/parserContentSeoPage";
 import { Suspense } from "react";
 import style from './SearchResultPage.module.scss';
+import Loading from "@/app/loading";
 
 const splitParamsText = (text: string) => {
     const arr = text.split('-');
@@ -39,11 +40,6 @@ const SearchResultPage = async ({ params }: { params: IParamsContent }) => {
     const nameCityRoute = splitParamsText(params.slug);
     const resultArrayCitys = await getRouteContent(nameCityRoute[0], nameCityRoute[1]);
     const resultContent = await fetchContent(resultArrayCitys?.cityIdDeparture, resultArrayCitys?.cityIdArrival);
-    console.log(resultContent.Result)
-
-    console.log(resultArrayCitys)
-    console.log(nameCityRoute)
-    
     let resultsContentPage;
 
 if(resultContent && resultContent.Result && resultContent.Result.Page && resultContent.Result.Page.Html){
@@ -51,21 +47,23 @@ if(resultContent && resultContent.Result && resultContent.Result.Page && resultC
 } else {
     resultsContentPage = null
 }
-    console.log(resultsContentPage)
     return (
         <>
 
-            <Suspense>
+            <Suspense fallback={<Loading />}>
                 <ListRates />
             </Suspense>
-            <div className="container">
-                <div className={style['routes-wrapper']}>
-                    {resultContent && resultContent.Result && resultContent.Result.Page && resultContent.Result.Page.Html ?
-                        <ContentSeoRoute resultsContentPage={resultsContentPage} resultArrayCitys={resultArrayCitys} resultContent={resultContent} />
-                        : null
-                    }
+            <Suspense fallback={<Loading />}>
+                <div className="container">
+                    <div className={style['routes-wrapper']}>
+                        {resultContent && resultContent.Result && resultContent.Result.Page && resultContent.Result.Page.Html ?
+                            <ContentSeoRoute resultsContentPage={resultsContentPage} resultArrayCitys={resultArrayCitys} resultContent={resultContent} />
+                            : null
+                        }
+                    </div>
                 </div>
-            </div>
+            </Suspense>
+            
         </>
     );
 };

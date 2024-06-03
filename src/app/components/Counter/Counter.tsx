@@ -15,7 +15,7 @@ const Counter:FC <ICounterProps>= ({className, initialStateValue, getCountValue}
     
     
     const [count, setCount] = useState(initialStateValue !== undefined ? initialStateValue :0);
-
+    const [buggageCount, setBuggageCount] = useState(initialStateValue !== undefined ? initialStateValue :0);
     useEffect(() => {
         if (getCountValue) {
           getCountValue(count);
@@ -25,21 +25,21 @@ const Counter:FC <ICounterProps>= ({className, initialStateValue, getCountValue}
         <div className={`${style.counter} ${className}`}>
             <button type='button' name='decrement'
                 id='decrement'
-                className={`${style['counter__btn']} ${count > 1 ? style.active : ''}`}
-                onClick={() => setCount((prev) => prev - 1)}
-                disabled={count < 2 ? true : false}
-            >
+                className={`${style['counter__btn']} ${count > 1  ? style.active : ''}`}
+                onClick={() => {setCount((prev) => prev - 1), setBuggageCount((prev) => prev - 1)}}
+                disabled={ buggageCount === 0 || count === 1 ? true : false}
+            >  
                 <Image width={24} height={24}
                     className={style['counter__icon']}
                     src={DecrementIcon} alt=''
                 />
             </button>
             <div className={style['counter__value']}>
-                {count}
+              {initialStateValue === 0 ? buggageCount : count} 
             </div>
             <button type='button' name='increment' id='increment'
                 className={style['counter__btn']}
-                onClick={() => setCount((prev) => prev + 1)}>
+                onClick={() => {setCount((prev) => prev + 1),setBuggageCount((prev) => prev + 1)}}>
                 <Image width={24} height={24}
                     className={style['counter__icon']}
                     src={IncrementIcon} alt=''

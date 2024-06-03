@@ -1,28 +1,32 @@
-'use client';
+
 import style from './SalesPage.module.scss';
-import ItemSalesPage from './ItemSalesPage/ItemSalesPage';
-import { useState } from 'react';
+import { Suspense } from 'react';
 import Menu from '../components/Header/Menu/Menu';
-import { SalesPageListData, sliderRoutesInternational } from '../constant/constant';
+import { sliderRoutesInternational } from '../constant/constant';
 import RouteItem from '../components/RouteItem/RouteItem';
 import ButtonRoutes from '../components/UI/Button/ButtonRoutes/ButtonRoutes';
-import Button from '../components/UI/Button/Button';
-import ArrowRight from '../icons/svg/ArrowRight';
 import Breadcrumbs from '../components/UI/Breadcrumbs/Breadcrumbs';
+import ActionAll from './ActionAll/ActionAll';
+import ButtonMoreAction from '../components/ButtonMorePage/ButtonMoreAction/ButtonMoreAction';
+import Loading from '../loading';
 
 
 const links = [
     { label: 'Главная', href: '/' },
     { label: 'Акции', href: '/akcii', active: true },
   ];
-const SalesPage = () => {
-    
-    const [visibleItems, setVisibleItems] = useState(4);
-    const itemsPerPage = 4; 
-
-    const handleShowMore = () => {
-        setVisibleItems(prevVisibleItems => prevVisibleItems + itemsPerPage);
+const SalesPage = ({
+    searchParams,
+  }: {
+    searchParams?: {
+      query?: string;
+      page?: string;
     };
+  }) => {
+    
+    const query = searchParams?.query || '3';
+    const currentPage = Number(searchParams?.page) || 1;
+
     return (
         <>
             <Menu className='menu__theme--blue' />
@@ -34,18 +38,10 @@ const SalesPage = () => {
                             <h1 className={style['sales__title']}>
                                 Выгодные предложения Intercars
                             </h1>
-                            {SalesPageListData.slice(0, visibleItems).map((item) => (
-                                <ItemSalesPage key={item.id} dataItem={item} />
-                            ))}
-                            
-                            <Button disabled={SalesPageListData.length > visibleItems ? false : true} 
-                            type='button'
-                            onClick={handleShowMore}
-                            className={`${style['sales__btn']} ${SalesPageListData.length > visibleItems ? '' : style.disabled}`}>
-                                <p className={style['sales__btn-text']}>Показать еще</p>
-                                <ArrowRight className={style['sales__icon']} />
-                            </Button>
-                            
+                            <Suspense key={query} fallback={<Loading />} >
+                                <ActionAll  query={query}/>
+                            </Suspense>
+                            <ButtonMoreAction />
                         </div>
                         <div className={style['sales__promo']}>
                             {sliderRoutesInternational.slice(0, 2).map((item) => (

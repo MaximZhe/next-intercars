@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 
 import Menu from '../../components/Header/Menu/Menu';
@@ -14,6 +14,7 @@ import { accordionItemsLeft, accordionItemsRight } from '@/app/constant/constant
 import Slider from '../UI/Slider/Slider';
 import SearchForm from '../SearchForm/SearchForm';
 import style from './HomePage.module.scss';
+import Loading from '@/app/loading';
 
 
 export const metadata: Metadata = {
@@ -42,8 +43,13 @@ export default function Homepage()  {
                 </div>
             </div>
         </div>
+        <Suspense>
         <Slider title={'Популярные маршруты'} className={`slider-routes`}/>
-        <Actions />
+        </Suspense>
+        <Suspense fallback={<Loading />}>
+            <Actions />
+        </Suspense>
+        
         <Info />
         <Advantages />
         <Accordion

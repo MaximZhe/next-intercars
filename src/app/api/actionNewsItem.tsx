@@ -16,6 +16,7 @@ export async function getFetchNewsItem(id: any) {
           headers: {
               'Content-Type': 'application/json',
           },
+          cache: 'no-store',
       });
       if (!res.ok) {
           throw new Error('Failed to fetch data');

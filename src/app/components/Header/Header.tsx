@@ -40,7 +40,6 @@ const Header = () => {
                             </Link>
                         </div>
                     </div>
-                    <LanguagePanel /> 
                     <HumburgerMenu/>
                 </div>
             </div>

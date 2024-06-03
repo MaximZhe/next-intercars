@@ -11,10 +11,12 @@ import { ReviewsData } from '@/app/constant/constant';
 import ArrowRight from '@/app/icons/svg/ArrowRight';
 
 interface IReviewsData {
-    idDeparture: number,
-    idArrival: number,
+    reviesData: any
+
 }
-const Reviews:FC <IReviewsData> = ({idDeparture, idArrival}) => {
+const Reviews: FC<IReviewsData> = ({ reviesData }) => {
+    console.log(reviesData.questionsData.Collection)
+
     const [visibleItems, setVisibleItems] = useState(2);
     const itemsPerPage = 2;
 
@@ -27,20 +29,27 @@ const Reviews:FC <IReviewsData> = ({idDeparture, idArrival}) => {
                 <h3 className={style.reviews__title}>
                     Комментарии, вопросы и отзывы пользователей
                 </h3>
-                {ReviewsData.slice(0, visibleItems).map((item) => (
-                    <ReviewsItem key={item.id} dataItem={item} />
-                ))}
+                {reviesData.questionsData.Collection.length > 0 ? (
+                    <>
+                        {reviesData.questionsData.Collection.slice(0, visibleItems).map((item: any) => (
+                            <ReviewsItem key={item.id} dataItem={item} />
+                        ))}
 
-                <Button disabled={ReviewsData.length > visibleItems ? false : true}
-                    type='button'
-                    onClick={handleShowMore}
-                    className={`${style.reviews__btn} ${ReviewsData.length > visibleItems ? '' : 'disabled'}`}>
-                    <p className={style['reviews__btn-text']}>Показать еще</p>
-                    <ArrowRight className={style.reviews__icon} />
-                </Button>
+                        <Button disabled={reviesData.questionsData.Collection.length > visibleItems ? false : true}
+                            type='button'
+                            onClick={handleShowMore}
+                            className={`${style.reviews__btn} ${reviesData.questionsData.Collection.length > visibleItems ? '' : 'disabled'}`}>
+                            <p className={style['reviews__btn-text']}>Показать еще</p>
+                            <ArrowRight className={style.reviews__icon} />
+                        </Button>
+                    </> )
+                    : (<p className={style['reviews__default']}>По данному маршруту нет отзывов и вопросов, вы можете быть первым.</p> )
+                }
+
+
 
             </div>
-            <ReviewsForm idDeparture={idDeparture} idArrival={idArrival}/>
+            <ReviewsForm idDeparture={reviesData.idDeparture} idArrival={reviesData.idArrival} />
         </div>
     );
 };

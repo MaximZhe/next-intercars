@@ -1,12 +1,12 @@
 'use server'
 export async function getServerSideProps(countNews: number) {
  
-    // Здесь можно выполнить запрос на сервер для получения данных
+    // запрос на сервер для получения данных
     const dat = {
         ContentType: "News",
         PageSize: countNews,
         Page: 0,
-        SiteId: 1,
+        SiteId: 2,
         Lang: "RUS"
       }
     const res = await fetch('http://api.intercars-tickets.com/api/v1/news/all', {
@@ -15,7 +15,8 @@ export async function getServerSideProps(countNews: number) {
         headers: {
           'Content-Type': 'application/json',
         },
-        next: { revalidate: 60 },
+        
+        cache: 'no-store',
     });
     if (!res.ok) {
         throw new Error('Failed to fetch data')

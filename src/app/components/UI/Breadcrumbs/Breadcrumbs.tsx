@@ -31,7 +31,7 @@ const Breadcrumbs:FC<ILinks> = ({ links }) => {
             <span>{link.label}</span>
           ) : (
             link.back ? (
-              <Link href={link.href} onClick={handleBackPage}>
+              <Link href={link.href} onClick={handleBackPage} scroll={false}>
                 {link.label}
               </Link>
             ) : (

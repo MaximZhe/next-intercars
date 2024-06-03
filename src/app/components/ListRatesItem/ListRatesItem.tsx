@@ -1,5 +1,5 @@
 'use client';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import arrow from '../../icons/image/Arrow static blue.svg';
 
@@ -35,6 +35,7 @@ export interface ISingleRouteProps {
 const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
   const { dataRoute } = useAppSelector((state: { dataRouteReduser: any; }) => state.dataRouteReduser);
   const [isLoadingFetch, setIsLoadingFetch] = useState(false);
+  const [widthWindow, setWindowWidth] = useState(0)
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -70,16 +71,28 @@ const ListRatesItem: FC<ItemRatesProps> = ({ data, sortedPrices }) => {
     getSingleRoute(valueId)
   };
 
-  const width = WindowScreenUser()
+  useEffect(() => {
+    const handleResize = () => {
+      const windowSize = WindowScreenUser();
+        setWindowWidth(windowSize);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+        window.removeEventListener('resize', handleResize);
+    };
+}, []);
+
   const transfer = 0;
   const transferStart = 0;
   const transferEnd = 0;
-  const spentClassBackground = SwitchClassImg(width, transfer);
+  const spentClassBackground = SwitchClassImg(widthWindow, transfer);
   const [isToggleDetailsComponent, setIsToggleDetailsComponent] = useState(false)
   const formatedPrice = (price: number) => {
     return Math.floor(price);
   }
-
+ 
 
   return (
     <>

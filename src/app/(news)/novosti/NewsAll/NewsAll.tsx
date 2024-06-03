@@ -14,7 +14,7 @@ export const fetchCityArrays = async (sizePage: number) => {
 }
 
 const NewsAll = async ({
-    query = '4',
+    query = '3',
   }: {
     query: string;
   }) => {

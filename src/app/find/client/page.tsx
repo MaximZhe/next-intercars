@@ -12,13 +12,16 @@ import { IItemFullBusPlaces } from '@/app/types/types';
 import { formatedDateRoute } from '@/app/utils/formatedDateRoute';
 import { WindowScreenUser } from '@/app/utils/windowScreen';
 import { usePriceContext } from '@/contex';
+import Modal from '@/app/components/UI/Modal/Modal';
+import { useModalContext } from '@/contex/modal';
+
 
 
 
 interface IClientProps {
-  params:{
-      slug: string,
-  } 
+  params: {
+    slug: string,
+  }
 }
 interface IArrayDateRoute {
   dateDepart: string | undefined,
@@ -34,21 +37,19 @@ interface IArrayDateRoute {
 //   Floor: number;
 // };
 
-const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
-  const {Route} = useAppSelector((state:any) => state.singleRouteReduser)
-  const {priceFormTarifs} = useAppSelector((state) => state.priceFormTarifsReduser);
-  // const { isMobile,isTablet } = useMatchMedia();
+const ChoiceTicketsPage: FC<IClientProps> = ({ params }) => {
+  const { Route } = useAppSelector((state: any) => state.singleRouteReduser)
+  const { priceFormTarifs } = useAppSelector((state) => state.priceFormTarifsReduser);
   const valueId = params.slug
   const pathname = usePathname();
-  
-  const { pricePromo, setPricePromo} = usePriceContext();
-  console.log(pricePromo)
-  
+
+  const { pricePromo, setPricePromo } = usePriceContext();
+
   const [windowWidth, setWindowWidth] = useState(0);
   const [isTicketPage, setIsTicketPage] = useState(false);
   const [countUser, setCountUser] = useState(1)
   const [arrayPlaces, setArrayPlaces] = useState<IItemFullBusPlaces[]>([])
-  const [dateRoute, setDateRoute] = useState<IArrayDateRoute>({dateDepart: '', dateArrival: ''})
+  const [dateRoute, setDateRoute] = useState<IArrayDateRoute>({ dateDepart: '', dateArrival: '' })
   const [dataResultRoute, setDataResultRoute] = useState<any>([])
 
   const [resultSumPrice, setResultSumPrice] = useState(0);
@@ -56,21 +57,21 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
   const [resultArrayPrice, setResultArrayPrice] = useState<any[]>([]);
 
   useEffect(() => {
-    const isTicketPage = pathname === `/find/client`; // Замените '/booking' на путь к Вашей странице бронирования билета
+    const isTicketPage = pathname === `/find/client`;
     setIsTicketPage(isTicketPage);
   }, [pathname]);
 
   useEffect(() => {
-      const dateDepartRoute = formatedDateRoute(Route.Result.Route.DateDepart);
-      const dateArrivalRoute = formatedDateRoute(Route.Result.Route.DateArrive);
-      setDateRoute({dateDepart: dateDepartRoute, dateArrival: dateArrivalRoute})
+    const dateDepartRoute = formatedDateRoute(Route.Result.Route.DateDepart);
+    const dateArrivalRoute = formatedDateRoute(Route.Result.Route.DateArrive);
+    setDateRoute({ dateDepart: dateDepartRoute, dateArrival: dateArrivalRoute })
     // Проверяем, есть ли данные в localStorage
     const storedData = localStorage.getItem('routePlaces');
     const storeRoute = localStorage.getItem('routeData');
-    if(storeRoute){
+    if (storeRoute) {
       const parseDataRoute = JSON.parse(storeRoute);
       setDataResultRoute(parseDataRoute);
-    }else{
+    } else {
       setDataResultRoute(Route.Result.Route);
       localStorage.setItem('routeData', JSON.stringify(Route.Result.Route));
     }
@@ -81,7 +82,7 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
     } else {
       // Если данных нет, сохраняем данные из Redux в localStorage
       const res = Route.Result.Route.FullBusPlaces;
-     
+
       if (res && res.length > 0) {
         const sortedRes = [...res]; // Создаем копию массива
         sortedRes.sort(compare); // Сортируем копию массива
@@ -90,7 +91,7 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
       }
     }
   }, [Route]);
-  
+
   // При обновлении данных из Redux, обновляем данные в state и localStorage
   useEffect(() => {
     const res = Route.Result.Route.FullBusPlaces;
@@ -101,23 +102,23 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
       localStorage.setItem('routePlaces', JSON.stringify(sortedRes));
     }
     const resultGetRoute = Route.Result.Route;
-    if(resultGetRoute ){
+    if (resultGetRoute) {
       localStorage.setItem('routeData', JSON.stringify(resultGetRoute));
       setDataResultRoute(resultGetRoute);
     }
   }, [Route]);
   useEffect(() => {
     const newPricePromo = parseFloat(pricePromo);
-    if(newPricePromo > 0){
+    if (newPricePromo > 0) {
       setResultSumPrice(newPricePromo)
       console.log(resultSumPrice)
       setPricePromo('')
-    }else{
+    } else {
       console.log('скидки нет')
     }
 
   }, [pricePromo]);
-
+  /*фильтруем маста полученные с сервера в массив для отрисовки карты автобуса*/
   function compare(a: { Row: number; Col: number; }, b: { Row: number; Col: number; }) {
     if (a.Row < b.Row) {
       return -1;
@@ -133,13 +134,13 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
     }
     return 0;
   }
-  
+
   const handleGetCountValue = (value: number) => {
     setCountUser(value);
   };
 
   const FullBusPlaces = arrayPlaces
-  
+
   const sortedArrays = [];
   let currentRow = 0;
 
@@ -165,149 +166,154 @@ const ChoiceTicketsPage:FC<IClientProps> = ({params}) => {
     { label: 'Поиск билетов', href: '/find', back: true },
     { label: 'Оформление билетов', href: `/find/client/${valueId}`, active: true },
   ];
-const handleifChangeTariffs = (index: number, selectedTarifId: any) => {
-  setSelectedTariffs((prevPassengers:any) => {
-    const updatedPassengers = [...prevPassengers];
-    const existingPassenger = updatedPassengers.find((passenger: any) => passenger.index === index);
-    if (existingPassenger) {
-      existingPassenger.selectedTarifId = selectedTarifId;
-    } else {
-      updatedPassengers.push({ index, selectedTarifId });
-    }
-    return updatedPassengers.filter(item => item.selectedTarifId !== undefined && item.selectedTarifId.label !== '');
-  });
-};
-
-useEffect(() => {
-  const handleArraySlice = (arr:any[], countUser:number) => {
-    const newArray = arr.slice(0, countUser);
-    return newArray;
+  const handleifChangeTariffs = (index: number, selectedTarifId: any) => {
+    setSelectedTariffs((prevPassengers: any) => {
+      const updatedPassengers = [...prevPassengers];
+      const existingPassenger = updatedPassengers.find((passenger: any) => passenger.index === index);
+      if (existingPassenger) {
+        existingPassenger.selectedTarifId = selectedTarifId;
+      } else {
+        updatedPassengers.push({ index, selectedTarifId });
+      }
+      return updatedPassengers.filter(item => item.selectedTarifId !== undefined && item.selectedTarifId.label !== '');
+    });
   };
 
-  if (selectedTariffs.length > countUser) {
-    const newSelectedTariffs = handleArraySlice(selectedTariffs, countUser);
-    setSelectedTariffs(newSelectedTariffs);
-  }
-}, [countUser]);
+  useEffect(() => {
+    const handleArraySlice = (arr: any[], countUser: number) => {
+      const newArray = arr.slice(0, countUser);
+      return newArray;
+    };
 
-
-
-// Создаем новый массив цен на основе выбранных тарифов
-useEffect(() => {
-  const newResultArrayPrice = selectedTariffs.map((selectedItem: any) => {
-    const selectedTarifId = selectedItem.selectedTarifId.label;
-    const price = Route.Result.Route.Routes[0].Tariffs.find((item: any) => item.Name === selectedTarifId)?.Prices[2].Value || 0;
-    return price;
-  });
-
-  setResultArrayPrice(newResultArrayPrice);
-}, [selectedTariffs]);
-
-useEffect(() => {
-  if (resultArrayPrice.length > 0) {
-    const currentSum = resultArrayPrice.reduce((acc, curr) => acc + curr, 0);
-    const prevSum = resultSumPrice;
-    const diff = currentSum - prevSum;
-    if (diff > 0) {
-      setResultSumPrice(prev => prev + diff);
-    } else if (diff < 0) {
-      setResultSumPrice(prev => prev + diff);
+    if (selectedTariffs.length > countUser) {
+      const newSelectedTariffs = handleArraySlice(selectedTariffs, countUser);
+      setSelectedTariffs(newSelectedTariffs);
     }
-  }
-}, [resultArrayPrice]);
+  }, [countUser]);
 
 
 
-    useEffect(() => {
-        const handleResize = () => {
-          const windowSize = WindowScreenUser();
-            setWindowWidth(windowSize);
-        };
+  // Создаем новый массив цен на основе выбранных тарифов
+  useEffect(() => {
+    const newResultArrayPrice = selectedTariffs.map((selectedItem: any) => {
+      const selectedTarifId = selectedItem.selectedTarifId.label;
+      const price = Route.Result.Route.Routes[0].Tariffs.find((item: any) => item.Name === selectedTarifId)?.Prices[2].Value || 0;
+      return price;
+    });
 
-        window.addEventListener('resize', handleResize);
+    setResultArrayPrice(newResultArrayPrice);
+  }, [selectedTariffs]);
 
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+  useEffect(() => {
+    if (resultArrayPrice.length > 0) {
+      const currentSum = resultArrayPrice.reduce((acc, curr) => acc + curr, 0);
+      const prevSum = resultSumPrice;
+      const diff = currentSum - prevSum;
+      if (diff > 0) {
+        setResultSumPrice(prev => prev + diff);
+      } else if (diff < 0) {
+        setResultSumPrice(prev => prev + diff);
+      }
+    }
+  }, [resultArrayPrice]);
 
-    
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      const windowSize = WindowScreenUser();
+      setWindowWidth(windowSize);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  const { isModal } = useModalContext();
+
   return (
     <>
-     <Menu className='menu__theme--blue'/>
-    <section className={style.tickets}>
-      <div className='container'>
-        <div className={style['tickets__wrapper']}>
-          <Breadcrumbs links={links} />
-          <div className={style['tickets-item']}>
-            <div className={style['tickets-item__header']}>
-              <h1 className={style['tickets-item-info__main-title']}>
-                {dataResultRoute.City1} - {dataResultRoute.City2}
-              </h1>
-              <div className={style['tickets-item-info-timer']}>
-                <p className={style['tickets-item-info-timer__text']}>
-                   {windowWidth < 768 ? 'Осталось:' : 'До конца оформления осталось:'}
-                </p>
-                <div className={style['tickets-item-info-timer__value']}>
-                  <Timer isTicketPage={isTicketPage} />
-                </div>
-              </div>
-            </div>
-            <div className={style['tickets-item-info']}>
-              <div className={style['tickets-item-info__left']}>
-                <p className={style['tickets-item-info__subtitle']}>
-                  Отправление
-                </p>
-                <p className={style['tickets-item-info__date']}>
-                {dateRoute.dateDepart} в {dataResultRoute.TimeDepart}
-                </p>
-                <p className={style['tickets-item-info__place']}>
-                {dataResultRoute.DepartName}
-                </p>
-                <div className={style['tickets-item-info__container']}>
-                  <h2 className={style['tickets-item-info__title']}>
-                    Количество пассажиров
-                  </h2>
-                  <Counter
-                    className={`${style['tickets-item-info-counter']}`}
-                    initialStateValue={1}
-                    getCountValue={handleGetCountValue} />
-                </div>
-              </div>
-              <div className={style['tickets-item-info__right']}>
+      <Menu responsive={true} />
+      <section className={style.tickets}>
+        <div className='container'>
+          <div className={style['tickets__wrapper']}>
+            <Modal isOpen={isModal}>
+              <h1>Время бронирования вышло</h1>
 
-                <p className={style['tickets-item-info__subtitle']}>
-                  Прибытие
-                </p>
-                <p className={style['tickets-item-info__date']}>
-                {dateRoute.dateArrival} в {dataResultRoute.TimeArrive}
-                </p>
-                <p className={style['tickets-item-info__place']}>
-                {dataResultRoute.ArriveName}
-                </p>
-                <div className={style['tickets-item-info__container']}>
-                  <div className={style['tickets-item-info-price']}>
-                    <p className={style['tickets-item-info-price__text']}>
-                      Стоимость
-                    </p>
-                    <p className={style['tickets-item-info-price__full']}>
-                      {resultSumPrice} RUB
-                    </p>
-                    <p className={style['tickets-item-info-price__tickets']}>
-                      за {countUser} {countUser > 1 ? 'билета' : 'билет'}
-                    </p>
+            </Modal>
+            
+            <Breadcrumbs links={links} />
+            <div className={style['tickets-item']}>
+              <div className={style['tickets-item__header']}>
+                <h1 className={style['tickets-item-info__main-title']}>
+                  {dataResultRoute.City1} - {dataResultRoute.City2}
+                </h1>
+                <div className={style['tickets-item-info-timer']}>
+                  <p className={style['tickets-item-info-timer__text']}>
+                    {windowWidth < 768 ? 'Осталось:' : 'До конца оформления осталось:'}
+                  </p>
+                  <div className={style['tickets-item-info-timer__value']}>
+                    <Timer isTicketPage={isTicketPage} />
                   </div>
                 </div>
               </div>
+              <div className={style['tickets-item-info']}>
+                <div className={style['tickets-item-info__left']}>
+                  <p className={style['tickets-item-info__subtitle']}>
+                    Отправление
+                  </p>
+                  <p className={style['tickets-item-info__date']}>
+                    {dateRoute.dateDepart} в {dataResultRoute.TimeDepart}
+                  </p>
+                  <p className={style['tickets-item-info__place']}>
+                    {dataResultRoute.DepartName}
+                  </p>
+                  <div className={style['tickets-item-info__container']}>
+                    <h2 className={style['tickets-item-info__title']}>
+                      Количество пассажиров
+                    </h2>
+                    <Counter
+                      className={`${style['tickets-item-info-counter']}`}
+                      initialStateValue={1}
+                      getCountValue={handleGetCountValue} />
+                  </div>
+                </div>
+                <div className={style['tickets-item-info__right']}>
+
+                  <p className={style['tickets-item-info__subtitle']}>
+                    Прибытие
+                  </p>
+                  <p className={style['tickets-item-info__date']}>
+                    {dateRoute.dateArrival} в {dataResultRoute.TimeArrive}
+                  </p>
+                  <p className={style['tickets-item-info__place']}>
+                    {dataResultRoute.ArriveName}
+                  </p>
+                  <div className={style['tickets-item-info__container']}>
+                    <div className={style['tickets-item-info-price']}>
+                      <p className={style['tickets-item-info-price__text']}>
+                        Стоимость
+                      </p>
+                      <p className={style['tickets-item-info-price__full']}>
+                        {resultSumPrice} RUB
+                      </p>
+                      <p className={style['tickets-item-info-price__tickets']}>
+                        за {countUser} {countUser > 1 ? 'билета' : 'билет'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <OrderForm countUser={countUser} places={sortedArrays} maxCol={maxCol} pricePay={resultSumPrice} getTarrifs={handleifChangeTariffs}
+                arrayTariffs={selectedTariffs} />
             </div>
-            <OrderForm countUser={countUser} places={sortedArrays} maxCol={maxCol} pricePay={resultSumPrice} getTarrifs={handleifChangeTariffs}
-            arrayTariffs={selectedTariffs} />
           </div>
         </div>
-      </div>
-    </section>
+      </section>
     </>
-    
+
   );
 };
 

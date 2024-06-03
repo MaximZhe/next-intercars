@@ -14,6 +14,7 @@ import 'swiper/css/navigation';
 import ButtonRoutes from '../Button/ButtonRoutes/ButtonRoutes';
 import { sliderRoutesInternational, sliderRoutesRussia } from '@/app/constant/constant';
 import SlideItem from './SlideItem/SlideItem';
+import Loading from '@/app/loading';
 
 
 
@@ -22,7 +23,14 @@ const Slider = ({ title, className }: { title: string, className: string }) => {
     const [swiper, setSwiper] = useState<SwiperType | null>(null);
     const [isFirstSlide, setIsFirstSlide] = useState(false);
     const [isLastSlide, setIsLastSlide] = useState(false);
-
+    const [sliderData, setSliderData] = useState<any>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    useEffect(() => {
+        if (sliderRoutesRussia) {
+            setSliderData(sliderRoutesRussia);
+            setIsLoading(false);
+        }
+    },[])
 
     const handleReachEnd = () => {
         setIsFirstSlide(false);
@@ -32,7 +40,7 @@ const Slider = ({ title, className }: { title: string, className: string }) => {
     const handleReachBeginning = () => {
         setIsFirstSlide(false);
         setIsLastSlide(false);
-        
+
     };
 
     useEffect(() => {
@@ -56,6 +64,7 @@ const Slider = ({ title, className }: { title: string, className: string }) => {
     const handleClick = (name: string) => {
         setActiveTab(name);
     }
+    
     return (
         <div className={style.routes}>
             <div className='container'>
@@ -73,46 +82,52 @@ const Slider = ({ title, className }: { title: string, className: string }) => {
                         lastSlide={isLastSlide}
                     />
                 </div>
-                <Swiper className={`slider ${className}`} loop={true}
-                    onReachEnd={handleReachEnd}
-                    onReachBeginning={handleReachBeginning}
-                    onSwiper={setSwiper}
-                    modules={[Navigation]}
-                    spaceBetween={32}
-                    breakpoints={{
-                        480: {
-                            slidesPerView: 1,
-                        },
-                        576: {
-                            slidesPerView: 2,
-                        },
-                        768: {
-                            slidesPerView: 2,
-                        },
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    <Swiper className={`slider ${className}`} loop={true}
+                        onReachEnd={handleReachEnd}
+                        onReachBeginning={handleReachBeginning}
+                        onSwiper={setSwiper}
+                        modules={[Navigation]}
+                        spaceBetween={32}
+                        breakpoints={{
+                            480: {
+                                slidesPerView: 1,
+                            },
+                            576: {
+                                slidesPerView: 2,
+                            },
+                            768: {
+                                slidesPerView: 2,
+                            },
 
-                        991: {
-                            slidesPerView: 3,
-                        },
-                    }}
-                >
-                    {activeTab === 'russia' ?
-                        sliderRoutesRussia.map((slide) => (
-                            <SwiperSlide
-                                key={slide.id}
-                                className='slide'
-                            >
-                                <SlideItem data={slide} />
-                            </SwiperSlide>
-                        )) :
-                        sliderRoutesInternational.map((slide) => (
-                            <SwiperSlide
-                                key={slide.id}
-                            >
-                                <SlideItem data={slide} />
-                            </SwiperSlide>
-                        ))
-                    }
-                </Swiper>
+                            991: {
+                                slidesPerView: 3,
+                            },
+                        }}
+                    >
+                        {activeTab === 'russia' ?
+                            sliderRoutesRussia.map((slide) => (
+                                <SwiperSlide
+                                    key={slide.id}
+                                    className='slide'
+                                >
+                                    <SlideItem data={slide} />
+                                </SwiperSlide>
+                            )) :
+                            sliderRoutesInternational.map((slide) => (
+                                <SwiperSlide
+                                    key={slide.id}
+                                >
+                                    <SlideItem data={slide} />
+                                </SwiperSlide>
+                            ))
+                        }
+                    </Swiper>
+                )
+                }
+
                 <div className={style['routes-more']}>
                     <ButtonRoutes to={{ pathname: '/' }} title={'Все маршруты'} className={style['routes-more__link']} />
                 </div>

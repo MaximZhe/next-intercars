@@ -34,6 +34,12 @@
     font-size: 20px;
     line-height: 24px;
   }
+  &__img{
+    max-width: 300px;
+    height: auto;
+    margin-top: 30px;
+    width: 100%;
+  }
 
   &__promo {
     max-width: 350px;
@@ -68,6 +74,7 @@
       max-width: 100%;
     }
     &__promo {
+      margin-top: 15px;
       padding-top: 0;
       max-width: 100%;
     }

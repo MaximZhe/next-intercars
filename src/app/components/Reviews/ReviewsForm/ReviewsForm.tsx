@@ -119,7 +119,7 @@ const ReviewsForm:FC <IReviewsForm> = ({idDeparture, idArrival}) => {
                     </div>
                 </div>
                 <div className={style['reviews-form__input']}>
-                    <textarea placeholder='Ваш вопрос, отзыв или предложение'
+                    <textarea spellCheck={true} placeholder='Ваш вопрос, отзыв или предложение'
                         {...register('review.text')}>
 
                     </textarea>

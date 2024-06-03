@@ -1,5 +1,5 @@
 'use client'
-import { FC, useEffect, useState } from 'react';
+import { FC, Suspense, useEffect, useState } from 'react';
 import style from './ListRates.module.scss';
 import SearchForm from '../SearchForm/SearchForm';
 // import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
@@ -14,6 +14,8 @@ import { useAppSelector } from '@/app/hooks/redux';
 import ListRatesItem from '../ListRatesItem/ListRatesItem';
 import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
 import { useSearchParams } from 'next/navigation';
+import Menu from '../Header/Menu/Menu';
+import Button from '../UI/Button/Button';
 
 export interface IRoute {
   CarrierRoutes: IItemCarrierRoutes[];
@@ -24,12 +26,17 @@ const ListRates: FC = () => {
     { label: 'Главная', href: '/' },
     { label: 'Поиск билетов', href: '/find', active: true },
   ];
-  // const formatedPrice = (price: number) => {
-  //   return Math.floor(price);
-  // }
+  const [visibleItems, setVisibleItems] = useState(4);
+    const itemsPerPage = 4; 
+
+    const handleShowMore = () => {
+        setVisibleItems(prevVisibleItems => prevVisibleItems + itemsPerPage);
+    };
   const searchParams = useSearchParams();
   const newDates = searchParams.get('date');
-  
+
+
+
   const [routeData, setRouteData] = useState<ITariffData>({
     Result: {
       CarrierRoutes: [],
@@ -56,70 +63,76 @@ const ListRates: FC = () => {
     citySearchArrival: Name,
     dateSearch: newDates
   }
- 
+
+  const updateStorageRoute = localStorage.getItem('updateDateRoute');
   useEffect(() => {
     const fetchDynamicRoutes = async (id: string) => {
       console.log(id);
       try {
-          const data = {
-              "SearchId": id,
-          };
-  
-          const response = await fetch('/api/v1/routes/getSearch', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(data)
-          });
-  
-          if (!response.ok) {
-              throw new Error('Ошибка HTTP: ' + response.status);
-          }
-  
-          const dat = await response.json();
-          setRouteData(dat);
-          setRoutes(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat())
-          localStorage.setItem("userData", JSON.stringify(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat()));
-          // dispatch(setStoregeRoute(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat()));
-          setLoading(routeData.Result.IsActive)
+        const data = {
+          "SearchId": id,
+        };
+
+        const response = await fetch('/api/v1/routes/getSearch', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+          cache: 'no-store',
+        });
+
+        if (!response.ok) {
+          throw new Error('Ошибка HTTP: ' + response.status);
+        }
+
+        const dat = await response.json();
+        console.log(dat)
+        setRouteData(dat);
+        setRoutes(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat());
+        if (updateStorageRoute === 'true') {
+
+          localStorage.removeItem('routeDate');
+          setRoutes(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat());
+
+          console.log('storage clear');
+        }
+
+
+        // dispatch(setStoregeRoute(dat.Result.CarrierRoutes.map((item: { Routes: any; }) => item.Routes).flat()));
+        setLoading(routeData.Result.IsActive)
       } catch (error) {
-          console.error('Ошибка при отправке данных на сервер:', error);
+        console.error('Ошибка при отправке данных на сервер:', error);
       }
-  };
+    };
     fetchDynamicRoutes(dataRoute.Result.Id);
     if (routeData.Result.IsActive) {
-      
+
       const timer = setInterval(async () => {
         await fetchDynamicRoutes(routeData.Result.Id);
-        
+
       }, 2000);
 
       return () => {
         clearInterval(timer);
         setLoading(false)
       };
-    }else{
+    } else {
       console.log('')
     }
-     // Получаем данные из localStorage
-     const savedData = localStorage.getItem("userData");
 
-     // Проверяем, сохранены ли данные
-     if (savedData) {
-       const parsedData = JSON.parse(savedData);
-       // console.log("Данные успешно загружены из localStorage:", parsedData);
-       setRoutes(parsedData);
-       setLoading(false)
-     } else {
+
+
+    let backLocaltorage = localStorage.getItem('backPage');
+    if (backLocaltorage === 'true') {
       fetchDynamicRoutes(dataRoute.Result.Id);
-       console.log("Данные не найдены в localStorage"); 
-     }
-
+      localStorage.removeItem('backPage');
+      console.log('backPage очищен')
+    }
   }, [dataRoute, routeData.Result.Id, routeData.Result.IsActive])
   useEffect(() => {
     console.log(routeData)
-  },[routeData])
+  }, [routeData])
   // const routesArray = routes.map((item: { Routes: any; }) => item.Routes).flat();
   const sortedRoutesPriceBest = (routes: any[]) => {
     return routes.map(item => item.Price[2].Ptar).sort((a, b) => a - b);
@@ -149,11 +162,11 @@ const ListRates: FC = () => {
       setRoutes(newArrayRoutes);
       setActiveButton('Стоимость по возрастанию');
     }
-    
+
   }
   const sortedRoutesTimeDepart = () => {
     setActiveButton('Время отправления')
-    if (activeButton ===  'Время отправления') {
+    if (activeButton === 'Время отправления') {
       const newArrayRoutes = [...routes].sort((a, b) => {
         if (a.TimeDepart && b.TimeDepart) {
           return a.TimeDepart.localeCompare(b.TimeDepart);
@@ -209,7 +222,7 @@ const ListRates: FC = () => {
     }
   }
   const sortedRoutesTimeFull = () => {
-    setActiveButton( 'Время в пути')
+    setActiveButton('Время в пути')
     if (activeButton === 'Время в пути') {
       const newArrayRoutes = [...routes].sort((a, b) => {
         if (a.Hour && b.Hour) {
@@ -224,14 +237,14 @@ const ListRates: FC = () => {
       setActiveButton('Время в пути по убыванию');
     } else if (activeButton === 'Время в пути по возрастанию') {
       const newArrayRoutes = [...routes].sort((a, b) => {
-        
-          if (b.Hour && a.Hour) {
-            const hoursComparison = b.Hour.localeCompare(a.Hour);
-            if (hoursComparison !== 0) {
-              return hoursComparison;
-            }
+
+        if (b.Hour && a.Hour) {
+          const hoursComparison = b.Hour.localeCompare(a.Hour);
+          if (hoursComparison !== 0) {
+            return hoursComparison;
           }
-          return b.Minuts.localeCompare(a.Minuts);
+        }
+        return b.Minuts.localeCompare(a.Minuts);
       });
       setRoutes(newArrayRoutes);
       setActiveButton('Время в пути по убыванию');
@@ -244,35 +257,51 @@ const ListRates: FC = () => {
   const sortedPrices = sortedRoutesPriceBest(routes)
 
   return (
-    <section className={style.rates}>
-      <SearchForm className={style['rates__form']} searchProps={searchProps}/>
-      <div className='container'>
-        <div className={style['rates__wrapper']} >
-          <div className={style['rates__header']} >
-          <Breadcrumbs links={links} />
-            <div className={style['rates__filter']} >
-              <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={activeButton === 'Время отправления по возрастанию'} title={'Время отправления '} />
-              <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={activeButton === 'Время прибытия по возрастанию'} title={'Время прибытия'} />
-              <ListRatesFilterButtons onClick={sortedRoutesTimeFull} isSort={activeButton === 'Время в пути по возрастанию'} title={'Время в пути'}/>
-              <ListRatesFilterButtons onClick={sortedRoutesPrice} title={'Стоимость'} isSort={activeButton === 'Стоимость по возрастанию'} />
+    <>
+      <Menu responsive={true} />
+      <section className={style.rates}>
+        <Suspense>
+          <SearchForm className={style['rates__form']} searchProps={searchProps} />
+        </Suspense>
+        <Suspense>
+          <div className='container'>
+            <div className={style['rates__wrapper']} >
+              <div className={style['rates__header']} >
+                <Breadcrumbs links={links} />
+                <div className={style['rates__filter']} >
+                  <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={activeButton === 'Время отправления по возрастанию'} title={'Время отправления '} />
+                  <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={activeButton === 'Время прибытия по возрастанию'} title={'Время прибытия'} />
+                  <ListRatesFilterButtons onClick={sortedRoutesTimeFull} isSort={activeButton === 'Время в пути по возрастанию'} title={'Время в пути'} />
+                  <ListRatesFilterButtons onClick={sortedRoutesPrice} title={'Стоимость'} isSort={activeButton === 'Стоимость по возрастанию'} />
+                </div>
+              </div>
+
+              <div className={style.list}>
+                {routeData.Result.IsActive === true ?
+                  <GridLoader color={'#0243A6'} loading={loading} size={10} />
+                  : null}
+                {routes.length !== 0 ? (
+                  routes.slice(0, visibleItems).map((data) => (
+                    <ListRatesItem key={data.Id} data={data} sortedPrices={sortedPrices} />
+                  ))
+                ) : (
+                  loading === false ? <p>Извините, маршруты не найдены</p> : null
+                )}
+                <Button disabled={routes.length > visibleItems ? false : true} 
+                            type='button'
+                            onClick={handleShowMore}
+                            className={`${style['rates__btn']} ${routes.length > visibleItems ? '' : `${style['disabled']}`}`}>
+                                <p className='sales__btn-text'>Показать еще</p>
+                                
+                </Button>
+              </div>
             </div>
           </div>
+        </Suspense>
 
-          <div className={style.list}>
-            {routeData.Result.IsActive === true ? 
-            <GridLoader color={'#0243A6'} loading={loading} size={10}/> 
-            : null}
-            {routes.length !== 0 ? (
-              routes.map((data) => (
-                <ListRatesItem key={data.Id} data={data} sortedPrices={sortedPrices} />
-              ))
-            ) : (
-              loading === false ? <p>Извините, маршруты не найдены</p> : null
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
+
   );
 };
 

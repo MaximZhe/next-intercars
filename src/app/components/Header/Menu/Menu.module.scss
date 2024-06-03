@@ -2,6 +2,9 @@
   display: flex;
   background: rgba(0, 94, 228, 0.3);
 }
+.responsive {
+  display: none;
+}
 .menu {
   display: flex;
   align-items: center;
@@ -178,6 +181,9 @@
   }
 }
 @media (max-width: 600px) {
+  .responsive {
+    display: flex;
+  }
   .nav {
     background: #f0f3f6 !important;
     padding: 24px 12px;
@@ -189,6 +195,7 @@
       display: flex;
     }
   }
+
   .user {
     display: none;
     &__text {

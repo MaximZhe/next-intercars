@@ -14,6 +14,7 @@ export async function getServerSideProps() {
         headers: {
           'Content-Type': 'application/json',
         },
+        cache: 'no-store',
       });
       return res.json()
     }

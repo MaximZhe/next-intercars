@@ -1,7 +1,6 @@
-import React, { FC, Suspense } from 'react';
+import React, { FC} from 'react';
 import TicketImg from '../../icons/image/ticket-icon.svg';
 
-import BusSalon from '../../icons/image/bus-salon.jpg';
 import RoadIcon from '../../icons/image/road-icon.svg';
 
 
@@ -19,10 +18,8 @@ interface IParamsContent {
     resultContent: any
 }
 const ContentSeoRoute:FC<IParamsContent> = ({resultsContentPage, resultArrayCitys, resultContent}) => {
-    const imagesUrlBusSeo = [
-        '/icons/image/bus.jpg',
-        '/icons/image/bus1.jpg',
-    ]
+   
+    /*убираем дублирующие значения времени рейсов*/
     const scheduleItems = resultsContentPage[3]['schedule-text'];
     const halfLength = scheduleItems.length / 2;
     const halfScheduleItems = scheduleItems.slice(0, halfLength);
@@ -194,7 +191,7 @@ const ContentSeoRoute:FC<IParamsContent> = ({resultsContentPage, resultArrayCity
                                 </ul>
                             </div>
                             <div className={style['path-benefits__colum-right']}>
-                                
+                                <SliderSeo className={''}/>
                             </div>
                         </div>
                         <div className={style['path-roads']}>

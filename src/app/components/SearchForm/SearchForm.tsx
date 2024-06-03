@@ -9,7 +9,7 @@ import styles from './SearchForm.module.scss';
 import { setDataRoute } from '@/redux/slice/getRoutesSlice';
 import {setCityDepartureName} from '@/redux/slice/cityDepartureSlice';
 import { useAppDispatch } from '@/app/hooks/redux';
-import { useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import ArrowForm from '@/app/icons/svg/ArrowForm';
 import CalendarIcon from '@/app/icons/svg/CalendarIcon';
 import { defaultCityForm, defaultDateForm } from '@/app/constant/constant';
@@ -18,6 +18,7 @@ import { formatedDateFetch } from '@/app/utils/formatedDateFetch';
 import { getServerSideProps } from '@/app/api/actionCity';
 import { useDebounce } from '@/app/hooks/useDebounce';
 import { setCityArrivalName } from '@/redux/slice/cityArrivalSlice';
+import { getCalendarPrice } from '@/app/api/actionGetCalendarPrice';
 
 
 
@@ -49,6 +50,7 @@ interface ISearchForm {
     className: string,
     searchProps?:any,
     citySeoRoute?:any,
+    prop?:any,
     
 }
 
@@ -61,9 +63,10 @@ interface IDataCity {
       }
 }    
 
-const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => {
+const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute,prop}) => {
     const router = useRouter();
-
+    const pathname = useParams();
+    console.log(pathname)
     const handleSuccess = (cityNameDeparture:string, cityNameArrival:string, valueDate:string) => {
         router.push(`/find/route/${cityNameDeparture}-${cityNameArrival}?date=${valueDate}`, undefined);
       };
@@ -100,6 +103,23 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => 
     const [isCalendarShow, setCalendarShow] = useState(false)
     const [isButtonClicked, setButtonClicked] = useState(false);
     
+    // useEffect(() => {
+    //     async function  getCalendarPriceSearch() {
+    //         const datas = {
+    //             CityDeparture: 1,
+    //             CityArrival: 3,
+    //             Days: 30,
+    //             DateStart: "2024-05-21",
+    //             CurrencyId: 2,
+    //           }
+    //         const rr = await getCalendarPrice(datas);
+            
+    //         if(rr){
+    //             console.log(rr);
+    //         }
+    //     }
+    //     getCalendarPriceSearch()
+    // },[])
     useEffect(() => {
         if(citySeoRoute){
             setIsSearchForm(false)
@@ -167,7 +187,12 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => 
             const filteredCities = cityArray.filter((city: any) => 
                 city.Name && city.Name.toLowerCase().startsWith(inputValue)
             );
-            setCityDepartSearch(filteredCities);
+            if(filteredCities.length > 0){
+                setCityDepartSearch(filteredCities);
+            }else{
+                console.log('Город не найден')
+            }
+            
         }
     };
     const handleArrivalChangeFilter = (inputVal: string) => {
@@ -176,19 +201,13 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => 
             const filteredCities = cityArray.filter((city: any) => 
                 city.Name && city.Name.toLowerCase().startsWith(inputValue)
             );
-            setCitySearchArrival(filteredCities);
+            if(filteredCities.length > 0){
+                setCitySearchArrival(filteredCities);
+            }else{
+                console.log('Город не найден')
+            }
         }
     };
-    // const data = useAppSelector((state:any) => state.data.data);
-   
-    // useEffect(() => {
-    //     if(data){
-    //       console.log(data)
-    //     }
-    // })
-    //   useEffect(() => {
-    //     dispatch(fetchInitialData());
-    //   }, []);
     useEffect(() => {
         const fetchCityArray = async () => {
             const result = await getServerSideProps();
@@ -213,8 +232,8 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => 
         const fetchCityDeparture = async (cityDeparture: string) => {
             try {
                 const data = {
-                    Name: cityDeparture,
-                    Lang: 'ENG'
+                    name: cityDeparture,
+                    lang: 'ENG'
                 }
                 const response = await fetch('/api/v1/cities/find', {
                     method: 'POST',
@@ -226,13 +245,13 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => 
                 });
                 const dat = await response.json();
                 setCityDepartureData(dat);
-                console.log(dat)
+                console.log(dat.Result[0].Id)
             }
             catch (error) {
                 console.error('Ошибка при отправке данных на сервер:', error);
             }
         }
-        if (debbounceDeparture && debbounceDeparture.length > 0) {
+        if (debbounceDeparture && debbounceDeparture.length > 2) {
             if(isSelectedChange === true){
                 handleDepartureChangeFilter(debbounceDeparture);
                 setIDepartureSelect({
@@ -366,6 +385,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => 
                     dispatch(setDataRoute(dat));
                     setIsLoadingForm(false)
                     handleSuccess(cityDepartureData.Result[0].Name.toLowerCase(), cityArrivalData.Result[0].Name.toLowerCase(), date);
+                    localStorage.setItem('updateDateRoute', 'true');
                 } catch (error) {
                     console.error('Ошибка при отправке данных на сервер:', error);
                 } finally {
@@ -391,16 +411,21 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => 
             }else{
                 if(cityDepartureData.Result.length < 1){
                     console.log('Выберите другой город отправления');
-                   
                 }else if(cityArrivalData.Result.length < 1){
                     console.log('Выберите другой город прибытия');
-                    
                 }else{
-                   
                     console.log('данных нет');   
-                }  
+                }
+                setIsLoadingForm(false)
             }
         }
+        const backLocaltorage = localStorage.getItem('backPage');
+      if(backLocaltorage === 'true'){
+        setButtonClicked(true);
+       localStorage.removeItem('backPage');
+       console.log('backPage очищен')
+       console.log('получаем новый Search Id')
+      }
     }, [cityArrivalData.Result,debbounceArrival,debbounceDeparture, cityDepartureData.Result, isButtonClicked]);
 
     
@@ -415,14 +440,16 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => 
         setIsSelectedChange(false)
         console.log(IDepartureSelect.isCurrent, IArrivalSelect.isCurrent,isSelectedChange);
       };
+    
+      
     return (
         <>
         
-            <form className={`${styles['form-search']} ${className}`}>
+            <form id='search-form' className={`${styles['form-search']} ${className}`}>
                 <div className={styles['form-search__wrapper']}>
                     <label className={styles['form-search__label']}>Откуда</label>
                     <div className={styles['form-search__container']}>
-                        <input className={styles['form-search__input']}
+                        <input spellCheck={true} className={styles['form-search__input']}
                             id="departure"
                             name='departure'
                             type="text"
@@ -459,7 +486,7 @@ const SearchForm:FC <ISearchForm> = ({ className, searchProps,citySeoRoute}) => 
                 <div className={styles['form-search__wrapper']}>
                     <label className={styles['form-search__label']}>Куда</label>
                     <div className={styles['form-search__container']}>
-                    <input
+                    <input spellCheck={true}
                         className={styles['form-search__input']}
                         id="arrival"
                         name='arrival'

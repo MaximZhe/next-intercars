@@ -25,9 +25,8 @@ const NewsPage =  ({
     };
   }) => {
     
-    const query = searchParams?.query || '4';
+    const query = searchParams?.query || '3';
     const currentPage = Number(searchParams?.page) || 1;
-    console.log(query)
     return (
         <>
             <Menu className='menu__theme--blue' />

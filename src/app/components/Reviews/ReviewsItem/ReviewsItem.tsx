@@ -5,44 +5,46 @@ import style from './reviewsItem.module.scss';
 
 interface IReviewsItem {
     dataItem: {
-        id?: number,
-        user: string,
-        dateReviews: string | any,
-        question: string,
-        admin: string,
-        dateResponse: string | any,
-        bodyResponse: string
+        DateQuestion: string,
+        Answer: string,
+        SiteId: number,
+        Question: string,
+        ContactName: string,
+        Email: string,
+        DateAnswer: string,
+        CityDepartureId: number,
+        CityArrivalId: number,
     }
 }
 
 const ReviewsItem: FC<IReviewsItem> = ({ dataItem }) => {
-    const defaultdateReviews = moment(dataItem.dateReviews).format('DD MM YYYY HH:mm');
-    const defaultdateResponse = moment(dataItem.dateResponse).format('DD MM YYYY HH:mm');
+    const defaultdateReviews = moment(dataItem.DateQuestion).format('DD MM YYYY HH:mm');
+    const defaultdateResponse = moment(dataItem.DateAnswer).format('DD MM YYYY HH:mm');
 
     return (
-        <div className={style['reviews-item']}>
+        <div key={dataItem.DateQuestion} className={style['reviews-item']}>
             <div className={style['reviews-item__header']}>
                 <p className={style['reviews-item__user']}>
-                    {dataItem.user}
+                    {dataItem.ContactName}
                 </p>
                 <p className={style['reviews-item__date']}>
                     {defaultdateReviews}
                 </p>
             </div>
             <h3 className={style['reviews-item__title']}>
-                {dataItem.question}
+                {dataItem.Question}
             </h3>
             <div className={style['reviews-item-response']}>
                 <div className={style['reviews-item-response__header']}>
                     <p className={style['reviews-item-response__admin']}>
-                        {dataItem.admin}
+                       INTERCARS
                     </p>
                     <p className={style['reviews-item-response__date']}>
                         {defaultdateResponse}
                     </p>
                 </div>
                 <p className={style['reviews-item-response__text']}>
-                    {dataItem.bodyResponse}
+                    {dataItem.Answer}
                 </p>
             </div>
         </div>

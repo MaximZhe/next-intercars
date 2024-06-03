@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 import style from './СonsentBox.module.scss';
 import Link from 'next/link';
 const СonsentBox = () => {
-    const { register, watch,setFocus, resetField, formState: { errors } } = useFormContext();
+    const { register, formState: { errors } } = useFormContext();
     return (
         <>
             <div className={style['promo-order-form__checkboxs']}>

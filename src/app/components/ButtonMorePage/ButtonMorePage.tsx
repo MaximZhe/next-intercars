@@ -44,12 +44,7 @@ const ButtonMorePage: FC<IButtonMorePageProps> = ({ }) => {
   return (
 
     <>
-
       <Button
-        // onClick={async () => {
-        //     const newsAr = await fetchCityArrays(6)
-        //     setCount(newsAr)
-        //   }}
         onClick={RefreshPage}
         type='button'
         className={`${style['news__btn']} ${arrayLengthNews < countNews ? style.disabled : ''}`}
@@ -57,7 +52,6 @@ const ButtonMorePage: FC<IButtonMorePageProps> = ({ }) => {
         <p className={style['news__btn-text']}>Показать еще</p>
         <ArrowRight className={style['news__icon']} />
       </Button>
-
     </>
   );
 };

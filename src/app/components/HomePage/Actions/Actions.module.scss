@@ -128,4 +128,9 @@
       }
     }
   }
+  .actions-content{
+    &__text{
+      max-width: 195px;
+    }
+  }
 }

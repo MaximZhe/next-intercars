@@ -12,18 +12,19 @@ import { setLanguageValue } from '@/redux/slice/languageSlice';
 import { setIsStateMenuMobail } from '@/redux/slice/menuMobileStateSlice';
 
 interface IMenuProps{
-    className?: string
+    className?: string,
+    responsive?: boolean
 }
 
 // eslint-disable-next-line react/display-name
-const Menu:FC<IMenuProps> = ({className}) => {
+const Menu:FC<IMenuProps> = ({className, responsive}) => {
    
     const [isOpenDropdown, setIsOpenDropdown] = useState(false);
     const { language } = useAppSelector((state: { languageReduser: any; }) => state.languageReduser);
     const { isShow } = useAppSelector((state: { stateMobileMenuReduser: any; }) => state.stateMobileMenuReduser);
     const dispatch = useAppDispatch();
     return (
-        <div className={`${style.nav} ${!isShow ? style.hide : style.show} ${className ? className : ''} `}>
+        <div className={`${style.nav} ${!isShow ? style.hide : style.show} ${className ? className : ''} ${ responsive ? style.responsive : ''} `}>
             <div className='container'>
                 
                     <div className={`${style.user} ${style['user--mobail']}`}>

@@ -1,8 +1,6 @@
 
 import style from './SingleNewsPage.module.scss';
-import styles from '../ItemNewsPage/ItemNewsPage.module.scss'
 import styleNews from '../NewsPage.module.scss'
-// import { useParams } from 'react-router-dom';
 import { FC } from 'react';
 import { sliderRoutesInternational } from '../../../constant/constant';
 import Menu from '../../../components/Header/Menu/Menu';
@@ -13,8 +11,9 @@ import ButtonRoutes from '../../../components/UI/Button/ButtonRoutes/ButtonRoute
 import Breadcrumbs from '@/app/components/UI/Breadcrumbs/Breadcrumbs';
 import { getFetchNewsItem } from '@/app/api/actionNewsItem';
 import { getServerSideProps } from '@/app/api/actionNews';
-import { Metadata, ResolvingMetadata } from 'next';
-
+import { Metadata} from 'next';
+import { parseDataNews } from '@/app/utils/parserNewsPage';
+import Image from 'next/image';
 interface ISingleNewsProps {
     params:{
         niceUrl: string
@@ -80,17 +79,15 @@ const SingleNewsPage:FC<ISingleNewsProps> = async ({params}) => {
     const id = findIdByNiceUrl(resultParams, params);
     const resultsNewsItem = await fetchNewsItem(id)
 
-    function newtext(text: string) {
-        const splittedText = text.split("\n");
-        return splittedText.map((value, index) => (
-            <p key={index} className={styles['news-item__text']}>{value}</p>
-        ))
-    }
+    const resultsContentPage = parseDataNews(resultsNewsItem.Content);
+ 
     const links = [
         { label: 'Главная', href: '/' },
         { label: 'Новости', href: '/novosti'},
         { label: resultsNewsItem.Name, active: true }
       ];
+
+      
     return (
         <>
             <Menu className='menu__theme--blue' />
@@ -100,7 +97,22 @@ const SingleNewsPage:FC<ISingleNewsProps> = async ({params}) => {
                         <div className={style['news-single__content']}>
                             <Breadcrumbs links={links} />
                             <div className={style['news-single__item']}>
-                                <div dangerouslySetInnerHTML={{ __html: resultsNewsItem.Content }} /> 
+                                <h1 className={style['news-single__main-title']}>
+                                    {resultsContentPage[0]['news-single-title'][0]['news-single__main-title']}
+                                </h1>
+                                {resultsContentPage[2]['news-single-img'][0]['imgSrc'] !== '' ?
+                                <Image src={`${resultsContentPage[2]['news-single-img'][0]['imgSrc']}`}
+                                width={600}
+                                height={300}
+                                alt={resultsContentPage[2]['news-single-img'][0]['imgAlt']}
+                                className={style['news-single__img']}
+                              />
+                                : null}
+                                
+                                
+                                {resultsContentPage[1]['news-single-text'].map((item:any, index:number) => (
+                                    <p key={index} className={style['news-single__text']}>{item['news-single__text']}</p>
+                                ))}
                             </div>
                         </div>
                         <div className={style['news-single__promo']}>

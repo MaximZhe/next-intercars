@@ -174,7 +174,7 @@ div.react-calendar__month-view__days{
   color:#FFFFFF!important;
 }
 .react-calendar__month-view__days__day--neighboringMonth {
-  pointer-events: none;
+  
 }
 .react-calendar__tile--now {
   cursor: pointer;

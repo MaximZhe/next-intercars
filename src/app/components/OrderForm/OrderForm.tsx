@@ -18,9 +18,16 @@ import CommentOrder from "../CommentOrder/CommentOrder";
 
 import { Passenger, ServerData } from "@/app/types/types";
 import { updatePassengerArray } from "@/app/utils/updatePassengerArray";
+import ModalErrors from "../UI/ModalErrors/ModalErrors";
+import { useModalErrorContext } from "@/contex/modal";
 
 
-
+interface IErrorAxios {
+  Result: {} | null,
+  Error: {
+    Message: string
+  }
+}
 export interface IBusPlace {
   Col: number,
   Floor: number,
@@ -53,6 +60,8 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
   const [selectedBaggage, setSelectedBaggage] = useState<number>(0);
   const [selectedPromoCode, setSelectedPromoCode] = useState<string>('');
   const [isLoadingPay, setIsLoadingPay] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const {isModalError, setIsModalError} = useModalErrorContext();
   const numberArray = createNumberArray(countUser);
   const router = useRouter();
   useEffect(() => {
@@ -89,9 +98,14 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
       router.replace(dat.Result.ExternalUrl)
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError;
+        const axiosError = error as AxiosError<IErrorAxios>;
         console.log(onmessage, axiosError.message);
-        console.log(axiosError.response);
+        const e = axiosError.response?.data;
+        if(e){
+          console.log(e.Error)
+          setErrorMessage(e.Error.Message)
+          setIsModalError(true);
+        }
       }
       setIsLoadingPay(false);
     } finally {
@@ -176,12 +190,15 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
       PromoCode: selectedPromoCode
     };
     console.log(updatedData);
-    methods.reset();
+    
     getPay(updatedData);
   };
   
   return (
     <>
+    <ModalErrors isOpen={isModalError} >
+<p>{errorMessage}</p>
+</ModalErrors>
       <FormProvider {...methods}>
         <form className={style['order-form']} onSubmit={methods.handleSubmit(handleFormSubmit)}>
           <div className={style['order-form__users']}>
