@@ -141,8 +141,6 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
           FirstName: '',
           LastName: '',
           MiddleName: '',
-          PlaceNumber: 0,
-          TarifId: { value: 0, label: '' },
         }
       },
       Phone: '',

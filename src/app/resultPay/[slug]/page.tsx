@@ -13,6 +13,7 @@ import Menu from '../../components/Header/Menu/Menu';
 import { getOrderStatus } from '@/app/api/getOrderStatus';
 import IconTicket from '../../icons/image/ticket-icon.svg';
 import Image from 'next/image';
+import { getCreateTicket } from '@/app/api/actionGetCreateTicket';
 const splitStatusMassage = (text: string) => {
     const massage = text.split(':')
     return massage
@@ -20,9 +21,12 @@ const splitStatusMassage = (text: string) => {
 const GoodOrderPage = async ({params, searchParams }: { params: { slug: string }, searchParams: { [key: string]: string | string[] | undefined } }) => {
 
     const searchParamsOrder = searchParams
-    const status = await getOrderStatus({ orderId: searchParamsOrder.orderId !== undefined ? searchParamsOrder.orderId : '' })
-    const massageStatus = status.Error.Message
+    const statusCreate = await getCreateTicket({ orderId: searchParamsOrder.orderId !== undefined ? searchParamsOrder.orderId : '' })
+    const massageCreateStatus = statusCreate.Error?.Message
+    const status = await getOrderStatus({ orderId: searchParamsOrder.orderId !== undefined ? searchParamsOrder.orderId : '0581a5a7-6b91-7cfa-b98d-6eb101f423bb' })
+    const massageStatus = splitStatusMassage(status.Result.Status)
     console.log(status)
+    console.log(statusCreate)
     return (
         <>
             <Menu responsive={true} />
@@ -33,7 +37,7 @@ const GoodOrderPage = async ({params, searchParams }: { params: { slug: string }
                             <Breadcrumbs links={[]} />
                             <div className={style['ending-order__content']}>
                             
-                                {status.Result !== null ? (
+                                {status.Result.Success === true && statusCreate.Result !== null ? (
                                     <>
                                         <Image width={48} height={42} alt='' src={IconTicket} className={style['ending-order__icon']} />
                                         <h1 className={style['ending-order__title']}>

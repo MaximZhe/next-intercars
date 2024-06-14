@@ -40,7 +40,7 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
   const [countBaggage, setCountBaggage] = useState(0)
   const [numberPlace, setNumberPlace] = useState(0)
   const { isOpenModalPlace, setIsOpenModalPlace } = useModalPlaceContext();
-  console.log(Route.Result.Route.CarrierName)
+
   const selectedPlace = async (placeDataFetch: ISelectePlace) => {
     const responce = await fetch('/api/v1/tickets/selectplace', {
       method: 'POST',
