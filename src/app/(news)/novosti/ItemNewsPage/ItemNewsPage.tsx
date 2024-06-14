@@ -24,7 +24,7 @@ const ItemNewsPage = ({ dataItem, key }: { dataItem: IItemNewsPageProps, key: nu
             </h2>
             <ButtonRoutes
                 to={{
-                    pathname: `/novosti/${dataItem.NiceUrl}`,
+                    pathname: `/novosti/singleNews/${dataItem.NiceUrl}`,
                 }}
                 title={'Подробнее'}
                 className={`${style['news-item__more']}`}

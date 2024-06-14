@@ -147,7 +147,7 @@ img {
   min-width: 30px;
 }
 .react-calendar__tile {
-  padding: 5px 6.6667px;
+  padding: 5px 0px!important;
   border: none;
     font-weight: 700!important;
     color: #454545;
@@ -155,7 +155,6 @@ img {
     height: 40px;
     font-size: 12px;
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
     border-radius: 6px;
@@ -172,6 +171,9 @@ div.react-calendar__month-view__days{
 .react-calendar__tile--active{
   background: #0243a6!important;
   color:#FFFFFF!important;
+  & > span {
+    color: #FFFFFF!important;
+  }
 }
 .react-calendar__month-view__days__day--neighboringMonth {
   
@@ -194,4 +196,12 @@ div.react-calendar__month-view__days{
   color: #0243a6!important;
   background: #ffffff!important;
   box-shadow: 0px 0px 2px #0243a6 !important;
+}
+.price-ticket{
+  font-size: 9px;
+  color: green;
+}
+.price-old{
+  font-size: 9px;
+  color: #454545;
 }

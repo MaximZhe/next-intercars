@@ -4,7 +4,7 @@ import Menu from '../../components/Header/Menu/Menu';
 import { sliderRoutesInternational } from '../../constant/constant';
 import RouteItem from '../../components/RouteItem/RouteItem';
 import ButtonRoutes from '../../components/UI/Button/ButtonRoutes/ButtonRoutes';
-import AfphaImg from '../../icons/image/AlfaBank.png'
+import AfphaImg from '../../../../public/AlfaBank.png'
 
 import Breadcrumbs from '../../components/UI/Breadcrumbs/Breadcrumbs';
 import Link from 'next/link';

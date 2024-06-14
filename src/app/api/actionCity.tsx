@@ -4,7 +4,7 @@ export async function getServerSideProps() {
     // Здесь можно выполнить запрос на сервер для получения данных
     const dat = {
         Page:0,
-        Count:4000,
+        Count:15000,
         Lang:'RUS'
     }
     try{
@@ -15,6 +15,7 @@ export async function getServerSideProps() {
           'Content-Type': 'application/json',
         },
         cache: 'no-store',
+        
       });
       return res.json()
     }

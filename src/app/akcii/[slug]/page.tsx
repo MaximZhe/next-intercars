@@ -14,6 +14,7 @@ import { getFetchActionItem } from '@/app/api/actionGetActionItem';
 import { actionGetAction } from '@/app/api/actionGetAction';
 import { parserActionData } from '@/app/utils/parserActionData';
 import Link from 'next/link';
+import { generateStaticParamsAction } from '@/app/api/getUrlAction';
 // import { useParams } from 'react-router-dom';
 
 interface ISingleSalesProps {
@@ -23,18 +24,7 @@ interface ISingleSalesProps {
     }
 
 }
-export async function generateStaticParams() {
-    const newsResponse = await actionGetAction(30);
 
-    const resultArraId = newsResponse.Collection
-    return resultArraId.map((item: any) => ({
-        params: {
-            slug: Object.keys(item)[0],
-            id: item[Object.keys(item)[0]],
-        }
-    }))
-
-}
 async function fetchActionItem(id: string) {
     const res = await getFetchActionItem(id);
     const data = res.Result
@@ -48,7 +38,7 @@ const splitKeywords = (keywordsAction: any) => {
 export async function generateMetadata(
     { params }: ISingleSalesProps
 ): Promise<Metadata> {
-    const resultParams = await generateStaticParams()
+    const resultParams = await generateStaticParamsAction()
 
     function findIdByNiceUrl(resultArray: any[], params: any) {
         const niceUrl = params.niceUrl;
@@ -83,7 +73,7 @@ export async function generateMetadata(
 }
 const SingleSalesPage: FC<ISingleSalesProps> = async ({ params }) => {
 
-    const resultParamsAction = await generateStaticParams()
+    const resultParamsAction = await generateStaticParamsAction()
     
     function findIdByNiceUrl(resultArray: any[], params: any) {
         const slug = params.slug;

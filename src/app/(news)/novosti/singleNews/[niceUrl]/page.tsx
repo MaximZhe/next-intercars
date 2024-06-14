@@ -1,19 +1,20 @@
 
 import style from './SingleNewsPage.module.scss';
-import styleNews from '../NewsPage.module.scss'
+import styleNews from '../../NewsPage.module.scss'
 import { FC } from 'react';
-import { sliderRoutesInternational } from '../../../constant/constant';
-import Menu from '../../../components/Header/Menu/Menu';
-import ActionCardItem from '../../../components/ActionCardItem/ActionCardItem';
-import { initialActionsCards } from '../../../constant/initialActionsCards';
-import RouteItem from '../../../components/RouteItem/RouteItem';
-import ButtonRoutes from '../../../components/UI/Button/ButtonRoutes/ButtonRoutes';
+import { sliderRoutesInternational } from '../../../../constant/constant';
+import Menu from '../../../../components/Header/Menu/Menu';
+import ActionCardItem from '../../../../components/ActionCardItem/ActionCardItem';
+import { initialActionsCards } from '../../../../constant/initialActionsCards';
+import RouteItem from '../../../../components/RouteItem/RouteItem';
+import ButtonRoutes from '../../../../components/UI/Button/ButtonRoutes/ButtonRoutes';
 import Breadcrumbs from '@/app/components/UI/Breadcrumbs/Breadcrumbs';
 import { getFetchNewsItem } from '@/app/api/actionNewsItem';
 import { getServerSideProps } from '@/app/api/actionNews';
 import { Metadata} from 'next';
 import { parseDataNews } from '@/app/utils/parserNewsPage';
 import Image from 'next/image';
+import { generateStaticParams } from '@/app/api/getUrlNews';
 interface ISingleNewsProps {
     params:{
         niceUrl: string
@@ -21,18 +22,7 @@ interface ISingleNewsProps {
 }
 
 
-export async function generateStaticParams() {
-    const newsResponse = await getServerSideProps(30);
- 
-    const resultArraId = newsResponse.Collection
-    return resultArraId.map((item: any) => ({
-        params:{
-            niceUrl: Object.keys(item)[0],
-            id: item[Object.keys(item)[0]],
-        }
-    }))
-    
-}
+
 async function fetchNewsItem(id: string) {
     const res = await getFetchNewsItem(id);
     const data = res.Result
@@ -63,9 +53,9 @@ export async function generateMetadata(
     }
   }
 const SingleNewsPage:FC<ISingleNewsProps> = async ({params}) => {
-
+console.log(params)
     const resultParams = await generateStaticParams()
-
+console.log(resultParams)
     function findIdByNiceUrl(resultArray: any[], params: any) {
         const niceUrl  = params.niceUrl;
         const foundObject = resultArray.find((item) => item.params.niceUrl === niceUrl);

@@ -11,18 +11,17 @@ import RouteItem from '../../components/RouteItem/RouteItem';
 import ButtonRoutes from '../../components/UI/Button/ButtonRoutes/ButtonRoutes';
 import Menu from '../../components/Header/Menu/Menu';
 import { getOrderStatus } from '@/app/api/getOrderStatus';
-
-
+import IconTicket from '../../icons/image/ticket-icon.svg';
+import Image from 'next/image';
 const splitStatusMassage = (text: string) => {
     const massage = text.split(':')
     return massage
 }
 const GoodOrderPage = async ({params, searchParams }: { params: { slug: string }, searchParams: { [key: string]: string | string[] | undefined } }) => {
 
-    const rr = params
     const searchParamsOrder = searchParams
-    const status = await getOrderStatus({ orderId: searchParamsOrder.orderId !== undefined ? searchParamsOrder.orderId : '0581a5a7-6b91-7cfa-b98d-6eb101f423bb' })
-    const massageStatus = splitStatusMassage(status.Result.Status)
+    const status = await getOrderStatus({ orderId: searchParamsOrder.orderId !== undefined ? searchParamsOrder.orderId : '' })
+    const massageStatus = status.Error.Message
     console.log(status)
     return (
         <>
@@ -34,9 +33,9 @@ const GoodOrderPage = async ({params, searchParams }: { params: { slug: string }
                             <Breadcrumbs links={[]} />
                             <div className={style['ending-order__content']}>
                             
-                                {status.Result?.Success === true && status.Result.Status === "2: Проведена полная авторизация суммы заказа" ? (
+                                {status.Result !== null ? (
                                     <>
-                                        {/* <Image width={48} height={42} alt='' src={IconTicket} className={style['ending-order__icon']} /> */}
+                                        <Image width={48} height={42} alt='' src={IconTicket} className={style['ending-order__icon']} />
                                         <h1 className={style['ending-order__title']}>
                                             Спасибо за покупку на нашем сайте!
                                         </h1>
@@ -59,13 +58,13 @@ const GoodOrderPage = async ({params, searchParams }: { params: { slug: string }
                                     </>
                                 ) : (
                                     <>
-                                    {/* <Image width={48} height={42} alt='' src={IconTicket} className={style['ending-order__icon']} /> */}
+                                    <Image width={48} height={42} alt='' src={IconTicket} className={style['ending-order__icon']} />
                                     <h1 className={style['ending-order__title']}>
                                             Платеж не прошел.
                                             
                                         </h1>
                                         <p className={style['ending-order__text']}>
-                                            Причина: {massageStatus[1]}
+                                            Причина: {massageStatus}
                                         </p>
                                         
                                         

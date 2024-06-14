@@ -12,16 +12,38 @@ export function ModalContext({
     children: React.ReactNode
 }) {
     const [isModal, setIsModal] = useState(false);
+    return (
+        <ModalClientProvaider.Provider value={{ isModal, setIsModal }}>       
+                    {children}
+        </ModalClientProvaider.Provider>
+    )
+}
+export function ModalContextBustiket({
+    children,
+}: {
+    children: React.ReactNode
+}) {
+
     const [isOpenModalPlace, setIsOpenModalPlace] = useState(false);
+
+    return (
+        <ModalBustiketProvaider.Provider value={{ isOpenModalPlace, setIsOpenModalPlace }}>
+            {children}
+        </ModalBustiketProvaider.Provider>
+
+    )
+}
+export function ModalContextError({
+    children,
+}: {
+    children: React.ReactNode
+}) {
     const [isModalError, setIsModalError] = useState(false);
     return (
-        <ModalClientProvaider.Provider value={{ isModal, setIsModal }}>
-            <ModalBustiketProvaider.Provider value={{ isOpenModalPlace, setIsOpenModalPlace }}>
-                <ModalErrorProvaider.Provider value={{ isModalError, setIsModalError}}>
-                    {children}
-                </ModalErrorProvaider.Provider>
-            </ModalBustiketProvaider.Provider>
-        </ModalClientProvaider.Provider>
+
+        <ModalErrorProvaider.Provider value={{ isModalError, setIsModalError }}>
+            {children}
+        </ModalErrorProvaider.Provider>
     )
 }
 export function useModalContext() {
@@ -29,7 +51,7 @@ export function useModalContext() {
 }
 export function useModalPlaceContext() {
     return useContext(ModalBustiketProvaider);
-} 
+}
 export function useModalErrorContext() {
     return useContext(ModalErrorProvaider);
-}   
+}    

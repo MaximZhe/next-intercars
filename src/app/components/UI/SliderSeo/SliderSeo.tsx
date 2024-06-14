@@ -5,10 +5,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay,EffectFade } from 'swiper/modules';
 import type { Swiper as SwiperType } from "swiper";
 import Image from 'next/image';
-import Bus from '../../../icons/image/bus.jpg';
-import BusTwo from '../../../icons/image/bus1.jpg';
-import BusThree from '../../../icons/image/bus2.jpg';
-import BusFour from '../../../icons/image/bus3.jpg';
+import Bus from './bus.jpg';
+import BusTwo from './bus1.jpg';
+import BusThree from './bus2.jpg';
+import BusFour from './bus3.jpg';
 
 import 'swiper/css';
 import 'swiper/css/autoplay';

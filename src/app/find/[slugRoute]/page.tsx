@@ -64,18 +64,16 @@ export async function generateMetadata(
 
     }
 }
-const RouteDescriptionPage = async ({ params, query, searchParams }: {
-    params: IParamsContent, query: string, searchParams?: {
-        query?: string;
-        page?: string;
-    }
-}) => {
+interface PageProps {
+    params: IParamsContent;
+}
+const RouteDescriptionPage = async ({ params}: {params:IParamsContent}) => {
     const links = [
         { label: 'Главная', href: '/' },
         { label: 'Маршрут', href: `/find/${params.slugRoute}`, active: true },
     ];
-    const querys = searchParams?.query || '3';
-    const currentPage = Number(searchParams?.page) || 1;
+   
+   
     const nameCityRoute = splitParamsText(params.slugRoute);
     const resultArrayCitys = await getRouteContent(nameCityRoute[0], nameCityRoute[1]);
     const resultContent = await fetchContent(resultArrayCitys?.cityIdDeparture, resultArrayCitys?.cityIdArrival);
@@ -106,14 +104,14 @@ const RouteDescriptionPage = async ({ params, query, searchParams }: {
                         <div className={style['path__routes']}>
                             <Suspense fallback={<Loading />}>
                                 {resultContent.Result.Routes.length > 0 ? (
-                                    resultContent.Result.Routes.slice(0, parseInt(querys)).map((data: any) => (
+                                    resultContent.Result.Routes.map((data: any) => (
                                         <ListRatesItem key={data.Id} data={data} />
                                     ))
                                 ) : (null)
 
                                 }
                             </Suspense>
-                            <ButtonMoreRouteSeo lengthRoute={resultContent.Result.Routes.length} />
+                            
                         </div>
                         <Suspense fallback={<Loading />}>
                             <ContentSeoRoute resultsContentPage={resultsContentPage} resultArrayCitys={resultArrayCitys} resultContent={resultContent} />

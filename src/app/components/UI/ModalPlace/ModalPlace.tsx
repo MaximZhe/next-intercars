@@ -11,14 +11,17 @@ const ModalPlace:FC<IModalProps> = ({ isOpen, children }) => {
     function onClose() {
       setIsOpenModalPlace(false);
     }
-    return (
-      <div className={style['modal-overlay']}>
-        <div className={style['modal-content']}>
-          {children}
-          <button className={style['modal-close']} onClick={() => {onClose()}}>Выбрать другое место</button>
+    {isOpen ? 
+      (
+        <div className={`${style['modal-overlay']} ${isOpenModalPlace ? style.active : ''}`}>
+          <div className={style['modal-content']}>
+            {children}
+            <button className={style['modal-close']} onClick={() => {onClose()}}>Выбрать другое место</button>
+          </div>
         </div>
-      </div>
-    );
+      )
+      : (null)}
+    
   };
 
 export default ModalPlace;

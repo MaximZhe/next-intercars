@@ -7,7 +7,7 @@ export async function getOrderStatus({ orderId }: { orderId: string | string[] |
   };
   try {
     const response = await fetch(
-      "http://api.intercars-tickets.com/api/v1/alphabank/status",
+      "http://api.intercars-tickets.com/api/v1/alphabank/create",
       {
         method: "POST",
         headers: {
