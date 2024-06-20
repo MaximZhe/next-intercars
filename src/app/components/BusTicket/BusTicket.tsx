@@ -3,7 +3,6 @@
 import { FC, useEffect, useState } from 'react';
 import style from './BusTicket.module.scss'
 import BusDriver from '../../icons/image/driver-bus.svg';
-import Counter from '../Counter/Counter';
 import Image from 'next/image';
 import { useAppSelector } from '@/app/hooks/redux';
 
@@ -33,7 +32,7 @@ interface ISelectePlace {
   SearchId: string,
   Lang: string
 }
-const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, handleBaggage }) => {
+const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, handleBaggage, countUser }) => {
   const { Route } = useAppSelector((state: any) => state.singleRouteReduser);
   const { dataRoute } = useAppSelector((state: any) => state.dataRouteReduser);
   const [isBook, setIsBook] = useState(true)
@@ -81,26 +80,23 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
 
   const handleSeatClick = (place: IBusPlace) => {
     if (place.IsFree) {
-      if(Route.Result.Route.CarrierName === 'Intercars'){
-        if (isBook === true) {
-          selectedPlace({ NumberPlace: place.Seat, RouteId: Route.Result.Route.Id, SearchId: dataRoute.Result.Id, Lang: 'RU' })
-          setIsBook(prev => !prev)
-          if (isOpenModalPlace) {
-            setIsBook(prev => !prev)
-          }
-        } else if (isBook === false) {
-          removePlace({ NumberPlace: place.Seat, RouteId: Route.Result.Route.Id, SearchId: dataRoute.Result.Id, Lang: 'RU' })
-          setIsBook(prev => !prev)
+      if (Route.Result.Route.CarrierName === 'Intercars') {
+        const isSelected = selectedPlaces.some(seat => seat.Seat === place.Seat);
   
+        if (isSelected) {
+          removePlace({ NumberPlace: place.Seat, RouteId: Route.Result.Route.Id, SearchId: dataRoute.Result.Id, Lang: 'RU' });
         } else {
-          console.log('ошибка')
+          selectedPlace({ NumberPlace: place.Seat, RouteId: Route.Result.Route.Id, SearchId: dataRoute.Result.Id, Lang: 'RU' });
+          
+          if (isOpenModalPlace) {
+            setIsBook(prev => !prev);
+          }
         }
-      }else{
-        console.log('бронь не проверяем')
+      } else {
+        console.log('бронь не проверяем');
       }
-      
     } else {
-      console.log('место занято')
+      console.log('место занято');
     }
     handlePlaceSelection(place);
   };
@@ -150,7 +146,7 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
 
                         if (!place) {
                           return (
-                            <div className={`${style.seat} ${style.invisible}`} key={placeIndex} data-col={placeIndex} />
+                            <div className={`${style.seat} ${style.invisible} `} key={placeIndex} data-col={placeIndex} />
                           );
                         }
 
@@ -158,7 +154,7 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
                         const seatClass = place.IsFree ? `${style.free}` : `${style.occupied}`;
 
                         return (
-                          <div className={`${style.seat} ${colClass} ${seatClass} ${selectedPlaces.includes(place) ? style.choose : ''}`} key={placeIndex} data-col={placeIndex} onClick={() => handleSeatClick(place)}>
+                          <div className={`${style.seat} ${colClass} ${seatClass} ${selectedPlaces.includes(place) ? style.choose : ''} ${selectedPlaces.length === countUser ? style.disabled : ''}`} key={placeIndex} data-col={placeIndex} onClick={() => handleSeatClick(place)}>
                             {place ? <span>{place.Seat}</span> : null}
                           </div>
                         );
@@ -195,7 +191,11 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
                           const seatClass = place.IsFree ? style.free : style.occupied;
 
                           return (
-                            <div className={`${style.seat} ${colClass} ${seatClass} ${selectedPlaces.includes(place) ? style.choose : ''}`} key={placeIndex} data-col={placeIndex} onClick={() => handleSeatClick(place)}>
+                            <div className={`${style.seat} ${colClass} 
+                            ${seatClass} ${selectedPlaces.includes(place) ? style.choose : ''} 
+                            ${selectedPlaces.length === countUser ? style.disabled : ''}`} 
+                            key={placeIndex} data-col={placeIndex} 
+                            onClick={() => handleSeatClick(place)}>
                               {place ? <span>{place.Seat}</span> : null}
                             </div>
                           );

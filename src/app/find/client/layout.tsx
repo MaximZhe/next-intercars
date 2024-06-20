@@ -1,8 +1,14 @@
 
 
 import { PricePromoContext } from "@/contex"
-import { ModalContext, ModalContextBustiket, ModalContextError } from "@/contex/modal"
+import { ModalContext, ModalContextBustiket, ModalContextError, ModalContextFormError } from "@/contex/modal"
+import { Metadata } from "next"
 
+export const metadata: Metadata = {
+    title: 'Intercars - покупка билета',
+    description: 'Intercars - покупка билета',
+    keywords:'Intercars - покупка билета'
+  }
 export default function BookingLayout({
     children,
 }: {
@@ -14,7 +20,9 @@ export default function BookingLayout({
                 <ModalContext>
                     <ModalContextBustiket>
                         <ModalContextError>
-                           {children}  
+                            <ModalContextFormError>
+                                {children}  
+                            </ModalContextFormError>    
                         </ModalContextError>
                     </ModalContextBustiket>
                 </ModalContext>  

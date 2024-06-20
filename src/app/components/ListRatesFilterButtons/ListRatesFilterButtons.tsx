@@ -6,11 +6,11 @@ import ArrowFilter from '@/app/icons/svg/ArrowFilter';
 
 interface IButtonFilter{
     title: string,
-    onClick:() => void,
-    isSort:boolean
+    onClick?:() => void,
+    isSort?:boolean
 }
 const ListRatesFilterButtons:FC<IButtonFilter> = ({ title, onClick,isSort}) => {
-    console.log(isSort)
+
     return (
         <Button className={`${style['filter-button']} ${!isSort ? '' : style.active}`} onClick={onClick}>
             <span className={style['filter-button__text']}>

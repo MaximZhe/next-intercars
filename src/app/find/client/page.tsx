@@ -217,8 +217,6 @@ const ChoiceTicketsPage: FC<IClientProps> = ({ params }) => {
     }
   }, [resultArrayPrice]);
 
-
-
   useEffect(() => {
     const handleResize = () => {
       const windowSize = WindowScreenUser();

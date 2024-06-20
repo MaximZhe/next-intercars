@@ -38,7 +38,8 @@ const Counter:FC <ICounterProps>= ({className, initialStateValue, getCountValue}
               {initialStateValue === 0 ? buggageCount : count} 
             </div>
             <button type='button' name='increment' id='increment'
-                className={style['counter__btn']}
+            disabled={ count === 5 ? true : false}
+                className={`${style['counter__btn']} ${count > 4  ? style.disabled : ''}`}
                 onClick={() => {setCount((prev) => prev + 1),setBuggageCount((prev) => prev + 1)}}>
                 <Image width={24} height={24}
                     className={style['counter__icon']}

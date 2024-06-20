@@ -16,6 +16,7 @@ import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
 import { useSearchParams } from 'next/navigation';
 import Menu from '../Header/Menu/Menu';
 import Button from '../UI/Button/Button';
+import Loading from '../../loading';
 
 export interface IRoute {
   CarrierRoutes: IItemCarrierRoutes[];
@@ -27,11 +28,11 @@ const ListRates: FC = () => {
     { label: 'Поиск билетов', href: '/find', active: true },
   ];
   const [visibleItems, setVisibleItems] = useState(4);
-    const itemsPerPage = 4; 
+  const itemsPerPage = 4;
 
-    const handleShowMore = () => {
-        setVisibleItems(prevVisibleItems => prevVisibleItems + itemsPerPage);
-    };
+  const handleShowMore = () => {
+    setVisibleItems(prevVisibleItems => prevVisibleItems + itemsPerPage);
+  };
   const searchParams = useSearchParams();
   const newDates = searchParams.get('date');
 
@@ -260,22 +261,20 @@ const ListRates: FC = () => {
     <>
       <Menu responsive={true} />
       <section className={style.rates}>
-        <Suspense>
-          <SearchForm className={style['rates__form']} searchProps={searchProps} />
-        </Suspense>
-        <Suspense>
-          <div className='container'>
-            <div className={style['rates__wrapper']} >
-              <div className={style['rates__header']} >
-                <Breadcrumbs links={links} />
-                <div className={style['rates__filter']} >
-                  <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={activeButton === 'Время отправления по возрастанию'} title={'Время отправления '} />
-                  <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={activeButton === 'Время прибытия по возрастанию'} title={'Время прибытия'} />
-                  <ListRatesFilterButtons onClick={sortedRoutesTimeFull} isSort={activeButton === 'Время в пути по возрастанию'} title={'Время в пути'} />
-                  <ListRatesFilterButtons onClick={sortedRoutesPrice} title={'Стоимость'} isSort={activeButton === 'Стоимость по возрастанию'} />
-                </div>
-              </div>
+      <SearchForm className={style['rates__form']} searchProps={searchProps} />
 
+        <div className='container'>
+          <div className={style['rates__wrapper']} >
+            <div className={style['rates__header']} >
+              <Breadcrumbs links={links} />
+              <div className={style['rates__filter']} >
+                <ListRatesFilterButtons onClick={sortedRoutesTimeDepart} isSort={activeButton === 'Время отправления по возрастанию'} title={'Время отправления '} />
+                <ListRatesFilterButtons onClick={sortedRoutesTimeArrive} isSort={activeButton === 'Время прибытия по возрастанию'} title={'Время прибытия'} />
+                <ListRatesFilterButtons onClick={sortedRoutesTimeFull} isSort={activeButton === 'Время в пути по возрастанию'} title={'Время в пути'} />
+                <ListRatesFilterButtons onClick={sortedRoutesPrice} title={'Стоимость'} isSort={activeButton === 'Стоимость по возрастанию'} />
+              </div>
+            </div>
+            <Suspense fallback={<Loading />}>
               <div className={style.list}>
                 {routeData.Result.IsActive === true ?
                   <GridLoader color={'#0243A6'} loading={loading} size={10} />
@@ -287,18 +286,17 @@ const ListRates: FC = () => {
                 ) : (
                   loading === false ? <p>Извините, маршруты не найдены</p> : null
                 )}
-                <Button disabled={routes.length > visibleItems ? false : true} 
-                            type='button'
-                            onClick={handleShowMore}
-                            className={`${style['rates__btn']} ${routes.length > visibleItems ? '' : `${style['disabled']}`}`}>
-                                <p className='sales__btn-text'>Показать еще</p>
-                                
+                <Button disabled={routes.length > visibleItems ? false : true}
+                  type='button'
+                  onClick={handleShowMore}
+                  className={`${style['rates__btn']} ${routes.length > visibleItems ? '' : `${style['disabled']}`}`}>
+                  <p className='sales__btn-text'>Показать еще</p>
+
                 </Button>
               </div>
-            </div>
+            </Suspense>
           </div>
-        </Suspense>
-
+        </div>
       </section>
     </>
 

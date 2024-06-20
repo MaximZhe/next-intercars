@@ -5,7 +5,7 @@ import { createContext, useContext, useState } from "react";
 const ModalClientProvaider = createContext<any>(undefined);
 const ModalBustiketProvaider = createContext<any>(undefined);
 const ModalErrorProvaider = createContext<any>(undefined);
-
+const ModalErrorFormProvaider = createContext<any>(undefined);
 export function ModalContext({
     children,
 }: {
@@ -46,6 +46,19 @@ export function ModalContextError({
         </ModalErrorProvaider.Provider>
     )
 }
+export function ModalContextFormError({
+    children,
+}: {
+    children: React.ReactNode
+}) {
+    const [isModalErrorForm, setIsModalErrorForm] = useState(false);
+    return (
+
+        <ModalErrorFormProvaider.Provider value={{ isModalErrorForm, setIsModalErrorForm }}>
+            {children}
+        </ModalErrorFormProvaider.Provider>
+    )
+}
 export function useModalContext() {
     return useContext(ModalClientProvaider);
 }
@@ -54,4 +67,7 @@ export function useModalPlaceContext() {
 }
 export function useModalErrorContext() {
     return useContext(ModalErrorProvaider);
+} 
+export function useModalErrorFormContext() {
+    return useContext(ModalErrorFormProvaider);
 }    

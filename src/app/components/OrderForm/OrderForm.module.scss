@@ -50,6 +50,14 @@
       background: #d5dde7;
     }
   }
+  &__error-title{
+    font-size: 16px;
+    color:red;
+  }
+  &__error-item{
+    margin-top: 5px;
+    font-size:15px;
+  }
 }
 .order-form-price {
   text-align: right;
@@ -70,6 +78,7 @@
       flex-direction: column;
     }
     &__result {
+      margin-top: 15px;
       flex-direction: row;
       max-width: 315px;
       margin-right: auto;

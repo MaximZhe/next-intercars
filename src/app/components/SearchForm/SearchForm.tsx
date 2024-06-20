@@ -1,6 +1,6 @@
 "use client"
 
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import moment from 'moment';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -82,11 +82,14 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
     const dispatch = useAppDispatch();
     const [cityArray, setCityArray] = useState([]);
     const [cityDepartSearch, setCityDepartSearch] = useState([]);
+    //Выпадающий список городов
     const [IDepartureSelect, setIDepartureSelect] = useState({ name: '', isCurrent: false });
     const [IArrivalSelect, setIArrivalSelect] = useState({ name: '', isCurrent: false });
+    
     const [citySearchArrival, setCitySearchArrival] = useState([]);
     const [cityDepartureValue, setCityDepartureValue] = useState<string>('');
     const [cityArrivalValue, setCityArrivalValue] = useState<string>('');
+    //Информация о городах
     const [cityDepartureData, setCityDepartureData] = useState<ICityDataProps>({
         Result: [initialStateResultCity],
         Error: null
@@ -95,20 +98,41 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
         Result: [initialStateResultCity],
         Error: null
     });
+    //Анимация стрелки
     const [isAnimatedArrow, setIsAnimatedArrow] = useState(false);
+
     const [isSelectedChange, setIsSelectedChange] = useState(false);
+    //Состояние кнопки поиска
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
     const [isSearchForm, setIsSearchForm] = useState(true);
+    //Цены календаря
     const [ticketPrices, setTicketPrices] = useState<TicketPrice[]>([]);
 
+    const refArrivalSelect = useRef<HTMLDivElement | null>(null);
+    const refDepartureSelect = useRef<HTMLDivElement | null>(null);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (refArrivalSelect.current && !refArrivalSelect.current.contains(event.target as Node)) {
+        setIArrivalSelect({ isCurrent: false, name: '' });
+      }
+      if (refDepartureSelect.current && !refDepartureSelect.current.contains(event.target as Node)) {
+        setIDepartureSelect({ isCurrent: false, name: '' });
+      }
+    };
+    
+    useEffect(() => {
+      document.addEventListener('click', handleClickOutside);
+      return () => {
+        document.removeEventListener('click', handleClickOutside);
+      };
+    }, []);
     const tileContent = ({ date, view }: { date: Date; view: string }) => {
         if (view === 'month') {
           const formattedDate = formatedDateFetch(date);
           const ticketData = ticketPrices.find((item) => item.DateDeparture === formattedDate);
-          if (ticketData && ticketData.IsActive) {
-            return <span key={ticketData.DateDeparture} className={ticketData.IsActive ? 'price-ticket' : 'price-old'}>{`${ticketData.Price} ₽`} </span>;
-          } else if (ticketData && !ticketData.IsActive) {
+          if (ticketData && ticketData.Price) {
+            return <span key={ticketData.DateDeparture} className={ticketData.IsActive === true ? 'price-ticket' : 'price-old'}>{`${ticketData.Price} ₽`} </span>;
+          } else if (ticketData && !ticketData.Price) {
             return <span> </span>;
           }
         }
@@ -213,9 +237,10 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
         }
     }, [isAnimatedArrow])
     // Функция для определения, можно ли кликнуть по дате
-    const tileDisabled = ({ date }: { date: any }) => {
-        return isPastDate(date);
-    };
+    const tileDisabled = ({ date, view }: any) => {
+        // Отключить выбор прошедших дат
+        return date.getTime() < new Date().getTime();
+      };
 
     const debbounceDeparture = useDebounce(cityDepartureValue, 0);
     const debbounceArrival = useDebounce(cityArrivalValue, 0);
@@ -489,7 +514,6 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
         }
     }, [cityArrivalData.Result, debbounceArrival, debbounceDeparture, cityDepartureData.Result, isButtonClicked]);
 
-
     const handleSubmit = () => {
         setButtonClicked(true);
 
@@ -502,10 +526,8 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
         console.log(IDepartureSelect.isCurrent, IArrivalSelect.isCurrent, isSelectedChange);
     };
 
-
     return (
         <>
-
             <form id='search-form' autoComplete='off' className={`${styles['form-search']} ${className}`}>
                 <div className={styles['form-search__wrapper']}>
                     <label className={styles['form-search__label']}>Откуда</label>
@@ -519,18 +541,14 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
                             placeholder='Пункт отправления'
                             required={true}
                         />
-                        <div className={`${styles['form-search__select']} ${IDepartureSelect.isCurrent === true ? styles.active : ''}`}>
+                        <div ref={refDepartureSelect} className={`${styles['form-search__select']} ${IDepartureSelect.isCurrent === true ? styles.active : ''}`}>
                             {cityDepartSearch.map((city: any) => {
-                                const [cityName, cityDetails] = splitCityName(city.Name);
-                                
+                                const [cityName, cityDetails] = splitCityName(city.Name);              
                                 return (
-                                    
                                     <button type='button' key={city.Id} onClick={() => updateDataDepartCity(city)}>
                                         {cityName}
                                         <span className={styles['form-search__details']}>{cityDetails ? `(${cityDetails})` : null}</span>
                                     </button>
-                                    
-                                    
                                 );
                             })}
 
@@ -555,7 +573,6 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
                         </button>
                     </div>
                 </div>
-
                 <div className={styles['form-search__wrapper']}>
                     <label className={styles['form-search__label']}>Куда</label>
                     <div className={styles['form-search__container']}>
@@ -569,7 +586,7 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
                             placeholder='Пункт назначения'
                             required={true}
                         />
-                        <div className={`${styles['form-search__select']} ${IArrivalSelect.isCurrent === true ? styles.active : ''}`}>
+                        <div ref={refArrivalSelect} className={`${styles['form-search__select']} ${IArrivalSelect.isCurrent === true ? styles.active : ''}`}>
                             {citySearchArrival.map((city: any) => {
                                 const [cityNameArrival, cityDetailsArrival] = splitCityName(city.Name);
                                 return (
@@ -584,12 +601,10 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
                     </div>
                     <div className={styles['form-search__sample']}>
                         <p className={styles['form-search__text']}>Например:</p>
-
                         <button className={styles['form-search__btn']} type='button' onClick={() => { setCityArrivalValue(defaultCityForm.Minsk); setCitySearchArrival([]); }}>{defaultCityForm.Minsk}</button>
                         <button className={styles['form-search__btn']} type='button' onClick={() => { setCityArrivalValue(defaultCityForm.Mosсow); setCitySearchArrival([]); }}>{defaultCityForm.Mosсow}</button>
                     </div>
                 </div>
-
                 <div className={styles['form-search__wrapper']}>
                     <label className={styles['form-search__label']}>Когда</label>
                     <div className={styles['form-search__container']}>
@@ -608,9 +623,7 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
                                 className={`${styles['form-search__icon']} ${isCalendarShow ? styles.active : ''}`}
                             />
                         </div>
-
                     </div>
-
                     <div className={styles['form-search__sample']}>
                         <p className={styles['form-search__text']}>Например:</p>
                         <button className={styles['form-search__btn']} type='button' onClick={() => setDate(defaultDate)}>{defaultDateForm.Today}</button>

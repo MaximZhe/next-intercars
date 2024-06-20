@@ -1,12 +1,11 @@
 'use client'
 
-import { backPage } from '@/app/utils/backPage';
 import { useModalContext } from '@/contex/modal';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const Timer = ({ isTicketPage }: { isTicketPage: boolean }) => {
-  const [timeLeft, setTimeLeft] = useState('02:30');
+  const [timeLeft, setTimeLeft] = useState('4:00');
   const [stopTimer, setStopTimer] = useState(false);
   const pathname = usePathname();
   const {isModal, setIsModal} = useModalContext();

@@ -60,6 +60,7 @@
 .choose {
   background: #005ee4 !important;
   color: #ffffff !important;
+  pointer-events: inherit!important;
 }
 
 .free {
@@ -72,6 +73,9 @@
   background: #d5dde7;
   color: #ffffff;
   cursor: default;
+}
+.disabled{
+  pointer-events: none;
 }
 .invisible {
   display: block;

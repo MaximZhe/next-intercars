@@ -140,6 +140,9 @@ img {
     fill:#6A85AB;
   }
 }
+.css-1nmdiq5-menu{
+  margin-top: 0px!important;
+}
 .react-calendar__navigation {
   height: 25px;
 }
@@ -171,6 +174,7 @@ div.react-calendar__month-view__days{
 .react-calendar__tile--active{
   background: #0243a6!important;
   color:#FFFFFF!important;
+  opacity: 1!important;
   & > span {
     color: #FFFFFF!important;
   }
@@ -186,7 +190,7 @@ div.react-calendar__month-view__days{
 .react-calendar__tile:disabled {
   background: none;
   pointer-events: none;
-  visibility: hidden;
+  opacity: 0.5;
 }
 .react-calendar__viewContainer{
   padding: 0 3px;

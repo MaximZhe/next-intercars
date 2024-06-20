@@ -22,10 +22,17 @@
         &:hover {
           box-shadow: 0px 0px 1px 1px #005ee4;
         }
+        
       }
       
       &.active {
         background: #005ee4;
+      }
+      &.disabled{
+        background: #d5dde7;
+        &:hover {
+          box-shadow: 0px 0px 1px 1px #d5dde7;
+        }
       }
     }
     &__value {

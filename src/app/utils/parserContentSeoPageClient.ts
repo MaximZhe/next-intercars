@@ -1,5 +1,5 @@
 
-import { JSDOM } from 'jsdom';
+
 import { resultArrayContent } from './filterArrayContent';
 import { arrayClassName, arrayKeyName } from '../constant/arrayClassSeoPage';
 
@@ -10,9 +10,9 @@ const splitUrlLink = (text:string | null) => {
     }
     
 }
-export function parseData(data: string) {
-    const parser = new JSDOM(data);;
-    const doc = parser.window.document;
+export function parseDataSeoClient(data: string) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data, 'text/html');
 
     const result: any = [];
 

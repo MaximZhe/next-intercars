@@ -10,7 +10,7 @@ import RouteItem from '../../../../components/RouteItem/RouteItem';
 import ButtonRoutes from '../../../../components/UI/Button/ButtonRoutes/ButtonRoutes';
 import Breadcrumbs from '@/app/components/UI/Breadcrumbs/Breadcrumbs';
 import { getFetchNewsItem } from '@/app/api/actionNewsItem';
-import { getServerSideProps } from '@/app/api/actionNews';
+
 import { Metadata} from 'next';
 import { parseDataNews } from '@/app/utils/parserNewsPage';
 import Image from 'next/image';
@@ -49,7 +49,11 @@ export async function generateMetadata(
     return {
       title: news.SeoTitle,
       description: news.SeoDescription,
-      
+      openGraph: {
+        title: news.SeoTitle,
+        description: news.SeoDescription,
+        images: news.SeoImage ? [{ url: news.SeoImage }] : [],
+      },
     }
   }
 const SingleNewsPage:FC<ISingleNewsProps> = async ({params}) => {

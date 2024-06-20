@@ -60,8 +60,12 @@ export async function generateMetadata(
     return {
         title: contentMetaSeo.Result.Page?.MetaTitle,
         description: contentMetaSeo.Result.Page?.MetaDescription,
-        keywords: contentMetaSeo.Result.Page?.MetaKeywords
-
+        keywords: contentMetaSeo.Result.Page?.MetaKeywords,
+        openGraph: {
+            title: contentMetaSeo.Result.Page?.MetaTitle,
+            description: contentMetaSeo.Result.Page?.MetaDescription,
+            images: contentMetaSeo.Result.Page?.SeoImage ? [{ url: contentMetaSeo.Result.Page?.SeoImage }] : [],
+        }
     }
 }
 interface PageProps {

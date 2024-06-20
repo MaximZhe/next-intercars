@@ -1,32 +1,33 @@
-
-
-// import Image from 'next/image';
-// import IconTicket from '../icons/image/ticket-icon.svg';
-import Breadcrumbs from '../../components/UI/Breadcrumbs/Breadcrumbs';
-
-import style from './GoodOrderPage.module.scss';
+import IconTicket from '../../icons/image/ticket-icon.svg';
+import Image from 'next/image';
 import Link from 'next/link';
+import style from './GoodOrderPage.module.scss';
+
+
 import { sliderRoutesInternational } from '../../constant/constant';
+
+import Breadcrumbs from '../../components/UI/Breadcrumbs/Breadcrumbs';
 import RouteItem from '../../components/RouteItem/RouteItem';
 import ButtonRoutes from '../../components/UI/Button/ButtonRoutes/ButtonRoutes';
 import Menu from '../../components/Header/Menu/Menu';
+
+
 import { getOrderStatus } from '@/app/api/getOrderStatus';
-import IconTicket from '../../icons/image/ticket-icon.svg';
-import Image from 'next/image';
 import { getCreateTicket } from '@/app/api/actionGetCreateTicket';
+import ButtonDownload from '@/app/components/UI/Button/ButtonDonwload/ButtonDownload';
 const splitStatusMassage = (text: string) => {
     const massage = text.split(':')
     return massage
 }
+
 const GoodOrderPage = async ({params, searchParams }: { params: { slug: string }, searchParams: { [key: string]: string | string[] | undefined } }) => {
 
     const searchParamsOrder = searchParams
-    const statusCreate = await getCreateTicket({ orderId: searchParamsOrder.orderId !== undefined ? searchParamsOrder.orderId : '' })
+    const statusCreate = await getCreateTicket({ orderId: searchParamsOrder.orderId })
     const massageCreateStatus = statusCreate.Error?.Message
-    const status = await getOrderStatus({ orderId: searchParamsOrder.orderId !== undefined ? searchParamsOrder.orderId : '0581a5a7-6b91-7cfa-b98d-6eb101f423bb' })
+    const status = await getOrderStatus({ orderId: searchParamsOrder.orderId })
     const massageStatus = splitStatusMassage(status.Result.Status)
-    console.log(status)
-    console.log(statusCreate)
+
     return (
         <>
             <Menu responsive={true} />
@@ -59,6 +60,7 @@ const GoodOrderPage = async ({params, searchParams }: { params: { slug: string }
                                         <Link href={'/'} className={style['ending-order__link']}>
                                             Продолжить поиск билетов
                                         </Link>
+                                        <ButtonDownload datas={{ OrderId: searchParamsOrder?.orderId, SiteVersionId: 2, Lang: 'RUS' }} />
                                     </>
                                 ) : (
                                     <>
@@ -68,7 +70,7 @@ const GoodOrderPage = async ({params, searchParams }: { params: { slug: string }
                                             
                                         </h1>
                                         <p className={style['ending-order__text']}>
-                                            Причина: {massageStatus}
+                                            Причина: {massageStatus[1]}
                                         </p>
                                         
                                         

@@ -14,13 +14,13 @@ import SliderSeo from '../UI/SliderSeo/SliderSeo';
 
 interface IParamsContent {
     resultsContentPage: any,
-    resultArrayCitys: any,
+    resultArrayCitys?: any,
     resultContent: any
 }
 const ContentSeoRoute:FC<IParamsContent> = ({resultsContentPage, resultArrayCitys, resultContent}) => {
    
     /*убираем дублирующие значения времени рейсов*/
-    const scheduleItems = resultsContentPage[3]['schedule-text'];
+    const scheduleItems = resultsContentPage[3]['schedule-text'] !== undefined ? resultsContentPage[3]['schedule-text'] : [];
     const halfLength = scheduleItems.length / 2;
     const halfScheduleItems = scheduleItems.slice(0, halfLength);
     return (

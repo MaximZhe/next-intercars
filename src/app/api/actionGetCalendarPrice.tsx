@@ -10,6 +10,7 @@ interface ICalendarPrice {
 }
 export async function getCalendarPrice( dataCalendarPrice: ICalendarPrice) {
  
+    const url = process.env.NEXT_PUBLIC_APY_URL
     // Здесь можно выполнить запрос на сервер для получения данных
     const dat = {
         CityDeparture: dataCalendarPrice.CityDeparture,
@@ -20,7 +21,7 @@ export async function getCalendarPrice( dataCalendarPrice: ICalendarPrice) {
         Lang: "RUS"
       }
     try{
-      const res = await fetch('http://api.intercars-tickets.com/api/v1/calendar', {
+      const res = await fetch(`${url}/api/v1/calendar`, {
         method: 'POST',
         body: JSON.stringify(dat),
         headers: {

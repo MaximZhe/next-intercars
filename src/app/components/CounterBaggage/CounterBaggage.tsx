@@ -36,7 +36,8 @@ const CounterBaggage:FC <ICounterProps>= ({className, initialStateValue, getCoun
               {initialStateValue === 0 ? buggageCount : buggageCount} 
             </div>
             <button type='button' name='increment' id='increment'
-                className={style['counter__btn']}
+                className={`${style['counter__btn']} ${buggageCount > 2  ? style.disabled : ''}`}
+                disabled={buggageCount > 2 ? true : false}
                 onClick={() => {setBuggageCount((prev) => prev + 1)}}>
                 <Image width={24} height={24}
                     className={style['counter__icon']}

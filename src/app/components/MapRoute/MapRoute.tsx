@@ -8,7 +8,7 @@ interface INameRoute {
 }
 const MapRoute: FC <INameRoute> = ({cityStart, cityEnd}) => {
   const keys = process.env.NEXT_PUBLIC_APY_KEY_MAP;
-  
+  // console.log(cityStart, cityEnd)
   const initMap = () => {
     if (window.ymaps) {
 

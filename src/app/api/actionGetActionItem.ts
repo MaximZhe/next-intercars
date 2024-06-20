@@ -1,5 +1,6 @@
 'use server'
 export async function getFetchActionItem(id: any) {
+    const url = process.env.NEXT_PUBLIC_APY_URL
   try {
     const parsedId = parseInt(id, 10);
     if (isNaN(parsedId)) {
@@ -10,7 +11,7 @@ export async function getFetchActionItem(id: any) {
         Id: parsedId,
         Lang: "RUS"
     };
-      const res = await fetch('http://api.intercars-tickets.com/api/v1/news/', {
+      const res = await fetch(`${url}/api/v1/news/`, {
           method: 'POST',
           body: JSON.stringify(dat),
           headers: {

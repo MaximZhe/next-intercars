@@ -1,6 +1,6 @@
 'use server'
 export async function getServerSideProps(countNews: number) {
- 
+  const url = process.env.NEXT_PUBLIC_APY_URL
     // запрос на сервер для получения данных
     const dat = {
         ContentType: "News",
@@ -9,7 +9,7 @@ export async function getServerSideProps(countNews: number) {
         SiteId: 2,
         Lang: "RUS"
       }
-    const res = await fetch('http://api.intercars-tickets.com/api/v1/news/all', {
+    const res = await fetch(`${url}/api/v1/news/all`, {
         method: 'POST',
         body: JSON.stringify(dat),
         headers: {

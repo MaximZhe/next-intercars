@@ -3,14 +3,14 @@
 
 export async function getRouteContent(cityDepart: string, cityArraval: string) {
 
-
+    const url = process.env.NEXT_PUBLIC_APY_URL
     const fetchCityDeparture = async (cityDeparture: string) => {
         try {
             const data = {
                 name: cityDeparture,
                 lang: 'RU'
             }
-            const response = await fetch('http://api.intercars-tickets.com/api/v1/cities/find', {
+            const response = await fetch(`${url}/api/v1/cities/find`, {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {
@@ -36,7 +36,7 @@ export async function getRouteContent(cityDepart: string, cityArraval: string) {
                 name: cityArrival,
                 lang: 'RU'
             }
-            const response = await fetch('http://api.intercars-tickets.com/api/v1/cities/find', {
+            const response = await fetch(`${url}/api/v1/cities/find`, {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {

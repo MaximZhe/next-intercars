@@ -2,7 +2,7 @@
 import { useFormContext } from 'react-hook-form';
 import { ErrorMessage } from "@hookform/error-message"
 import style from './ContactsUser.module.scss';
-import InputMask from 'react-input-mask';
+
 const ContactsUser = () => {
     const { register, watch, formState: { errors } } = useFormContext();
 
@@ -40,9 +40,14 @@ const ContactsUser = () => {
                     <div className={`${errors['Phone'] ? `${style['errors-validate']}` : ''} ${style['contacts-user-form__input']}`}>
                         <div className={`${style['contacts-user-form__wrapper']}  ${errors['Phone'] ? `${style['errors-validate']}` : ''}`}>
                             
-                            <InputMask type='tel'
-                                mask="+7 999 999 99 99"
-                                {...register('Phone', { required: 'Пожалуйста, введите номер телефона' })}
+                            <input type='tel'
+                                
+                                {...register('Phone', { required: 'Пожалуйста, введите номер телефона',
+                                    pattern: {
+                                        value: /^[0-9\s\W]+$/,
+                                        message: 'Можно использовать цифры',
+                                      }
+                                 })}
                                 placeholder='+7 000 000 00 00'
                             />
                             <label className={style.active}>Контактный телефон</label>
@@ -56,7 +61,7 @@ const ContactsUser = () => {
                 <div className={style['contacts-user-form__check']}>
                     <input
                         type='checkbox'
-                        {...register('TermsAccepted')}
+                        {...register('HasSubscription')}
                     />
                     <label>Хочу получать информацию о скидках и акционных предложениях</label>
                 </div>

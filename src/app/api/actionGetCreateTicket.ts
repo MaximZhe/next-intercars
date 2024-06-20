@@ -1,13 +1,14 @@
 "use server";
 
 export async function getCreateTicket({ orderId }: { orderId: string | string[] | undefined }) {
+  const url = process.env.NEXT_PUBLIC_APY_URL
   const data = {
     OrderId: orderId,
     Lang: "RUS",
   };
   try {
     const response = await fetch(
-      "http://api.intercars-tickets.com/api/v1/alphabank/create",
+      `${url}/api/v1/alphabank/create`,
       {
         method: "POST",
         headers: {

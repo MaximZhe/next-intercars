@@ -7,7 +7,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://api.intercars-tickets.com/api/:path*',
+        destination: 'http://testapi.intercars.ru/api/:path*',
       },
       
     
