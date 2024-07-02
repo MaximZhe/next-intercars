@@ -2,12 +2,10 @@
 import { FC, Suspense, useEffect, useState } from 'react';
 import style from './ListRates.module.scss';
 import SearchForm from '../SearchForm/SearchForm';
-// import Breadcrumbs from '../UI/Breadcrumbs/Breadcrumbs';
-
 import ListRatesFilterButtons from '../ListRatesFilterButtons/ListRatesFilterButtons';
 
 
-// import { setStoregeRoute } from '../../redux/slice/storegeDataRoute';
+
 import { GridLoader } from 'react-spinners';
 import { IItemCarrierRoutes, IItemRoutes, ITariffData } from '@/app/types/types';
 import { useAppSelector } from '@/app/hooks/redux';
@@ -17,6 +15,8 @@ import { useSearchParams } from 'next/navigation';
 import Menu from '../Header/Menu/Menu';
 import Button from '../UI/Button/Button';
 import Loading from '../../loading';
+import ModalErrorsSearchId from '../UI/Modal/ModalErrorsSearchId/ModalErrorsSearchId';
+import { useModalErrorSearchIdContext } from '@/contex/modal';
 
 export interface IRoute {
   CarrierRoutes: IItemCarrierRoutes[];
@@ -64,8 +64,16 @@ const ListRates: FC = () => {
     citySearchArrival: Name,
     dateSearch: newDates
   }
-
-  const updateStorageRoute = localStorage.getItem('updateDateRoute');
+  function createStorageRoute() {
+    if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+      const storageRoute = localStorage.getItem('updateDateRoute');
+      return storageRoute
+      // ... your code
+    } else {
+      console.log('Ваш браузер не поддерживает localStorage');
+    }
+  }
+  const updateStorageRoute = createStorageRoute();
   useEffect(() => {
     const fetchDynamicRoutes = async (id: string) => {
       console.log(id);
@@ -121,9 +129,6 @@ const ListRates: FC = () => {
     } else {
       console.log('')
     }
-
-
-
     let backLocaltorage = localStorage.getItem('backPage');
     if (backLocaltorage === 'true') {
       fetchDynamicRoutes(dataRoute.Result.Id);
@@ -134,6 +139,9 @@ const ListRates: FC = () => {
   useEffect(() => {
     console.log(routeData)
   }, [routeData])
+  // window.addEventListener('popstate', function(event) {
+  //   console.log('переход назад')
+  // }); 
   // const routesArray = routes.map((item: { Routes: any; }) => item.Routes).flat();
   const sortedRoutesPriceBest = (routes: any[]) => {
     return routes.map(item => item.Price[2].Ptar).sort((a, b) => a - b);
@@ -198,6 +206,7 @@ const ListRates: FC = () => {
   // }
   const sortedRoutesTimeArrive = () => {
     setActiveButton('Время прибытия')
+    console.log(activeButton)
     if (activeButton === 'Время прибытия') {
       const newArrayRoutes = [...routes].sort((a, b) => {
         if (a.TimeArrive && b.TimeArrive) {
@@ -256,9 +265,15 @@ const ListRates: FC = () => {
     }
   }
   const sortedPrices = sortedRoutesPriceBest(routes)
-
+useEffect(() => {
+  console.log(routes)
+},[routes])
+const {isModalErrorSearchId} = useModalErrorSearchIdContext();
   return (
     <>
+    <ModalErrorsSearchId isOpen={isModalErrorSearchId}>
+<p>Данные поиска устарели, выполните поиск занаво.</p>
+    </ModalErrorsSearchId>
       <Menu responsive={true} />
       <section className={style.rates}>
       <SearchForm className={style['rates__form']} searchProps={searchProps} />

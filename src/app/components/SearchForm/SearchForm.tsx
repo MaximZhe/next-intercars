@@ -71,8 +71,7 @@ interface TicketPrice {
   }
 const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, prop }) => {
     const router = useRouter();
-    const pathname = useParams();
-
+    
     const handleSuccess = (cityNameDeparture: string, cityNameArrival: string, valueDate: string) => {
         const actualCityDeparture = splitCityName(cityNameDeparture);
         const actualCityArrival = splitCityName(cityNameArrival);
@@ -236,10 +235,12 @@ const SearchForm: FC<ISearchForm> = ({ className, searchProps, citySeoRoute, pro
             clearTimeout(animatedIcon);
         }
     }, [isAnimatedArrow])
-    // Функция для определения, можно ли кликнуть по дате
     const tileDisabled = ({ date, view }: any) => {
-        // Отключить выбор прошедших дат
-        return date.getTime() < new Date().getTime();
+        // Получаем сегодняшнюю дату
+        const today = new Date();
+      
+        // Отключить выбор прошедших дат, кроме сегодняшней
+        return date.getDate() < today.getDate(); 
       };
 
     const debbounceDeparture = useDebounce(cityDepartureValue, 0);

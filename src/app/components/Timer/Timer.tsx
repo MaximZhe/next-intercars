@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const Timer = ({ isTicketPage }: { isTicketPage: boolean }) => {
-  const [timeLeft, setTimeLeft] = useState('4:00');
+  const [timeLeft, setTimeLeft] = useState('24:00');
   const [stopTimer, setStopTimer] = useState(false);
   const pathname = usePathname();
   const {isModal, setIsModal} = useModalContext();

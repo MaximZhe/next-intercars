@@ -139,7 +139,7 @@ const ContentSeoRouteClient: FC<IParamsContent> = ({ resultsContentPage, resultA
                             }) : null}
 
                             <div className={style['path-description__map']}>
-                                {citysMap && citysMap[0] && citysMap[1] ? <MapRoute cityStart={citysMap[0]} cityEnd={citysMap[1]} /> : null}
+                                {citysMap && citysMap[0] && citysMap[1] ? <MapRoute cityStart={citysMap[0]} cityEnd={citysMap[1]} arrayStopsCity={[]} /> : null}
 
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-import React, { FC} from 'react';
+import React, { FC, Suspense} from 'react';
 import TicketImg from '../../icons/image/ticket-icon.svg';
 
 import RoadIcon from '../../icons/image/road-icon.svg';
@@ -11,6 +11,7 @@ import ButtonRoutes from '@/app/components/UI/Button/ButtonRoutes/ButtonRoutes';
 import BenefitsIcons from '@/app/components/UI/Benefits-icons/Benefits-icons';
 import Link from 'next/link';
 import SliderSeo from '../UI/SliderSeo/SliderSeo';
+import Loading from '@/app/loading';
 
 interface IParamsContent {
     resultsContentPage: any,
@@ -23,6 +24,8 @@ const ContentSeoRoute:FC<IParamsContent> = ({resultsContentPage, resultArrayCity
     const scheduleItems = resultsContentPage[3]['schedule-text'] !== undefined ? resultsContentPage[3]['schedule-text'] : [];
     const halfLength = scheduleItems.length / 2;
     const halfScheduleItems = scheduleItems.slice(0, halfLength);
+    const arrayStopsCity = resultContent.Result.Routes[0].AllStops
+    console.log(resultContent.Result.Routes[0].AllStops)
     return (
         <>
             <div className={style['path-description']}>
@@ -89,7 +92,10 @@ const ContentSeoRoute:FC<IParamsContent> = ({resultsContentPage, resultArrayCity
                                     })}
 
                                     <div className={style['path-description__map']}>
-                                        <MapRoute  cityStart={resultArrayCitys?.cityDepartName} cityEnd={resultArrayCitys?.cityArravalName}/>
+                                        <Suspense fallback={<Loading />}>
+                                           <MapRoute arrayStopsCity={arrayStopsCity} cityStart={resultArrayCitys?.cityDepartName} cityEnd={resultArrayCitys?.cityArravalName}/>
+                                        </Suspense>
+                                        
                                     </div>
                                 </div>
                                 <div className={style['path-description__info']}>

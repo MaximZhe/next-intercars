@@ -6,6 +6,7 @@ const ModalClientProvaider = createContext<any>(undefined);
 const ModalBustiketProvaider = createContext<any>(undefined);
 const ModalErrorProvaider = createContext<any>(undefined);
 const ModalErrorFormProvaider = createContext<any>(undefined);
+const ModalErrorSearchIdProvaider = createContext<any>(undefined);
 export function ModalContext({
     children,
 }: {
@@ -59,6 +60,19 @@ export function ModalContextFormError({
         </ModalErrorFormProvaider.Provider>
     )
 }
+export function ModalContextSearchId({
+    children,
+}: {
+    children: React.ReactNode
+}) {
+    const [isModalErrorSearchId, setIsModalErrorSearchId] = useState(false);
+    return (
+
+        <ModalErrorSearchIdProvaider.Provider value={{ isModalErrorSearchId, setIsModalErrorSearchId }}>
+            {children}
+        </ModalErrorSearchIdProvaider.Provider>
+    )
+}
 export function useModalContext() {
     return useContext(ModalClientProvaider);
 }
@@ -70,4 +84,7 @@ export function useModalErrorContext() {
 } 
 export function useModalErrorFormContext() {
     return useContext(ModalErrorFormProvaider);
-}    
+} 
+export function useModalErrorSearchIdContext() {
+    return useContext(ModalErrorSearchIdProvaider);
+}   

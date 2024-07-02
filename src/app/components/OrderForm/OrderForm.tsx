@@ -49,7 +49,12 @@ export interface IIDRoutes {
   searchId: string,
   routeId: string
 }
-
+interface arrayDataPromoCode {
+  counterUser: number,
+  arrayTariffsRoute: any[],
+  carrierName: string,
+  placePromo: number,
+}
 const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, getTarrifs, arrayTariffs }) => {
 
   const { Route } = useAppSelector((state: any) => state.singleRouteReduser);
@@ -63,7 +68,12 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
   const { isModalError, setIsModalError } = useModalErrorContext();
   const { isModalErrorForm, setIsModalErrorForm } = useModalErrorFormContext();
   const [arrayErrorMessage, setArrayErrorMessage] = useState<string[]>([]);
-  
+  const [statePromoCode, setStatePromoCode] = useState<arrayDataPromoCode>({
+    counterUser: 0,
+    arrayTariffsRoute: [],
+    carrierName: '',
+    placePromo: 0
+  });
   const numberArray = createNumberArray(countUser);
   const router = useRouter();
 
@@ -76,6 +86,14 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
   function transformArray(passengersArray: Passenger[]) {
     return Object.values(passengersArray);
   }
+  useEffect(() => {
+    setStatePromoCode({
+      counterUser: countUser,
+      arrayTariffsRoute: arrayTariffs,
+      carrierName: Route?.Result.Route.CarrierName,
+      placePromo: Route.Result.Route.CountFreePromos
+    })
+  }, [countUser, arrayTariffs, Route?.Result.Route.CarrierName, Route?.Result.Route.CountFreePromos]) 
   const getPay = async (formDatas: any) => {
     setIsLoadingPay(true);
     const transformedPassengers = transformArray(formDatas.Passengers);
@@ -149,6 +167,7 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
         }
       },
       Phone: '',
+      PhoneTwo: '',
       Email: '',
       CurrencyId: 4,
       PaySystem: 'alphaBank',
@@ -165,9 +184,9 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
     },
     mode: 'onBlur'
   });
-  
-  function validateForm () {
-   
+
+  function validateForm() {
+
     const newErrorMessages: string[] = [];
     const passengerErrors = methods.getFieldState('Passengers').error
     const phoneErrors = methods.getFieldState('Phone').error
@@ -177,35 +196,35 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
 
     setTimeout(() => {
 
-      if(passengerErrors){
+      if (passengerErrors) {
         newErrorMessages.push('Данные о пассажире не заполнены');
       }
-      if(phoneErrors) {
+      if (phoneErrors) {
         newErrorMessages.push('Номер телефона не заполнен');
       }
-      if(emailErrors) {
+      if (emailErrors) {
         newErrorMessages.push('Email не заполнен');
       }
-      if(termsAcceptedPolityErrors) {
+      if (termsAcceptedPolityErrors) {
         newErrorMessages.push('Политика конфиденциальности не принята');
       }
-      if(termsAcceptedProcessingErrors) {
+      if (termsAcceptedProcessingErrors) {
         newErrorMessages.push('Согласие на обработку персональных данных не принято');
       }
-      if(selectedPlaces.length < countUser) {
+      if (selectedPlaces.length < countUser) {
         newErrorMessages.push('Выберите место');
       }
-      if(newErrorMessages.length > 0) {
+      if (newErrorMessages.length > 0) {
         setArrayErrorMessage(newErrorMessages);
       }
-    },0)
-    
+    }, 0)
+
   }
-  
+
   useEffect(() => {
     if (arrayErrorMessage.length > 0) {
       setIsModalErrorForm(true)
-    } 
+    }
   }, [arrayErrorMessage])
   const handleFormSubmit = (data: any) => {
     // Обновляем пассажира в Passengers с выбранным местом
@@ -236,26 +255,26 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
       PromoCode: selectedPromoCode
     };
     console.log(updatedData);
-    if(selectedPlaces.length < countUser) {
+    if (selectedPlaces.length < countUser) {
       validateForm()
-    }else{
+    } else {
       getPay(updatedData);
     }
-    
+
   };
-  
-  
+
+
   return (
     <>
       <ModalErrors isOpen={isModalError} >
         <p>{errorMessage}</p>
       </ModalErrors>
       <ModalErrorsForm isOpen={isModalErrorForm} >
-      <p className={style['order-form__error-title']}>Пожалуйста, заполните следующие поля:</p> 
-      <ul className={style['order-form__error-list']}>
-        {arrayErrorMessage.map((message: string, index: number) => 
-        <li key={index} className={style['order-form__error-item']}>{message}</li>)}
-      </ul>
+        <p className={style['order-form__error-title']}>Пожалуйста, заполните следующие поля:</p>
+        <ul className={style['order-form__error-list']}>
+          {arrayErrorMessage.map((message: string, index: number) =>
+            <li key={index} className={style['order-form__error-item']}>{message}</li>)}
+        </ul>
       </ModalErrorsForm>
       <FormProvider {...methods}>
         <form className={style['order-form']} onSubmit={methods.handleSubmit(handleFormSubmit, validateForm)}>
@@ -276,7 +295,10 @@ const FormComponent: FC<ICountUser> = ({ countUser, places, maxCol, pricePay, ge
           />
           <CommentOrder />
           <ContactsUser />
-          {countUser === 1 && arrayTariffs.length > 0 && arrayTariffs[0].selectedTarifId.label !== 'DT (до 12 лет)' ?
+          {statePromoCode.counterUser === 1 && statePromoCode.arrayTariffsRoute.length > 0 &&
+            statePromoCode.arrayTariffsRoute[0].selectedTarifId.label !== 'DT (до 12 лет)' &&
+            statePromoCode.carrierName === 'Intercars' &&
+            statePromoCode.placePromo > 0 ?
             <PromoOrder handlePromoCode={handlePromoCode} routeIds={idRoutes} control={methods.control} places={selectedPlaces} />
             : null}
           <div className={style['order-form__container']}>

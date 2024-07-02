@@ -24,10 +24,10 @@ const ContactsUser = () => {
                         <div className={`${errors['Email'] ? `${style['errors-validate']}` : ''} ${style['contacts-user-form__wrapper']} `}>
                             <input type='email'
                                 {...register('Email', { required: 'Пожалуйста, введите адрес электронной почты',
-                                pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                                    message: 'Укажите @ для адреса электронной почты'
-                                }
+                                    pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+[A-Z]{2,4}$/i,
+                                    message: 'Укажите корректный адрес электронной почты'
+                                    }
                                  })}
                             />
                             <label className={`${emailUser ? style.active : ""}`}>Адрес электронной почты</label>
@@ -37,6 +37,7 @@ const ContactsUser = () => {
                             <ErrorMessage errors={errors} name="Email" />
                         </div>
                     </div>
+                    <div className={style['contacts-user-form__input-wrapper']}>
                     <div className={`${errors['Phone'] ? `${style['errors-validate']}` : ''} ${style['contacts-user-form__input']}`}>
                         <div className={`${style['contacts-user-form__wrapper']}  ${errors['Phone'] ? `${style['errors-validate']}` : ''}`}>
                             
@@ -57,6 +58,28 @@ const ContactsUser = () => {
                             <ErrorMessage errors={errors} name="Phone" />
                         </div>
                     </div>
+                    <div className={`${errors['PhoneTwo'] ? `${style['errors-validate']}` : ''} ${style['contacts-user-form__input']}`}>
+                        <div className={`${style['contacts-user-form__wrapper']}  ${errors['PhoneTwo'] ? `${style['errors-validate']}` : ''}`}>
+                            
+                            <input type='tel'
+                                
+                                {...register('PhoneTwo', {
+                                    pattern: {
+                                        value: /^[0-9\s\W]+$/,
+                                        message: 'Можно использовать цифры',
+                                      }
+                                 })}
+                                placeholder='+7 000 000 00 00'
+                            />
+                            <label className={style.active}>Дополнительный телефон</label>
+                        </div>
+
+                        <div className={style['contacts-user-form__error']}>
+                            <ErrorMessage errors={errors} name="PhoneTwo" />
+                        </div>
+                    </div>
+                    </div>
+                    
                 </div>
                 <div className={style['contacts-user-form__check']}>
                     <input

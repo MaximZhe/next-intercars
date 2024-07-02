@@ -18,7 +18,7 @@ const СonsentBox = () => {
                             type='checkbox'
                             {...register('termsAcceptedPolity', { required: 'Пожалуйста, примите условия' })}
                         />
-                        <label >Принимаю условия <Link href='/'>пользовательского соглашения и политики конфеденциальности</Link></label>
+                        <label >Принимаю условия <Link href='/' target='_blank'>пользовательского соглашения и политики конфеденциальности</Link></label>
 
                     </div>
 
@@ -32,7 +32,7 @@ const СonsentBox = () => {
                         type='checkbox'
                         {...register('termsAcceptedProcessing', { required: 'Пожалуйста, примите условия' })}
                     />
-                    <label>Даю согласие на <Link href='/'>обработку персональных данных</Link> </label>
+                    <label>Даю согласие на <Link href='/' target='_blank'>обработку персональных данных</Link> </label>
                 </div>
                 </div>
             </div>

@@ -15,9 +15,9 @@ const Modal: FC<IModalProps> = ({ isOpen, children }) => {
     setIsModal(false);
   }
 
-  // Условное отображение модального окна
+
   if (!isOpen) {
-    return null; // Если isOpen равен false, то не отображаем модальное окно
+    return null;
   }
 
   return (

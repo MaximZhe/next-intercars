@@ -82,12 +82,12 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
     if (place.IsFree) {
       if (Route.Result.Route.CarrierName === 'Intercars') {
         const isSelected = selectedPlaces.some(seat => seat.Seat === place.Seat);
-  
+
         if (isSelected) {
           removePlace({ NumberPlace: place.Seat, RouteId: Route.Result.Route.Id, SearchId: dataRoute.Result.Id, Lang: 'RU' });
         } else {
           selectedPlace({ NumberPlace: place.Seat, RouteId: Route.Result.Route.Id, SearchId: dataRoute.Result.Id, Lang: 'RU' });
-          
+
           if (isOpenModalPlace) {
             setIsBook(prev => !prev);
           }
@@ -131,7 +131,8 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
           </div>
         </div>
         <div className={style['bus-places']}>
-          {floor2Array.length > 0 ? (<>
+          {floor2Array.length > 0 ? (<div className={style['bus-places__floor-wrapper']}>
+            <p className={style['bus-places__floor-title']}>2 этаж</p>
             <div className={style['bus-places__wrapper']}>
               <Image width={40} height={66} src={BusDriver} className={style['bus-places__icon']} alt='' />
               <div className={style['bus-component']}>
@@ -164,11 +165,12 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
                 })}
               </div>
             </div>
-          </>
+          </div>
           ) : null}
 
           {floor1Array.length > 0 ? (
-            <>
+            <div className={style['bus-places__floor-wrapper']}>
+              {floor2Array.length > 0 ? (<p className={style['bus-places__floor-title']}>1 этаж</p>) : null}
               <div className={style['bus-places__wrapper']}>
                 <Image width={40} height={66} src={BusDriver} className={style['bus-places__icon']} alt='' />
                 <div className={style['bus-component']}>
@@ -193,9 +195,9 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
                           return (
                             <div className={`${style.seat} ${colClass} 
                             ${seatClass} ${selectedPlaces.includes(place) ? style.choose : ''} 
-                            ${selectedPlaces.length === countUser ? style.disabled : ''}`} 
-                            key={placeIndex} data-col={placeIndex} 
-                            onClick={() => handleSeatClick(place)}>
+                            ${selectedPlaces.length === countUser ? style.disabled : ''}`}
+                              key={placeIndex} data-col={placeIndex}
+                              onClick={() => handleSeatClick(place)}>
                               {place ? <span>{place.Seat}</span> : null}
                             </div>
                           );
@@ -205,7 +207,7 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
                   })}
                 </div>
               </div>
-            </>
+            </div>
           ) : null}
 
           {floor2Array.length === 0 && floor1Array.length === 0 ? (
@@ -213,19 +215,22 @@ const BusTicket: FC<IPlaces> = ({ places, handlePlaceSelection, selectedPlaces, 
           ) : null}
         </div>
       </div>
-      <div className={style['bus-ticket-baggage']}>
-        <h3 className={style['bus-ticket-baggage__title']}>
-          Укажите количество дополнительного багажа
-        </h3>
-        <CounterBaggage
-          className={`${style['bus-ticket-counter']}`}
-          initialStateValue={0}
-          getCountValues={handleGetCountBaggage} />
-        <p className={style['bus-ticket-baggage__text']}>
-          В стоимость билета входит 2 единицы багажа бесплатно объемом 90*60*25 см. и весом 20 кг каждая.
-          Негабаритный багаж и багаж более 2-ух единиц необходимо оплачивать дополнительно.
-        </p>
-      </div>
+      {Route?.Result.Route.CarrierName === 'Intercars' ?
+        <div className={style['bus-ticket-baggage']}>
+          <h3 className={style['bus-ticket-baggage__title']}>
+            Укажите количество дополнительного багажа
+          </h3>
+          <CounterBaggage
+            className={`${style['bus-ticket-counter']}`}
+            initialStateValue={0}
+            getCountValues={handleGetCountBaggage} />
+          <p className={style['bus-ticket-baggage__text']}>
+            В стоимость билета входит 2 единицы багажа бесплатно объемом 90*60*25 см. и весом 20 кг каждая.
+            Негабаритный багаж и багаж более 2-ух единиц необходимо оплачивать дополнительно.
+          </p>
+        </div>
+        : null}
+
     </div>
   );
 };

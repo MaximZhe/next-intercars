@@ -17,9 +17,10 @@
   display: flex;
   flex-direction: column;
   margin-left: 48px;
-
+  & > .bus-places__floor-wrapper:nth-child(2){
+    margin-top:10px;
+  }
   &__wrapper {
-    margin-top: 16px;
     border: 1px solid #d5dde7;
     border-radius: 8px;
     padding: 8px;
@@ -36,6 +37,16 @@
     &:nth-child(3) {
       margin-top: 16px;
     }
+  }
+  &__floor-title {
+    font-size: 20px;
+    line-height: 24px;
+    padding-left: 2px;
+  }
+  &__floor-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 }
 
@@ -73,6 +84,7 @@
   background: #d5dde7;
   color: #ffffff;
   cursor: default;
+  pointer-events: none;
 }
 .disabled{
   pointer-events: none;
@@ -159,6 +171,9 @@
     max-width: 380px;
     flex-direction: row;
     gap: 0 10px;
+    & > .bus-places__floor-wrapper:nth-child(2){
+      margin-top:0px;
+    }
     &__wrapper {
       flex-direction: column;
       margin-top: 0px;
@@ -194,6 +209,8 @@
   .bus-places {
     overflow-x: auto;
     max-width: 180px;
+    flex-direction: column;
+    gap: 10px 0px;
     &__wrapper {
       flex: 0 0 auto;
     }
